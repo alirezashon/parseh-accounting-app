@@ -1,0 +1,79 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: Tanha;
+  src: url('./fonts/IRANSansWeb\(FaNum\).ttf');
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: Tanha;
+  line-height: 1.75 !important;
+  font-size: 14px !important;
+  direction: rtl;
+}
+button {
+  outline: none;
+}
+@media (max-width: 520px) {
+  body {
+    font-size: 13px !important;
+  }
+}
+input {
+  background: white;
+  outline: none;
+  height: 40px;
+  padding: 0.12px 1vh;
+  font-size: 16px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+}
+input:hover {
+  border-color: #c2d1ff;
+}
+input:focus {
+  border-color: #565ffe;
+}
+.fill-button {
+  background-color: #7747c0;
+  color: #ffffff;
+}
+.border-button {
+  color: #7747c0;
+  border: 1px #7747c0 solid;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100vh);
+  }
+  to {
+    transform: translateY(45vh);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 1s ease-in-out forwards;
+}
+@keyframes error-input-animated {
+  10% {
+    transform: rotate(2deg);
+  }
+  35% {
+    transform: rotate(-2deg);
+  }
+  60% {
+    transform: rotate(2deg);
+  }
+  90% {
+    transform: rotate(-2deg);
+  }
+}
+.error-input-animated {
+  animation: error-input-animated 1s ease-in-out forwards;
+}
