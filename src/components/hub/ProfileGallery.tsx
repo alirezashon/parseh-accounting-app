@@ -155,13 +155,13 @@ const ProfileGallery = ({
           </div>
         </div>
       ) : (
-        <label htmlFor='avatarUpload '>
+        <label htmlFor='avatarUpload'>
           <Image
             className={'rounded-full'}
             src={'/images/contact.jpg'}
             alt=''
-            width={444}
-            height={444}
+            width={222}
+            height={222}
           />
           <div className='flex w-full justify-between items-center mt-2'>
             <IoAddCircleOutline
