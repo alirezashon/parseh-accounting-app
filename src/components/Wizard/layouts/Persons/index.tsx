@@ -1,6 +1,8 @@
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 const Persons = ({ changeStep }: { changeStep?: () => void }) => {
+  const router = useRouter()
   return (
     <div className='flex'>
       <div className='flex flex-col gap-7'>
@@ -16,7 +18,7 @@ const Persons = ({ changeStep }: { changeStep?: () => void }) => {
         </p>
         <div className='flex gap-5 mt-6 text-right'>
           <button
-            onClick={() => alert('bib bib')}
+            onClick={() => router.push('/persons/add')}
             className='fill-button rounded-lg h-10 min-w-40'
           >
             ثبت شخص
