@@ -1,4 +1,6 @@
-const Resources = () => {
+import Image from "next/image"
+
+const Resources = ({ changeStep }: { changeStep?: () => void }) => {
   return (
     <div>
       ثبت کالاها و خدمات هر چیزی که می خرید یا می فروشید را باید به صورت کالا یا
@@ -6,8 +8,7 @@ const Resources = () => {
       اندازی، تعمیرات، آموزش یا مانند اینها را ثبت می کنید، باید این موارد را به
       صورت خدمت در سیستم تعریف کنید. شما می توانید کالاها و خدمات را به صورت تک
       تک یا در قالب فایل اکسل و به صورت یکباره در سیستم ثبت کنید.
-
-   <div className='flex'>
+      <div className='flex'>
         <div className='flex flex-col gap-7'>
           <h1 className='font-bold text-2xl'> </h1>
           <p></p>
