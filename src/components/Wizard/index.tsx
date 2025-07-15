@@ -27,10 +27,19 @@ const WizardHandler = () => {
       title: 'سهامداران',
       content: <Shareholders changeStep={() => setCurrentStep(3)} />,
     },
-    { title: 'کالا ها', content: <Resources /> },
-    { title: 'بانکداری', content: <Finance /> },
-    { title: 'تراز افتتاحیه', content: <OpeningBalance /> },
-    { title: 'پایان', content: <End /> },
+    {
+      title: 'کالا / خدمت',
+      content: <Resources changeStep={() => setCurrentStep(4)} />,
+    },
+    {
+      title: 'بانکداری',
+      content: <Finance changeStep={() => setCurrentStep(5)} />,
+    },
+    {
+      title: 'تراز افتتاحیه',
+      content: <OpeningBalance changeStep={() => setCurrentStep(6)} />,
+    },
+    { title: 'پایان', content: <End changeStep={() => setCurrentStep(5)} /> },
   ]
   useEffect(() => {
     const savedStep = getCookieByKey(`${cookieKey}-current`)
