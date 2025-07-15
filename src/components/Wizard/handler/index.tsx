@@ -2,36 +2,21 @@
 
 import { useEffect, useState } from 'react'
 import { getCookieByKey, setCookieByKey } from '@/utils/cookies'
-import Start from './layouts/Start'
-import Persons from './layouts/Persons'
-import Shareholders from './layouts/Shareholders'
-import Resources from './layouts/Resources'
-import Finance from './layouts/Finance'
-import OpeningBalance from './layouts/OpeningBalance'
-import End from './layouts/End'
 
-const WizardHandler = () => {
+type Step = {
+  title: string
+  content: React.ReactNode
+}
+
+type WizardProps = {
+  steps: Step[]
+  cookieKey?: string
+}
+
+const WizardHandler = ({ steps, cookieKey = 'wizard' }: WizardProps) => {
   const [currentStep, setCurrentStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState<number[]>([])
-  const cookieKey = 'koloche'
-  const steps = [
-    {
-      title: 'شروع',
-      content: <Start changeStep={() => setCurrentStep(1)} />,
-    },
-    {
-      title: 'اشخاص',
-      content: <Persons changeStep={() => setCurrentStep(2)} />,
-    },
-    {
-      title: 'سهامداران',
-      content: <Shareholders changeStep={() => setCurrentStep(3)} />,
-    },
-    { title: 'کالا ها', content: <Resources /> },
-    { title: 'بانکداری', content: <Finance /> },
-    { title: 'تراز افتتاحیه', content: <OpeningBalance /> },
-    { title: 'پایان', content: <End /> },
-  ]
+
   useEffect(() => {
     const savedStep = getCookieByKey(`${cookieKey}-current`)
     const savedCompleted = getCookieByKey(`${cookieKey}-completed`)
@@ -73,21 +58,21 @@ const WizardHandler = () => {
             className='absolute top-1/2 right-0 h-1 bg-[#2f27ce] z-10 transform -translate-y-1/2 transition-all duration-300 rounded-full'
             style={{
               width: `
-                 ${
-                   currentStep === 0
-                     ? 8
-                     : currentStep === 1
-                     ? 20
-                     : currentStep === 2
-                     ? 35
-                     : currentStep === 3
-                     ? 48
-                     : currentStep === 4
-                     ? 61
-                     : currentStep === 5
-                     ? 80
-                     : 100
-                 }% `,
+                ${
+                  currentStep === 0
+                    ? 8
+                    : currentStep === 1
+                    ? 20
+                    : currentStep === 2
+                    ? 35
+                    : currentStep === 3
+                    ? 48
+                    : currentStep === 4
+                    ? 61
+                    : currentStep === 5
+                    ? 80
+                    : 100
+                }% `,
             }}
           />
 

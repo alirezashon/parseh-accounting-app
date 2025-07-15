@@ -10,6 +10,7 @@ html {
 }
 
 body {
+  background-color: #f8fcff;
   overflow-x: hidden;
   font-family: Tanha;
   line-height: 1.75 !important;
@@ -37,15 +38,17 @@ input:hover {
   border-color: #c2d1ff;
 }
 input:focus {
-  border-color: #565ffe;
+  border-color: #5683fe;
 }
 .fill-button {
-  background-color: #7747c0;
+  cursor: pointer;
+  background-color: #2f27ce;
   color: #ffffff;
 }
 .border-button {
-  color: #7747c0;
-  border: 1px #7747c0 solid;
+  cursor: pointer;
+  color: #2f27ce;
+  border: 1px #2f27ce solid;
 }
 
 @keyframes slideUp {
