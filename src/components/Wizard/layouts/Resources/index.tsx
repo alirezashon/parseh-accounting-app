@@ -28,7 +28,7 @@ const Resources = ({ changeStep }: { changeStep?: () => void }) => {
             </button>
           </div>
         </div>
-        <Image alt='' src={'/images/image.png'} width={600} height={600} />
+        <Image alt='' src={'/images/resources.png'} width={600} height={600} />
       </div>
     </div>
   )

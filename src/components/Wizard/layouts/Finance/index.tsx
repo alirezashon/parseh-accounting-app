@@ -1,4 +1,6 @@
-const Finance = () => {
+import Image from 'next/image'
+
+const Finance = ({ changeStep }: { changeStep?: () => void }) => {
   return (
     <div>
       ثبت بانک ها و صندوق ها زمانی که مشتری مبلغی را با کارت بانکی پرداخت می
@@ -26,8 +28,9 @@ const Finance = () => {
             </button>
           </div>
         </div>
-        <Image alt='' src={'/images/image.png'} width={600} height={600} />
-      </div> </div>
+        <Image alt='' src={'/images/resources.png'} width={600} height={600} />
+      </div>
+    </div>
   )
 }
 
