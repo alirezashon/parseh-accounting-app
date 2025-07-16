@@ -2,20 +2,20 @@ import Image from 'next/image'
 
 const Resources = ({ changeStep }: { changeStep?: () => void }) => {
   return (
-    <div className='flex'>
-      <div className='flex flex-col gap-7'>
-        <h1 className='font-bold text-2xl'> کالا / خدمت</h1>
+    <div className='flex flex-col-reverse md:flex-row items-center gap-6'>
+      <div className='flex flex-col gap-7 text-right max-w-xl'>
+        <h1 className='font-bold text-xl sm:text-2xl'>کالا / خدمت</h1>
         <p>
-          ثبت کالاها و خدمات هر چیزی که می خرید یا می فروشید را باید به صورت
-          کالا یا خدمت در سیستم ثبت کنید. در صورتی که در فاکتور مواردی نظیر نصب
-          و راه اندازی، تعمیرات، آموزش یا مانند اینها را ثبت می کنید،
+          ثبت کالاها و خدمات: هر چیزی که می‌خرید یا می‌فروشید را باید به‌صورت
+          کالا یا خدمت ثبت کنید. اگر در فاکتور، مواردی نظیر نصب، راه‌اندازی،
+          تعمیرات، آموزش و... دارید،
         </p>
         <p className='text-blue-700'>
-          باید این موارد را به صورت خدمت در سیستم تعریف کنید. شما می توانید
-          کالاها و خدمات را به صورت تک تک یا در قالب فایل اکسل و به صورت یکباره
-          در سیستم ثبت کنید.
+          باید این موارد را به‌صورت خدمت در سیستم تعریف کنید. شما می‌توانید
+          کالاها و خدمات را به‌صورت تکی یا با فایل اکسل به‌صورت یک‌باره ثبت
+          کنید.
         </p>
-        <div className='flex gap-5 mt-6 text-right'>
+        <div className='flex flex-col sm:flex-row gap-4 mt-4'>
           <button
             onClick={changeStep}
             className='fill-button rounded-lg h-10 px-6'
@@ -30,7 +30,12 @@ const Resources = ({ changeStep }: { changeStep?: () => void }) => {
           </button>
         </div>
       </div>
-      <Image alt='' src={'/images/resources.png'} width={600} height={600} />
+      <Image
+        alt=''
+        src={'/images/resources.png'}
+        width={400}
+        height={300}
+      />
     </div>
   )
 }

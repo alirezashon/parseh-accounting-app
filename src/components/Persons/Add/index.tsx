@@ -1,9 +1,10 @@
 'use client'
 
 import ProfileGallery from '@/components/hub/ProfileGallery'
+import Switch from '@/components/hub/Switch'
 import TabsWithIcons from '@/components/hub/TabSwitchIcons'
 import { getCookieByKey } from '@/utils/cookies'
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   FaUser,
   FaMapMarkerAlt,
@@ -11,20 +12,32 @@ import {
   FaCreditCard,
   FaInfoCircle,
 } from 'react-icons/fa'
+import Address from './Forms/Address'
+import AddressForm from './Forms/Address'
 
 const AddPersons = () => {
   const [formData, setFormData] = useState({
     accountcode: '',
     alias: '',
     name: '',
+    category: '',
+    title: '',
+    firstName: '',
     lastname: '',
+    company: '',
     active: true,
-    autoCode: true,
     type: {
       customer: false,
       supplier: false,
       shareholder: false,
       employee: false,
+    },
+    addressDetail: {
+      country: '',
+      province: '',
+      city: '',
+      postalCode: '',
+      address: '',
     },
   })
 
@@ -45,28 +58,15 @@ const AddPersons = () => {
       label: 'عمومی',
       icon: <FaUser />,
       content: (
-        <div className='grid grid-cols-2 gap-4'>
-          <input
-            className='input border rounded px-2 py-1'
-            placeholder='کد اقتصادی'
-          />
-          <input
-            className='input border rounded px-2 py-1'
-            placeholder='شماره ثبت'
-          />
-          <input
-            className='input border rounded px-2 py-1'
-            placeholder='شناسه ملی'
-          />
-          <input
-            className='input border rounded px-2 py-1'
-            placeholder='کد شعبه'
-          />
-          <textarea
-            className='input border rounded px-2 py-1 col-span-2'
-            placeholder='توضیحات'
-          />
-        </div>
+        <AddressForm
+          addressDetail={formData.addressDetail}
+          setAddressDetail={(data) =>
+            setFormData((prev) => ({
+              ...prev,
+              addressDetail: { ...prev.addressDetail, ...data },
+            }))
+          }
+        />
       ),
     },
     {
@@ -94,110 +94,137 @@ const AddPersons = () => {
       content: <div>🔧 اطلاعات دیگر</div>,
     },
   ]
-  const signUp = async () => {
-    await fetch('http://185.213.165.166:7569/api/sys/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        accept: 'application/json',
-      },
-      body: JSON.stringify({
-        mobile: '09369486468',
-        referral_code: 'string',
-        password: 'Aa12345@',
-        user_type: 0,
-      }),
-    })
+  const generateAccountingCode = () => {
+    return 'AC-' + Math.floor(100000 + Math.random() * 900000).toString()
   }
+
   useEffect(() => {
-    signUp()
+    const defaultCode = generateAccountingCode()
+    setFormData((prev) => ({ ...prev, accountcode: defaultCode }))
   }, [])
   return (
-    <div className='p-4 bg-white m-10 flex flex-col  items-center'>
-      <div className='flex gap-6 items-start max-lg:flex-col w-full'>
+    <div className='w-full p-4 bg-white  flex flex-col  items-center'>
+      <div className='flex flex-col  max-lg:items-center lg:flex-row gap-6 w-full'>
+        {/* گالری پروفایل */}
         <ProfileGallery uploadImage={UploadImage} />
-        <div className='grid grid-cols-2 gap-4 flex-1'>
-          <div className='col-span-2 flex items-center gap-4'>
-            <label className=''>کد حسابداری</label>
-            <input
-              type='text'
-              value={formData.accountcode}
-              onChange={(e) =>
-                setFormData({ ...formData, accountcode: e.target.value })
-              }
-              className='input border rounded px-2 py-1 w-96'
-            />
-            <label className='flex items-center gap-2'>
+
+        {/* فرم اطلاعات */}
+        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1'>
+          {/* کد حسابداری + فعال/اتوماتیک */}
+          <div className='col-span-2 flex flex-col gap-2'>
+            <label className='font-medium'>کد حسابداری</label>
+            <div className='flex flex-wrap items-center gap-4 justify-between'>
               <input
-                type='checkbox'
-                checked={formData.active}
+                type='text'
+                value={formData.accountcode}
                 onChange={(e) =>
-                  setFormData({ ...formData, active: e.target.checked })
+                  setFormData({ ...formData, accountcode: e.target.value })
                 }
-                className='accent-[#2F27CE] w-5 h-5'
+                className='input border rounded px-3 py-2 w-[40%]'
               />
-              فعال
-            </label>
-            <label className='flex items-center gap-2'>
-              <input
-                type='checkbox'
-                checked={formData.autoCode}
-                onChange={(e) =>
-                  setFormData({ ...formData, autoCode: e.target.checked })
-                }
-                className='accent-[#2F27CE] w-5 h-5'
-              />
-              اتوماتیک
-            </label>
+              <div className='flex justify-end gap-5 w-1/2 '>
+                <label className='flex items-center gap-2'>غیر فعال</label>
+                <Switch
+                  isActive={formData.active}
+                  setIsActive={(value: boolean) =>
+                    setFormData({ ...formData, active: value })
+                  }
+                />
+                <label className='flex items-center gap-2'>فعال</label>
+              </div>
+            </div>
           </div>
-          <div className='col-span-2 flex items-center gap-4'>
-            <label className=''>شرکت</label>
+          <div className='flex flex-col gap-2'>
+            <label className='font-medium'>نام شرکت</label>
             <input
-              placeholder='شرکت'
-              className='input border rounded px-2 py-1 w-96'
+              placeholder='نام شرکت'
+              className='input border rounded px-3 py-2'
+              value={formData.company}
+              onChange={(e) =>
+                setFormData({ ...formData, company: e.target.value })
+              }
+            />
+          </div>
+
+          <div className='flex flex-col gap-2'>
+            <label className='font-medium'>
+              نام مستعار <span className='text-red-500'>*</span>
+            </label>
+            <input
+              placeholder='نام مستعار'
+              className='input border rounded px-3 py-2'
               value={formData.name}
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
             />
           </div>
-          <input
-            placeholder='نام خانوادگی'
-            className='input border rounded px-2 py-1'
-            value={formData.lastname}
-            onChange={(e) =>
-              setFormData({ ...formData, lastname: e.target.value })
-            }
-          />
-          <input
-            placeholder='عنوان'
-            className='input border rounded px-2 py-1 col-span-2'
-          />
 
-          {/* نام مستعار */}
-          <div className='col-span-2 flex flex-col'>
-            <label>
-              نام مستعار <span className='text-red-500'>*</span>
-            </label>
+          <div className='flex flex-col gap-2'>
+            <label className='font-medium'>نام </label>
             <input
-              className='input border rounded px-2 py-1'
-              value={formData.alias}
+              placeholder='نام '
+              className='input border rounded px-3 py-2'
+              value={formData.firstName}
               onChange={(e) =>
-                setFormData({ ...formData, alias: e.target.value })
+                setFormData({ ...formData, firstName: e.target.value })
               }
             />
           </div>
 
-          {/* نوع شخص - چک‌باکس‌ها */}
-          <div className='col-span-2'>
-            <label className='block mb-1'>نوع</label>
-            <div className='flex flex-wrap gap-4'>
+          <div className='flex flex-col gap-2'>
+            <label className='font-medium'>
+              نام مستعار <span className='text-red-500'>*</span>
+            </label>
+            <input
+              placeholder='نام خانوادگی'
+              className='input border rounded px-3 py-2'
+              value={formData.lastname}
+              onChange={(e) =>
+                setFormData({ ...formData, lastname: e.target.value })
+              }
+            />
+          </div>
+
+          {/* عنوان */}
+          <div className='flex flex-col gap-2'>
+            <label className='font-medium'>عنوان</label>
+            <input
+              placeholder='عنوان'
+              className='input border rounded px-3 py-2'
+              value={formData.title}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+            />
+          </div>
+
+          {/* دسته‌بندی (Select) */}
+          <div className=' flex flex-col gap-2'>
+            <label className='font-medium'>دسته‌بندی</label>
+            <select
+              className='border border-gray-300 outline-none rounded-lg px-3 py-2'
+              value={formData.category || ''}
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
+            >
+              <option value=''>انتخاب کنید</option>
+              <option value='real'>حقیقی</option>
+              <option value='legal'>حقوقی</option>
+              <option value='foreign'>خارجی</option>
+            </select>
+          </div>
+          {/* نوع شخص (چک‌باکس‌ها) */}
+          <div className='col-span-2 flex flex-col gap-2'>
+            <label className='font-medium'>نوع</label>
+            <div className='flex flex-wrap gap-16 max-md:gap-7'>
               {['customer', 'supplier', 'shareholder', 'employee'].map(
                 (key) => (
-                  <label key={key} className='flex items-center gap-1'>
+                  <label key={key} className='flex items-center gap-2'>
                     <input
                       type='checkbox'
-                      className='accent-[#2F27CE] w-4'
+                      className='accent-[#2F27CE] w-4 h-4 cursor-pointer'
                       checked={formData.type[key as keyof typeof formData.type]}
                       onChange={(e) =>
                         setFormData({
@@ -224,8 +251,8 @@ const AddPersons = () => {
           </div>
         </div>
       </div>
-      <div className='w-full'>
-        <TabsWithIcons tabs={tabs} className='mt-4' />
+      <div className='w-full overflow-auto mt-5'>
+        <TabsWithIcons tabs={tabs} />
       </div>
     </div>
   )

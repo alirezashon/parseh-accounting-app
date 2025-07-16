@@ -1,35 +1,41 @@
 import Image from 'next/image'
-
+import { useRouter } from 'next/navigation'
 const Shareholders = ({ changeStep }: { changeStep?: () => void }) => {
+  const router = useRouter()
   return (
-    <div className='flex'>
-      <div className='flex flex-col gap-7'>
-        <h1 className='font-bold text-2xl'> ثبت سهامداران </h1>
+    <div className='flex flex-col-reverse md:flex-row items-center gap-6'>
+      <div className='flex flex-col gap-7 text-right max-w-xl'>
+        <h1 className='font-bold text-xl sm:text-2xl'>ثبت سهامداران</h1>
         <p>
-          سهامداران کسب و کار شما، اشخاصی هستند که در کسب و کار شما سرمایه گذاری
-          کرده اند. این افراد در واقع شرکای کاری شما هستند.{' '}
+          سهامداران کسب‌وکار شما اشخاصی هستند که در کسب‌وکار شما سرمایه‌گذاری
+          کرده‌اند. این افراد در واقع شرکای کاری شما هستند.
         </p>
         <p className='text-blue-700'>
-          {' '}
-          ممکن است شما شریک نداشته باشید و خود مالک کسب و کار باشید. در این صورت
-          تنها سهامدار خودتان هستید و درصد سهام شما ۱۰۰ درصد است.
+          ممکن است شما شریک نداشته باشید و خودتان مالک کسب‌وکار باشید. در این
+          صورت تنها سهامدار خودتان هستید و درصد سهام شما ۱۰۰٪ است.
         </p>
-        <div className='flex gap-5 mt-6 text-right'>
+        <div className='flex flex-col sm:flex-row gap-4 mt-4'>
           <button
-            onClick={changeStep}
-            className='fill-button rounded-lg h-10 px-6'
+            onClick={() => router.push('/persons/add')}
+            className='fill-button rounded-lg h-10 min-w-40'
           >
-            مرحله بعد
+            ثبت شخص
           </button>
           <button
-            onClick={() => alert('اخرج')}
-            className='border-button rounded-lg h-10 px-6'
+            onClick={changeStep}
+            className='border-button rounded-lg h-10 min-w-40'
           >
-            خروج
+            مرحله بعدی
           </button>
         </div>
       </div>
-      <Image alt='' src={'/images/image.png'} width={600} height={600} />
+      <Image
+        alt=''
+        src={'/images/shareHolders.png'}
+        width={400}
+        height={300}
+        className='w-full max-w-sm'
+      />
     </div>
   )
 }

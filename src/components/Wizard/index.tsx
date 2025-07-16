@@ -73,7 +73,7 @@ const WizardHandler = () => {
   }
 
   return (
-    <div className='w-full max-w-5xl mx-auto p-4  bg-white'>
+    <div className='w-full p-2  bg-white'>
       <div className='flex justify-between mb-6'>
         <div className='relative w-full mb-6'>
           <div className='absolute top-1/2 left-0 right-0 h-1 bg-[#C9D0D8] z-0 transform -translate-y-1/2 rounded-full' />
@@ -92,7 +92,7 @@ const WizardHandler = () => {
                      : currentStep === 3
                      ? 48
                      : currentStep === 4
-                     ? 61
+                     ? 65
                      : currentStep === 5
                      ? 80
                      : 100
@@ -100,12 +100,15 @@ const WizardHandler = () => {
             }}
           />
 
-          <div className='relative z-20 flex justify-around'>
+          <div className='relative   z-20 h-fit p-1 overflow-auto flex justify-around flex-wrap sm:flex-nowrap sm:overflow-x-auto gap-1'>
             {steps.map((section, index) => (
-              <div key={index} className='flex flex-col items-center'>
+              <div
+                key={index}
+                className='flex flex-col items-center min-w-[60px] flex-shrink-0'
+              >
                 <div
                   onClick={() => handleStepClick(index)}
-                  className={`w-10 h-10 p-6 flex items-center justify-center mt-5 rounded-full border border-white cursor-pointer text-white text-sm font-bold ${
+                  className={`w-7 h-7 sm:w-10 sm:h-10 flex items-center justify-center mt-5 rounded-full border border-white cursor-pointer text-white text-xs sm:text-sm font-bold ${
                     currentStep >= index
                       ? 'bg-[#2f27ce]'
                       : 'bg-[#C9D0D8] text-[#50545F]'
@@ -113,14 +116,16 @@ const WizardHandler = () => {
                 >
                   {index + 1}
                 </div>
-                <p className='mt-1 text-sm text-[#2f27ce]'>{section.title}</p>
+                <p className='mt-1 text-[10px] sm:text-sm text-[#2f27ce] text-center'>
+                  {section.title}
+                </p>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className='p-4 rounded shadow h-screen'>
+      <div className='p-2 sm:p-4 rounded shadow min-h-[400px]'>
         {steps[currentStep].content}
       </div>
     </div>

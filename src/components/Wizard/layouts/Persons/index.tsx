@@ -4,19 +4,19 @@ import { useRouter } from 'next/navigation'
 const Persons = ({ changeStep }: { changeStep?: () => void }) => {
   const router = useRouter()
   return (
-    <div className='flex'>
-      <div className='flex flex-col gap-7'>
-        <h1 className='font-bold text-2xl'> ثبت اشخاص</h1>
+    <div className='flex flex-col-reverse md:flex-row items-center gap-6'>
+      <div className='flex flex-col gap-7 text-right max-w-xl'>
+        <h1 className='font-bold text-xl sm:text-2xl'>ثبت اشخاص</h1>
         <p>
           اولین قدم برای کار با سیستم حسابداری، ثبت اشخاص طرف حساب شماست. این
-          اشخاص می توانند، مشتریان، تامین کنندگان، سهامداران، کارکنان و یا
-          بازاریابان کسب و کار شما باشند.
+          اشخاص می‌توانند مشتریان، تامین‌کنندگان، سهامداران، کارکنان و یا
+          بازاریابان کسب‌وکار شما باشند.
         </p>
         <p className='text-blue-700'>
-          شما می توانید اشخاص را به صورت تک تک یا در قالب فایل اکسل و به صورت
-          یکباره در سیستم ثبت کنید.
+          شما می‌توانید اشخاص را به‌صورت تکی یا با فایل اکسل به‌صورت یک‌باره ثبت
+          کنید.
         </p>
-        <div className='flex gap-5 mt-6 text-right'>
+        <div className='flex flex-col sm:flex-row gap-4 mt-4'>
           <button
             onClick={() => router.push('/persons/add')}
             className='fill-button rounded-lg h-10 min-w-40'
@@ -31,7 +31,13 @@ const Persons = ({ changeStep }: { changeStep?: () => void }) => {
           </button>
         </div>
       </div>
-      <Image alt='' src={'/images/image.png'} width={600} height={600} />
+      <Image
+        alt=''
+        src={'/images/persons.png'}
+        width={400}
+        height={300}
+        className='w-full max-w-sm'
+      />
     </div>
   )
 }
