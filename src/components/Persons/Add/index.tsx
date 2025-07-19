@@ -12,8 +12,8 @@ import {
   FaCreditCard,
   FaInfoCircle,
 } from 'react-icons/fa'
-import Address from './Forms/Address'
 import AddressForm from './Forms/Address'
+import Input from '@/components/hub/Forms/Input'
 
 const AddPersons = () => {
   const [formData, setFormData] = useState({
@@ -105,91 +105,69 @@ const AddPersons = () => {
   return (
     <div className='w-full p-4 border-x border-[#2f27ce65] bg-[white] shadow-[#2f27ce65] shadow-2xl flex flex-col  items-center'>
       <div className='flex flex-col  max-lg:items-center lg:flex-row gap-6 w-full'>
-        {/* گالری پروفایل */}
         <ProfileGallery uploadImage={UploadImage} />
-
-        {/* فرم اطلاعات */}
         <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1 '>
-          {/* کد حسابداری + فعال/اتوماتیک */}
           <div className='  flex flex-col gap-2'>
-            <label className='font-medium'>کد حسابداری</label>
-            <div className='flex flex-wrap items-center gap-4 justify-between'>
-              <input
-                type='text'
-                value={formData.accountcode}
-                onChange={(e) =>
-                  setFormData({ ...formData, accountcode: e.target.value })
-                }
-                className='input border rounded px-3 py-2 '
-              />
-            </div>
-          </div>
-          <div className='flex flex-col gap-2'>
-            <label className='font-medium'>نام شرکت</label>
-            <input
-              placeholder='نام شرکت'
-              className='input border rounded px-3 py-2'
-              value={formData.company}
-              onChange={(e) =>
-                setFormData({ ...formData, company: e.target.value })
+            <Input
+              value={formData.accountcode}
+              label='کد حسابداری'
+              onChange={(result: string) =>
+                setFormData({ ...formData, accountcode: result })
               }
+              inputStates='error'
+              message='کدی که زدی به درد عمت میخوره'
             />
           </div>
-
           <div className='flex flex-col gap-2'>
-            <label className='font-medium'>
-              نام مستعار <span className='text-red-500'>*</span>
-            </label>
-            <input
-              placeholder='نام مستعار'
-              className='input border rounded px-3 py-2'
-              value={formData.name}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
+            <Input
+              value={formData.accountcode}
+              label='نام شرکت'
+              onChange={(result: string) =>
+                setFormData({ ...formData, accountcode: result })
               }
+              inputStates='ok'
             />
           </div>
-
           <div className='flex flex-col gap-2'>
-            <label className='font-medium'>نام </label>
-            <input
-              placeholder='نام '
-              className='input border rounded px-3 py-2'
-              value={formData.firstName}
-              onChange={(e) =>
-                setFormData({ ...formData, firstName: e.target.value })
+            <Input
+              value={formData.accountcode}
+              label=' نام مستعار '
+              onChange={(result: string) =>
+                setFormData({ ...formData, accountcode: result })
               }
+              inputStates='in'
             />
           </div>
-
           <div className='flex flex-col gap-2'>
-            <label className='font-medium'>
-              نام مستعار <span className='text-red-500'>*</span>
-            </label>
-            <input
-              placeholder='نام خانوادگی'
-              className='input border rounded px-3 py-2'
-              value={formData.lastname}
-              onChange={(e) =>
-                setFormData({ ...formData, lastname: e.target.value })
+            <Input
+              value={formData.accountcode}
+              label=' نام   '
+              onChange={(result: string) =>
+                setFormData({ ...formData, accountcode: result })
               }
+              inputStates='need'
             />
           </div>
-
-          {/* عنوان */}
           <div className='flex flex-col gap-2'>
-            <label className='font-medium'>عنوان</label>
-            <input
-              placeholder='عنوان'
-              className='input border rounded px-3 py-2'
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
+            <Input
+              value={formData.accountcode}
+              label='نام خانوادگی'
+              onChange={(result: string) =>
+                setFormData({ ...formData, accountcode: result })
               }
+              inputStates='unique'
             />
           </div>
-
-          {/* دسته‌بندی (Select) */}
+          <div className='flex flex-col gap-2'>
+            <Input
+              value={formData.accountcode}
+              label='عنوان'
+              onChange={(result: string) =>
+                setFormData({ ...formData, accountcode: result })
+              }
+              inputStates=' '
+            />
+          </div>
           <div className=' flex flex-col gap-2'>
             <label className='font-medium'>دسته‌بندی</label>
             <select
@@ -218,7 +196,6 @@ const AddPersons = () => {
               <label className='flex items-center gap-2'>فعال</label>
             </div>
           </div>
-          {/* نوع شخص (چک‌باکس‌ها) */}
           <div className='col-span-2 flex flex-col  '>
             <label className='font-medium'>نوع</label>
             <div className='flex flex-wrap gap-16 max-md:gap-7'>
