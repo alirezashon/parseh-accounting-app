@@ -18,7 +18,7 @@ const Switch = ({
       />
       <label htmlFor={`checkbox-${id}`} className='cursor-pointer'>
         <div
-          className={`w-10 h-5 ${
+          className={`w-10 h-5 border-3 border-[#4b484f] ${
             isActive ? 'bg-[#2F27CE]' : 'bg-[#878FA4]'
           } rounded-full p-1 flex items-center`}
         >

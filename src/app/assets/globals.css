@@ -25,13 +25,14 @@ button {
     font-size: 13px !important;
   }
 }
-input {
+input,
+select {
   background: white;
   outline: none;
   height: 40px;
   padding: 0.12px 1vh;
   font-size: 16px;
-  border: 1px solid #cccccc;
+  border: 1px solid #2f27ce65;
   border-radius: 6px;
 }
 input:hover {

@@ -103,15 +103,15 @@ const AddPersons = () => {
     setFormData((prev) => ({ ...prev, accountcode: defaultCode }))
   }, [])
   return (
-    <div className='w-full p-4 bg-white  flex flex-col  items-center'>
+    <div className='w-full p-4 border-x border-[#2f27ce65] bg-[white] shadow-[#2f27ce65] shadow-2xl flex flex-col  items-center'>
       <div className='flex flex-col  max-lg:items-center lg:flex-row gap-6 w-full'>
         {/* گالری پروفایل */}
         <ProfileGallery uploadImage={UploadImage} />
 
         {/* فرم اطلاعات */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 flex-1'>
+        <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1 '>
           {/* کد حسابداری + فعال/اتوماتیک */}
-          <div className='col-span-2 flex flex-col gap-2'>
+          <div className='  flex flex-col gap-2'>
             <label className='font-medium'>کد حسابداری</label>
             <div className='flex flex-wrap items-center gap-4 justify-between'>
               <input
@@ -120,18 +120,8 @@ const AddPersons = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, accountcode: e.target.value })
                 }
-                className='input border rounded px-3 py-2 w-[40%]'
+                className='input border rounded px-3 py-2 '
               />
-              <div className='flex justify-end gap-5 w-1/2 '>
-                <label className='flex items-center gap-2'>غیر فعال</label>
-                <Switch
-                  isActive={formData.active}
-                  setIsActive={(value: boolean) =>
-                    setFormData({ ...formData, active: value })
-                  }
-                />
-                <label className='flex items-center gap-2'>فعال</label>
-              </div>
             </div>
           </div>
           <div className='flex flex-col gap-2'>
@@ -215,8 +205,21 @@ const AddPersons = () => {
               <option value='foreign'>خارجی</option>
             </select>
           </div>
+          <div className=' flex flex-col gap-2'>
+            <label>وضعیت</label>
+            <div className='flex border-b h-full border-[#2f27cebb] gap-5 items-center'>
+              <label className='flex items-center  '>غیر فعال</label>
+              <Switch
+                isActive={formData.active}
+                setIsActive={(value: boolean) =>
+                  setFormData({ ...formData, active: value })
+                }
+              />
+              <label className='flex items-center gap-2'>فعال</label>
+            </div>
+          </div>
           {/* نوع شخص (چک‌باکس‌ها) */}
-          <div className='col-span-2 flex flex-col gap-2'>
+          <div className='col-span-2 flex flex-col  '>
             <label className='font-medium'>نوع</label>
             <div className='flex flex-wrap gap-16 max-md:gap-7'>
               {['customer', 'supplier', 'shareholder', 'employee'].map(
