@@ -1,15 +1,17 @@
+import { errorClass } from '@/app/assets/style'
+
 const Input = ({
   value,
   onChange,
   label,
-  inputStates,
+  inputState,
   focused,
   message,
 }: {
   value: string
   onChange: (text: string) => void
   label?: string
-  inputStates?: 'error' | 'ok' | 'unique' | 'need' | 'in' | ' '
+  inputState?: 'error' | 'ok' | 'unique' | 'need' | 'in' | ' '
   focused?: () => void
   message?: string
 }) => {
@@ -17,15 +19,15 @@ const Input = ({
     <div className='flex flex-col transition-all duration-700'>
       <label
         className={`font-medium ${
-          inputStates === 'in'
+          inputState === 'in'
             ? 'text-blue-500'
-            : inputStates === 'ok'
+            : inputState === 'ok'
             ? 'text-green-500'
-            : inputStates === 'unique'
-            ? 'text-orange-400 '
-            : inputStates === 'need'
+            : inputState === 'unique'
+            ? 'text-red-300 '
+            : inputState === 'need'
             ? 'text-yellow-500'
-            : inputStates === 'error'
+            : inputState === 'error'
             ? 'text-red-500'
             : 'text-gray-500'
         }`}
@@ -36,32 +38,35 @@ const Input = ({
         onFocus={focused}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`input border   rounded px-3 py-2 ${
-          inputStates === 'in'
+        className={`${
+          ['error', 'unique', 'need'].includes(inputState as string) &&
+          errorClass
+        } input border border-gray-300   rounded px-3 py-2 ${
+          inputState === 'in'
             ? 'bg-blue-50 shadow-sm shadow-blue-500 text-blue-900'
-            : inputStates === 'ok'
+            : inputState === 'ok'
             ? 'bg-green-50 shadow-sm shadow-green-500 text-green-900'
-            : inputStates === 'unique'
-            ? 'bg-[rgb(255,160,52)] border-2 border-[#ff5e00] shadow-sm shadow-orange-400 text-[#ffffff]'
-            : inputStates === 'need'
-            ? 'bg-yellow-100 shadow-sm shadow-yellow-500 text-[#f75909]'
-            : inputStates === 'error' && 'bg-red-50 shadow-sm shadow-red-500'
+            : inputState === 'unique'
+            ? 'bg-[rgb(225,46,40)] border-2 border-[#ff5e00] shadow-sm shadow-orange-400 text-[#ffffff]'
+            : inputState === 'need'
+            ? 'bg-yellow-100 shadow-sm shadow-yellow-500 text-[#f70909]'
+            : inputState === 'error' && 'bg-red-50 shadow-sm shadow-red-500'
         }`}
       />
       <b
         className={`px-1 ${
-          inputStates === 'in'
+          inputState === 'in'
             ? 'text-blue-500'
-            : inputStates === 'ok'
+            : inputState === 'ok'
             ? 'text-green-500'
-            : inputStates === 'unique'
-            ? 'text-orange-400 '
-            : inputStates === 'need'
+            : inputState === 'unique'
+            ? 'text-red-300 '
+            : inputState === 'need'
             ? 'text-yellow-500'
-            : inputStates === 'error' && 'text-red-500'
+            : inputState === 'error' && 'text-red-500'
         }`}
       >
-        {message || inputStates}
+        {message || inputState}
       </b>
     </div>
   )

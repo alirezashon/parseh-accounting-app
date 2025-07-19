@@ -1,26 +1,47 @@
-const Generals = () => {
-    return (
-      <div className='grid grid-cols-2 gap-4'>
-        <input
-          className='input border rounded px-2 py-1'
-          placeholder='کد اقتصادی'
-        />
-        <input
-          className='input border rounded px-2 py-1'
-          placeholder='شماره ثبت'
-        />
-        <input
-          className='input border rounded px-2 py-1'
-          placeholder='شناسه ملی'
-        />
-        <input className='input border rounded px-2 py-1' placeholder='کد شعبه' />
-        <textarea
-          className='input border rounded px-2 py-1 col-span-2'
-          placeholder='توضیحات'
-        />
-      </div>
-    )
+'use client'
+
+import Input from '@/components/hub/Forms/Input'
+
+type Props = {
+  generals: {
+    credit: string
+    priceList: string
+    taxType: string
+    taxStatus: string
+    nationalId: string
+    economicCode: string
+    registrationNumber: string
+    branchCode: string
+    description: string
   }
-  
-  export default Generals
-  
+  setGenerals: (data: Partial<Props['generals']>) => void
+}
+
+const generalLabels: Record<keyof Props['generals'], string> = {
+  credit: 'اعتبار مالی (ریال)',
+  priceList: 'لیست قیمت',
+  taxType: 'نوع مالیات',
+  taxStatus: 'وضعیت مشمول مالیاتی',
+  nationalId: 'شناسه ملی',
+  economicCode: 'کد اقتصادی',
+  registrationNumber: 'شماره ثبت',
+  branchCode: 'کد شعبه',
+  description: 'توضیحات',
+}
+
+const Generals = ({ generals, setGenerals }: Props) => {
+  return (
+    <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+      {Object.keys(generals).map((key) => (
+        <Input
+          key={key}
+          onChange={(value) => setGenerals({ ...generals, [key]: value })}
+          value={generals[key as keyof typeof generals]}
+          label={generalLabels[key as keyof typeof generals]}
+        />
+      ))}
+    </div>
+  )
+}
+
+export default Generals

@@ -14,6 +14,12 @@ import {
 } from 'react-icons/fa'
 import AddressForm from './Forms/Address'
 import Input from '@/components/hub/Forms/Input'
+import SingleSelectList from '@/components/hub/Forms/SingleSelectList'
+import SwitchBox from '@/components/hub/Forms/SwitchBox'
+import Generals from './Forms/Generals'
+import Contacts from './Forms/Contacts'
+import BankAccounts from './Forms/Banks'
+import Others from './Forms/Others'
 
 const AddPersons = () => {
   const [formData, setFormData] = useState({
@@ -39,6 +45,35 @@ const AddPersons = () => {
       postalCode: '',
       address: '',
     },
+    generals: {
+      credit: '',
+      priceList: '',
+      taxType: '',
+      taxStatus: '',
+      nationalId: '',
+      economicCode: '',
+      registrationNumber: '',
+      branchCode: '',
+      description: '',
+    },
+    contacts: {
+      phone: '',
+      mobile: '',
+      fax: '',
+    },
+    bankAccounts: [
+      {
+        bankName: '',
+        accountNumber: '',
+        cardNumber: '',
+        iban: '',
+      },
+    ],
+    others: {
+      birthDate: '',
+      marriageDate: '',
+      membershipDate: '',
+    },
   })
 
   const UploadImage = async (formData: FormData): Promise<boolean> => {
@@ -58,6 +93,22 @@ const AddPersons = () => {
       label: 'عمومی',
       icon: <FaUser />,
       content: (
+        <Generals
+          generals={formData.generals}
+          setGenerals={(data) =>
+            setFormData((prev) => ({
+              ...prev,
+              generals: { ...prev.generals, ...data },
+            }))
+          }
+        />
+      ),
+    },
+    {
+      id: 'address',
+      label: 'اطلاعات آدرس',
+      icon: <FaMapMarkerAlt />,
+      content: (
         <AddressForm
           addressDetail={formData.addressDetail}
           setAddressDetail={(data) =>
@@ -70,28 +121,52 @@ const AddPersons = () => {
       ),
     },
     {
-      id: 'address',
-      label: 'اطلاعات آدرس',
-      icon: <FaMapMarkerAlt />,
-      content: <div>📍 فرم آدرس اینجاست</div>,
-    },
-    {
       id: 'contact',
       label: 'تماس',
       icon: <FaPhone />,
-      content: <div>📞 فرم اطلاعات تماس اینجاست</div>,
+      content: (
+        <Contacts
+          contacts={formData.contacts}
+          setContacts={(data) =>
+            setFormData((prev) => ({
+              ...prev,
+              addressDetail: { ...prev.addressDetail, ...data },
+            }))
+          }
+        />
+      ),
     },
     {
       id: 'bank',
       label: 'حساب بانکی',
       icon: <FaCreditCard />,
-      content: <div>🏦 فرم حساب بانکی اینجاست</div>,
+      content: (
+        <BankAccounts
+          bankAccounts={formData.bankAccounts}
+          setBankAccounts={(data) =>
+            setFormData((prev) => ({
+              ...prev,
+              bankAccounts: data,
+            }))
+          }
+        />
+      ),
     },
     {
       id: 'others',
       label: 'سایر',
       icon: <FaInfoCircle />,
-      content: <div>🔧 اطلاعات دیگر</div>,
+      content: (
+        <Others
+          others={formData.others}
+          setOthers={(data) =>
+            setFormData((prev) => ({
+              ...prev,
+              others: { ...prev.others, ...data },
+            }))
+          }
+        />
+      ),
     },
   ]
   const generateAccountingCode = () => {
@@ -114,88 +189,84 @@ const AddPersons = () => {
               onChange={(result: string) =>
                 setFormData({ ...formData, accountcode: result })
               }
-              inputStates='error'
+              inputState='error'
               message='کدی که زدی به درد عمت میخوره'
             />
           </div>
           <div className='flex flex-col gap-2'>
             <Input
-              value={formData.accountcode}
+              value={formData.company}
               label='نام شرکت'
               onChange={(result: string) =>
-                setFormData({ ...formData, accountcode: result })
+                setFormData({ ...formData, company: result })
               }
-              inputStates='ok'
+              inputState='ok'
             />
           </div>
           <div className='flex flex-col gap-2'>
             <Input
-              value={formData.accountcode}
+              value={formData.alias}
               label=' نام مستعار '
               onChange={(result: string) =>
-                setFormData({ ...formData, accountcode: result })
+                setFormData({ ...formData, alias: result })
               }
-              inputStates='in'
+              inputState='in'
             />
           </div>
           <div className='flex flex-col gap-2'>
             <Input
-              value={formData.accountcode}
+              value={formData.name}
               label=' نام   '
               onChange={(result: string) =>
-                setFormData({ ...formData, accountcode: result })
+                setFormData({ ...formData, name: result })
               }
-              inputStates='need'
+              inputState='need'
             />
           </div>
           <div className='flex flex-col gap-2'>
             <Input
-              value={formData.accountcode}
+              value={formData.lastname}
               label='نام خانوادگی'
               onChange={(result: string) =>
-                setFormData({ ...formData, accountcode: result })
+                setFormData({ ...formData, lastname: result })
               }
-              inputStates='unique'
+              inputState='unique'
             />
           </div>
           <div className='flex flex-col gap-2'>
             <Input
-              value={formData.accountcode}
+              value={formData.title}
               label='عنوان'
               onChange={(result: string) =>
-                setFormData({ ...formData, accountcode: result })
+                setFormData({ ...formData, title: result })
               }
-              inputStates=' '
+              inputState=' '
             />
           </div>
           <div className=' flex flex-col gap-2'>
             <label className='font-medium'>دسته‌بندی</label>
-            <select
-              className='border border-gray-300 outline-none rounded-lg px-3 py-2'
-              value={formData.category || ''}
-              onChange={(e) =>
-                setFormData({ ...formData, category: e.target.value })
+            <SingleSelectList
+              label='انتخاب کنید'
+              items={[
+                { id: 'real', label: 'حقیقی' },
+                { id: 'legal', label: 'حقوقی' },
+                { id: 'foreign', label: 'خارجی' },
+              ]}
+              setSelectedItems={(selected) =>
+                setFormData({ ...formData, category: selected as string })
               }
-            >
-              <option value=''>انتخاب کنید</option>
-              <option value='real'>حقیقی</option>
-              <option value='legal'>حقوقی</option>
-              <option value='foreign'>خارجی</option>
-            </select>
+            />
           </div>
-          <div className=' flex flex-col gap-2'>
-            <label>وضعیت</label>
-            <div className='flex border-b h-full border-[#2f27cebb] gap-5 items-center'>
-              <label className='flex items-center  '>غیر فعال</label>
-              <Switch
-                isActive={formData.active}
-                setIsActive={(value: boolean) =>
-                  setFormData({ ...formData, active: value })
-                }
-              />
-              <label className='flex items-center gap-2'>فعال</label>
-            </div>
-          </div>
+          <SwitchBox
+            leftText='فعال'
+            onChange={(value: boolean) =>
+              setFormData({ ...formData, active: value })
+            }
+            rightText='غیر فعال'
+            value
+            inputState='error'
+            label='وضعیت'
+          />
           <div className='col-span-2 flex flex-col  '>
             <label className='font-medium'>نوع</label>
             <div className='flex flex-wrap gap-16 max-md:gap-7'>
