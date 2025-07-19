@@ -2,7 +2,7 @@
 const Persons = () => {
   return (
     <div>
-      
+      shoshol
     </div>
   )
 }

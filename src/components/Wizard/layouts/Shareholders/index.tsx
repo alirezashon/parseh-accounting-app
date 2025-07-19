@@ -16,10 +16,10 @@ const Shareholders = ({ changeStep }: { changeStep?: () => void }) => {
         </p>
         <div className='flex flex-col sm:flex-row gap-4 mt-4'>
           <button
-            onClick={() => router.push('/persons/add')}
+            onClick={() => router.push('/shareholders/add')}
             className='fill-button rounded-lg h-10 min-w-40'
           >
-            ثبت شخص
+            ثبت سهامدار
           </button>
           <button
             onClick={changeStep}
