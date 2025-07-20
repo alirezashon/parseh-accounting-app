@@ -18,12 +18,12 @@ const SwitchBox = ({
 }) => {
   return (
     <div className=' flex flex-col gap-2'>
-      <label>{label}</label>
+      <label className='text-gray-600'>{label}</label>
       <div
         className={`flex border-b h-full ${
-          inputState === 'ok'
-            ? 'border-[#2f27cebb] '
-            : 'border-b-2 border-[#ee3636]'
+          inputState === 'error'
+            ? 'border-b-2 border-[#ee3636]'
+            : 'border-[#2775ce64] '
         } gap-5 items-center`}
       >
         <label className='flex items-center  '>{rightText}</label>

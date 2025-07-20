@@ -14,27 +14,28 @@ const Finance = ({ changeStep }: { changeStep?: () => void }) => {
           وجه در صندوق ثبت می‌شود. بنابراین شما باید نام بانک‌ها و صندوق‌های خود
           را در سیستم ثبت کنید.
         </p>
-        <div className='flex flex-col sm:flex-row gap-4 mt-4'>
+        <div className='flex flex-col sm:flex-row justify-between gap-4 mt-4'>
+          <button
+            onClick={() => (location.href = '/finance/banks/add')}
+            className='fill-button min-w-56 rounded-lg h-10 px-6'
+          >
+            ثبت حساب بانکی
+          </button>
           <button
             onClick={changeStep}
-            className='fill-button rounded-lg h-10 px-6'
+            className='fill-button min-w-56 rounded-lg h-10 px-6'
           >
-            مرحله بعد
-          </button>
-          <button
-            onClick={() => alert('اخرج')}
-            className='border-button rounded-lg h-10 px-6'
-          >
-            خروج
+            ثبت صنودق
           </button>
         </div>
+        <button
+          onClick={changeStep}
+          className='border-button rounded-lg h-10 px-6'
+        >
+          مرحله بعد
+        </button>
       </div>
-      <Image
-        alt=''
-        src={'/images/finance.png'}
-        width={400}
-        height={300}
-      />
+      <Image alt='' src={'/images/finance.png'} width={400} height={300} />
     </div>
   )
 }
