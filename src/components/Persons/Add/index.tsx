@@ -1,7 +1,6 @@
 'use client'
 
 import ProfileGallery from '@/components/hub/ProfileGallery'
-import Switch from '@/components/hub/Switch'
 import TabsWithIcons from '@/components/hub/TabSwitchIcons'
 import { getCookieByKey } from '@/utils/cookies'
 import { useState, useEffect } from 'react'
@@ -20,6 +19,7 @@ import Generals from './Forms/Generals'
 import Contacts from './Forms/Contacts'
 import BankAccounts from './Forms/Banks'
 import Others from './Forms/Others'
+import FormHead from '@/components/Headers/FormHead'
 
 const AddPersons = () => {
   const [formData, setFormData] = useState({
@@ -178,134 +178,139 @@ const AddPersons = () => {
     setFormData((prev) => ({ ...prev, accountcode: defaultCode }))
   }, [])
   return (
-    <div className='w-full p-4 border-x border-[#2f27ce65] bg-[white] shadow-[#2f27ce65] shadow-2xl flex flex-col  items-center'>
-      <div className='flex flex-col  max-lg:items-center lg:flex-row gap-6 w-full'>
-        <ProfileGallery uploadImage={UploadImage} />
-        <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1 '>
-          <div className='  flex flex-col gap-2'>
-            <Input
-              value={formData.accountcode}
-              label='کد حسابداری'
-              onChange={(result: string) =>
-                setFormData({ ...formData, accountcode: result })
+    <>
+      <FormHead />
+      <div className='w-full pt-20 p-4 border-x border-[primary65] bg-[white] shadow-[#2F27CE65] shadow-2xl flex flex-col  items-center'>
+        <div className='flex flex-col  max-lg:items-center lg:flex-row gap-6 w-full'>
+          <ProfileGallery uploadImage={UploadImage} />
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1 '>
+            <div className='  flex flex-col gap-2'>
+              <Input
+                value={formData.accountcode}
+                label='کد حسابداری'
+                onChange={(result: string) =>
+                  setFormData({ ...formData, accountcode: result })
+                }
+                inputState='error'
+                message='کدی که زدی به درد عمت میخوره'
+              />
+            </div>
+            <div className='flex flex-col gap-2'>
+              <Input
+                value={formData.company}
+                label='نام شرکت'
+                onChange={(result: string) =>
+                  setFormData({ ...formData, company: result })
+                }
+                inputState='ok'
+              />
+            </div>
+            <div className='flex flex-col gap-2'>
+              <Input
+                value={formData.alias}
+                label=' نام مستعار '
+                onChange={(result: string) =>
+                  setFormData({ ...formData, alias: result })
+                }
+                inputState='in'
+              />
+            </div>
+            <div className='flex flex-col gap-2'>
+              <Input
+                value={formData.name}
+                label=' نام   '
+                onChange={(result: string) =>
+                  setFormData({ ...formData, name: result })
+                }
+                inputState='need'
+              />
+            </div>
+            <div className='flex flex-col gap-2'>
+              <Input
+                value={formData.lastname}
+                label='نام خانوادگی'
+                onChange={(result: string) =>
+                  setFormData({ ...formData, lastname: result })
+                }
+                inputState='unique'
+              />
+            </div>
+            <div className='flex flex-col gap-2'>
+              <Input
+                value={formData.title}
+                label='عنوان'
+                onChange={(result: string) =>
+                  setFormData({ ...formData, title: result })
+                }
+                inputState=' '
+              />
+            </div>
+            <div className=' flex flex-col gap-2'>
+              <label className='font-medium'>دسته‌بندی</label>
+              <SingleSelectList
+                label='انتخاب کنید'
+                items={[
+                  { id: 'real', label: 'حقیقی' },
+                  { id: 'legal', label: 'حقوقی' },
+                  { id: 'foreign', label: 'خارجی' },
+                ]}
+                setSelectedItems={(selected) =>
+                  setFormData({ ...formData, category: selected as string })
+                }
+              />
+            </div>
+            <SwitchBox
+              leftText='فعال'
+              onChange={(value: boolean) =>
+                setFormData({ ...formData, active: value })
               }
+              rightText='غیر فعال'
+              value
               inputState='error'
-              message='کدی که زدی به درد عمت میخوره'
+              label='وضعیت'
             />
-          </div>
-          <div className='flex flex-col gap-2'>
-            <Input
-              value={formData.company}
-              label='نام شرکت'
-              onChange={(result: string) =>
-                setFormData({ ...formData, company: result })
-              }
-              inputState='ok'
-            />
-          </div>
-          <div className='flex flex-col gap-2'>
-            <Input
-              value={formData.alias}
-              label=' نام مستعار '
-              onChange={(result: string) =>
-                setFormData({ ...formData, alias: result })
-              }
-              inputState='in'
-            />
-          </div>
-          <div className='flex flex-col gap-2'>
-            <Input
-              value={formData.name}
-              label=' نام   '
-              onChange={(result: string) =>
-                setFormData({ ...formData, name: result })
-              }
-              inputState='need'
-            />
-          </div>
-          <div className='flex flex-col gap-2'>
-            <Input
-              value={formData.lastname}
-              label='نام خانوادگی'
-              onChange={(result: string) =>
-                setFormData({ ...formData, lastname: result })
-              }
-              inputState='unique'
-            />
-          </div>
-          <div className='flex flex-col gap-2'>
-            <Input
-              value={formData.title}
-              label='عنوان'
-              onChange={(result: string) =>
-                setFormData({ ...formData, title: result })
-              }
-              inputState=' '
-            />
-          </div>
-          <div className=' flex flex-col gap-2'>
-            <label className='font-medium'>دسته‌بندی</label>
-            <SingleSelectList
-              label='انتخاب کنید'
-              items={[
-                { id: 'real', label: 'حقیقی' },
-                { id: 'legal', label: 'حقوقی' },
-                { id: 'foreign', label: 'خارجی' },
-              ]}
-              setSelectedItems={(selected) =>
-                setFormData({ ...formData, category: selected as string })
-              }
-            />
-          </div>
-          <SwitchBox
-            leftText='فعال'
-            onChange={(value: boolean) =>
-              setFormData({ ...formData, active: value })
-            }
-            rightText='غیر فعال'
-            value
-            inputState='error'
-            label='وضعیت'
-          />
-          <div className='col-span-2 flex flex-col  '>
-            <label className='font-medium'>نوع</label>
-            <div className='flex flex-wrap gap-16 max-md:gap-7'>
-              {['customer', 'supplier', 'shareholder', 'employee'].map(
-                (key) => (
-                  <label key={key} className='flex items-center gap-2'>
-                    <input
-                      type='checkbox'
-                      className='accent-[#2F27CE] w-4 h-4 cursor-pointer'
-                      checked={formData.type[key as keyof typeof formData.type]}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          type: {
-                            ...formData.type,
-                            [key]: e.target.checked,
-                          },
-                        })
-                      }
-                    />
-                    {
+            <div className='col-span-2 flex flex-col  '>
+              <label className='font-medium'>نوع</label>
+              <div className='flex flex-wrap gap-16 max-md:gap-7'>
+                {['customer', 'supplier', 'shareholder', 'employee'].map(
+                  (key) => (
+                    <label key={key} className='flex items-center gap-2'>
+                      <input
+                        type='checkbox'
+                        className='accent-[#2F27CE] w-4 h-4 cursor-pointer'
+                        checked={
+                          formData.type[key as keyof typeof formData.type]
+                        }
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            type: {
+                              ...formData.type,
+                              [key]: e.target.checked,
+                            },
+                          })
+                        }
+                      />
                       {
-                        customer: 'مشتری',
-                        supplier: 'تأمین‌کننده',
-                        shareholder: 'سهام‌دار',
-                        employee: 'کارمند',
-                      }[key]
-                    }
-                  </label>
-                )
-              )}
+                        {
+                          customer: 'مشتری',
+                          supplier: 'تأمین‌کننده',
+                          shareholder: 'سهام‌دار',
+                          employee: 'کارمند',
+                        }[key]
+                      }
+                    </label>
+                  )
+                )}
+              </div>
             </div>
           </div>
         </div>
+        <div className='w-full overflow-auto mt-5'>
+          <TabsWithIcons tabs={tabs} />
+        </div>
       </div>
-      <div className='w-full overflow-auto mt-5'>
-        <TabsWithIcons tabs={tabs} />
-      </div>
-    </div>
+    </>
   )
 }
 

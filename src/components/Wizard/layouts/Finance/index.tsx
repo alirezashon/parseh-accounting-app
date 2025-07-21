@@ -22,10 +22,10 @@ const Finance = ({ changeStep }: { changeStep?: () => void }) => {
             ثبت حساب بانکی
           </button>
           <button
-            onClick={changeStep}
+            onClick={() => (location.href = '/finance/cache/add')}
             className='fill-button min-w-56 rounded-lg h-10 px-6'
           >
-            ثبت صنودق
+            ثبت صندوق
           </button>
         </div>
         <button

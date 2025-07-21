@@ -1,6 +1,8 @@
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 const OpeningBalance = ({ changeStep }: { changeStep?: () => void }) => {
+  const router = useRouter()
   return (
     <div className='flex flex-col-reverse md:flex-row items-center gap-6'>
       <div className='flex flex-col gap-7 text-right max-w-xl'>
@@ -14,18 +16,19 @@ const OpeningBalance = ({ changeStep }: { changeStep?: () => void }) => {
           بدهکاران و بستانکاران، موجودی کالا، بانک، صندوق، اثاثیه، حق امتیاز،
           ودایع و... همگی باید در تراز افتتاحیه ثبت شوند.
         </p>
+
         <div className='flex flex-col sm:flex-row gap-4 mt-4'>
           <button
-            onClick={changeStep}
-            className='fill-button rounded-lg h-10 px-6'
+            onClick={() => router.push('/accounting/financial-summary')}
+            className='fill-button rounded-lg h-10 min-w-40'
           >
-            مرحله بعد
+            ایجاد تراز جدید
           </button>
           <button
-            onClick={() => alert('اخرج')}
-            className='border-button rounded-lg h-10 px-6'
+            onClick={changeStep}
+            className='border-button rounded-lg h-10 min-w-40'
           >
-            خروج
+            مرحله بعدی
           </button>
         </div>
       </div>

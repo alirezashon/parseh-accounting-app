@@ -1,9 +1,9 @@
-import AddShareholders from '@/components/ShareHolders/Add'
+import AddCache from '@/components/Finance/Cache/Add'
 
 const AddShareholdersPage = () => {
   return (
     <div>
-      <AddShareholders />
+      <AddCache />
     </div>
   )
 }

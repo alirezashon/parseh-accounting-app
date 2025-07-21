@@ -81,7 +81,7 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
                 key={index}
                 className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-100 ${
                   selectedItem !== item.id &&
-                  'text-[#2f27ce] hover:bg-gray-100 hover:text-[#2f27ce]'
+                  'text-[#2F27CE] hover:bg-gray-100 hover:text-[#2F27CE]'
                 }`}
                 onClick={() => handleSelect(item.id)}
               >
@@ -89,12 +89,12 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
                   type='radio'
                   checked={selectedItem === item.id}
                   readOnly
-                  className='form-radio h-5 w-5 text-[#2f27ce] accent-[#2f27ce]'
+                  className='form-radio h-5 w-5 text-[#2F27CE] accent-[#2F27CE]'
                 />
                 <span
                   className={`${
                     selectedItem === item.id
-                      ? 'text-[#2f27ce65]'
+                      ? 'text-[primary65]'
                       : 'text-gray-700'
                   }`}
                 >

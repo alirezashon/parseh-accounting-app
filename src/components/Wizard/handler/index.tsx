@@ -55,7 +55,7 @@ const WizardHandler = ({ steps, cookieKey = 'wizard' }: WizardProps) => {
           <div className='absolute top-1/2 left-0 right-0 h-1 bg-[#C9D0D8] z-0 transform -translate-y-1/2 rounded-full' />
 
           <div
-            className='absolute top-1/2 right-0 h-1 bg-[#2f27ce] z-10 transform -translate-y-1/2 transition-all duration-300 rounded-full'
+            className='absolute top-1/2 right-0 h-1 bg-[#2F27CE] z-10 transform -translate-y-1/2 transition-all duration-300 rounded-full'
             style={{
               width: `
                 ${
@@ -83,13 +83,13 @@ const WizardHandler = ({ steps, cookieKey = 'wizard' }: WizardProps) => {
                   onClick={() => handleStepClick(index)}
                   className={`w-10 h-10 p-6 flex items-center justify-center mt-5 rounded-full border border-white cursor-pointer text-white text-sm font-bold ${
                     currentStep >= index
-                      ? 'bg-[#2f27ce]'
+                      ? 'bg-[#2F27CE]'
                       : 'bg-[#C9D0D8] text-[#50545F]'
                   }`}
                 >
                   {index + 1}
                 </div>
-                <p className='mt-1 text-sm text-[#2f27ce]'>{section.title}</p>
+                <p className='mt-1 text-sm text-[#2F27CE]'>{section.title}</p>
               </div>
             ))}
           </div>
