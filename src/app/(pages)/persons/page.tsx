@@ -1,10 +1,11 @@
+import Persons from '@/components/Persons'
 
-const Persons = () => {
+const PersonsPage = () => {
   return (
     <div>
-      
+      <Persons />
     </div>
   )
 }
 
-export default Persons
+export default PersonsPage

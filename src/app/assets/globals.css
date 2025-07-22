@@ -86,9 +86,8 @@ input:focus {
 }
 
 ::-webkit-scrollbar {
-  width: 1.2vh;
-  height: 4px;
-}
+  width: 1.5vh;
+ }
 
 /* Track */
 ::-webkit-scrollbar-track {
