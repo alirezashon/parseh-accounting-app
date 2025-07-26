@@ -19,7 +19,7 @@ export default function RootLayout({
           suppressHydrationWarning={true}
           className='flex flex-col items-center'
         >
-          <div className='max-w-[1120px] w-full px-4'>{children}</div>
+          <div className='max-w-[11 20px] w-full px-4'>{children}</div>
         </body>
       </html>
     </StatesProvider>

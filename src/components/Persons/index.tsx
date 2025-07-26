@@ -1,15 +1,53 @@
 'use client'
 import { useState } from 'react'
-import FormHead from '../Headers/FormHead'
 import EditableTable from '../Accounting/hub/DetailedBlankTable'
+import ListHead from '../Headers/ListHead'
+import { DiDatabase } from 'react-icons/di'
+import { RiUserAddFill } from 'react-icons/ri'
+import { ImMenu3 } from 'react-icons/im'
 
 const Persons = () => {
   const [activeTab, setActiveTab] = useState('همه')
   const [isMobile, setIsMobile] = useState(false)
-
   return (
-    <div className='absolute right-[9%] max-sm:right-0 w-[100vw] max-w-7xl max-w-sm:w-full min-h-[80vh] bg-white border border-[#dbeafe] rounded-b-2xl px-12 max-sm:px-1 py-24'>
-      <FormHead formName='اشخاص' />
+    <div className='absolute right-[9%] max-xl:right-0 max-sm:right-0 w-[100vw] max-w-7xl max-w-sm:w-full min-h-[80vh] bg-white border border-[#dbeafe] rounded-b-2xl px-12 max-sm:px-1 py-24'>
+      <ListHead
+        formName='اشخاص'
+        actions={[
+          {
+            icon: <DiDatabase className='text-2xl' />,
+            act: () => '',
+            label: ' داده ها',
+          },
+          {
+            icon: <RiUserAddFill className='text-2xl' />,
+            act: () => '',
+            label: 'ایجاد',
+          },
+          {
+            icon: <ImMenu3 className='text-2xl' />,
+            act: () => '',
+            label: 'سایر',
+            subList: [
+              {
+                icon: <ImMenu3 className='text-2xl' />,
+                act: () => '',
+                label: 'سایر',
+              },
+              {
+                icon: <DiDatabase className='text-2xl' />,
+                act: () => '',
+                label: ' داده ها',
+              },
+              {
+                icon: <RiUserAddFill className='text-2xl' />,
+                act: () => '',
+                label: 'ایجاد',
+              },
+            ],
+          },
+        ]}
+      />
       <div className='relative w-full border-b border-gray-300 '>
         <div
           className={`flex ${isMobile ? 'relative h-12 overflow-hidden' : ''}`}
@@ -41,8 +79,8 @@ const Persons = () => {
         searchMode
         rows={Array.from({ length: 24 }, (_, i) => ({
           id: i,
-          code: '1001',
-          currency: 'شرکت علی',
+          code: '100' + i,
+          currency: activeTab + 'شرکتلی',
           currencyAmount: 'ایران',
           amountIRR: 'تهران',
           city: 'تهران',

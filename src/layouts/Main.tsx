@@ -1,7 +1,4 @@
 'use client'
-// import Header from '@/components/shared/Header'
-// import NavigationLinks from '@/components/shared/NavigationLinks'
-// import Loader from '@/Context/Loader'
 import { useEffect, useState } from 'react'
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {

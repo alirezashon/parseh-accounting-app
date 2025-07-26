@@ -1,9 +1,7 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import { BiTrash } from 'react-icons/bi'
-import { VscGithubAction } from 'react-icons/vsc'
-
-// Types
+import { BiEdit, BiTrash } from 'react-icons/bi'
+import { MdDeleteForever } from 'react-icons/md'
 
 type GenericRow = {
   id: number
@@ -40,7 +38,7 @@ const EditableTable: React.FC<EditableTableProps> = ({
     Array(fields.length + 1).fill(300)
   )
   const [columns, setColumns] = useState<FieldConfig[]>(fields)
-
+  const [selectedRows, setSelectedRows] = useState<FieldConfig[] | null>()
   const dragColIndex = useRef<number | null>(null)
   const tableRef = useRef<HTMLTableElement>(null)
 
@@ -108,12 +106,12 @@ const EditableTable: React.FC<EditableTableProps> = ({
 
   return (
     <div
-      className={`${className} bg-white max-h-[70vh] rounded-2xl shadow-md overflow-auto border`}
+      className={`${className} bg-white max-h-[70vh] rounded-2xl  overflow-auto border border-[#3573e7] shadow-md shadow-[blue] `}
     >
-      <div className='max-h-[500px] overflow-auto'>
+      <div className='max-h-[6ز0vh] overflow-auto'>
         <table
           ref={tableRef}
-          className='min-w-max text-sm select-none table-fixed'
+          className='min-w-max max-md:min-w-0  text-sm select-none table-fixed'
           style={{ borderCollapse: 'collapse' }}
         >
           <thead>
@@ -121,6 +119,9 @@ const EditableTable: React.FC<EditableTableProps> = ({
               style={{ backgroundColor: color }}
               className='text-white sticky top-0 z-20'
             >
+              <th className='absolute border-l right-0 py-3 px-4 text-center font-semibold   top-0 bg-inherit z-10'>
+                عملیات
+              </th>
               {columns.map((field, i) => (
                 <th
                   key={field.key}
@@ -142,13 +143,33 @@ const EditableTable: React.FC<EditableTableProps> = ({
                   <div>{field.label}</div>
                 </th>
               ))}
-              <th className='py-3 px-4 text-center font-semibold sticky top-0 bg-inherit z-10'>
-                عملیات
-              </th>
             </tr>
 
             {searchMode && (
               <tr className='bg-gray-50 sticky top-[42px] z-10'>
+                <th className='bg-[#f9feff] flex justify-center items-center gap-1 transition-all duration-700'>
+                  <input
+                    type='checkbox'
+                    onClick={() =>
+                      selectedRows
+                        ? setSelectedRows(null)
+                        : setSelectedRows(fields)
+                    }
+                    defaultChecked={selectedRows?.length === fields.length}
+                    className={`cursor-pointer accent-[${color}] w-5 hover:rotate-12`}
+                  />
+                  {selectedRows && selectedRows?.length > 1 && (
+                    <MdDeleteForever
+                      size={32}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        // handleDelete()
+                      }}
+                      className={`cursor-pointer hover:-rotate-12 text-red-400 hover:bg-red-50 rounded-full hover:text-red-600 text-2xl transition`}
+                    />
+                  )}
+                </th>
+
                 {columns.map((field, i) => (
                   <th
                     key={field.key}
@@ -177,6 +198,22 @@ const EditableTable: React.FC<EditableTableProps> = ({
                 className='transition hover:bg-gray-50 cursor-pointer'
                 onClick={() => onRowClick(row)}
               >
+                <td className='py-2 flex w-20 gap-2 justify-center'>
+                  <BiTrash
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDelete(row.id)
+                    }}
+                    className='hover:-rotate-12 text-red-500 hover:bg-red-50 rounded-full hover:text-red-600 text-2xl transition'
+                  />
+                  <BiEdit
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDelete(row.id)
+                    }}
+                    className='hover:-rotate-12 text-blue-600 hover:bg-red-50 rounded-full hover:text-red-600 text-2xl transition'
+                  />
+                </td>
                 {columns.map((field, i) => (
                   <td
                     key={field.key}
@@ -199,22 +236,6 @@ const EditableTable: React.FC<EditableTableProps> = ({
                     />
                   </td>
                 ))}
-
-                <td className='py-2 px-4 text-center'>
-                  <div className='flex justify-center gap-2'>
-                    <BiTrash
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        handleDelete(row.id)
-                      }}
-                      className='text-red-500 hover:bg-red-50 rounded-full hover:text-red-600 text-2xl transition'
-                    />
-                    <VscGithubAction
-                      onClick={(e) => e.stopPropagation()}
-                      className='text-[#2F27CE] hover:bg-blue-50 rounded-full hover:text-blue-400 text-2xl transition'
-                    />
-                  </div>
-                </td>
               </tr>
             ))}
           </tbody>
