@@ -10,7 +10,7 @@ const Persons = () => {
   const [activeTab, setActiveTab] = useState('همه')
   const [isMobile, setIsMobile] = useState(false)
   return (
-    <div className='absolute right-[9%] max-xl:right-0 max-sm:right-0 w-[100vw] max-w-7xl max-w-sm:w-full min-h-[80vh] bg-white border border-[#dbeafe] rounded-b-2xl px-12 max-sm:px-1 py-24'>
+    <div>
       <ListHead
         formName='اشخاص'
         actions={[

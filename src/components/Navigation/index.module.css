@@ -1,0 +1,48 @@
+.drawer {
+  right: 0;
+  background-color: #2f27ce;
+  color: #2f27ce;
+  border-right: ridge #2f27ce 0.4vh;
+  position: fixed;
+  z-index: 70;
+}
+.item {
+  background: white;
+  width: 98%;
+}
+.iconBox {
+  margin: 10px 0;
+  box-shadow: 1px 1px 1px 1px #2f27ce;
+  font-size: 50px;
+  font-weight: bold;
+  width: 100%;
+  display: flex;
+  padding: 0vh;
+  border: ridge 2px #2f27ce;
+
+  background: #ecebff;
+}
+.iconBox:hover {
+  cursor: pointer;
+  margin: 0.7vh;
+  transition: all 0.5s;
+  border-radius: 1vh;
+  background: #0f20a4;
+  color: #fff;
+}
+.icon {
+  margin: 10px 0;
+  font-size: 50px;
+  /* box-shadow: 1px 1px 1px 1px #2f27ce; */
+  font-weight: bold;
+}
+
+.iconName {
+  font-size: 25px;
+}
+
+@media (max-width: 777px) {
+  .icon {
+    font-size: 3vh;
+  }
+}

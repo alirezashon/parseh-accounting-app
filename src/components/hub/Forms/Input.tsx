@@ -69,7 +69,7 @@ const Input = ({
             : inputState === 'error' && 'text-red-500'
         }`}
       >
-        {message || inputState}
+        {message}
       </b>
     </div>
   )
