@@ -1,10 +1,11 @@
 import FinancialSummary from '@/components/Accounting/FinancialSummary'
+import FormLayout from '@/layouts/Form'
 
 const FinancialSummaryPage = () => {
   return (
-    <div>
+    <FormLayout>
       <FinancialSummary />
-    </div>
+    </FormLayout>
   )
 }
 

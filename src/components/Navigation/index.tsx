@@ -23,7 +23,7 @@ const Drawer = () => {
     { tag: <RiContactsBookFill />, name: 'کاربرها', destination: '/persons' },
     { tag: <GiTakeMyMoney />, name: 'مالی ', destination: '/finance' },
     { tag: <GiMechanicalArm />, name: 'خدمات', destination: '/services' },
-    { tag: <IoDocumentAttach />, name: 'اسناد', destination: '/documents' },
+    { tag: <IoDocumentAttach />, name: 'اسناد', destination: '/accounting' },
     { tag: <FaChartPie />, name: ' گزارش ها', destination: '/reports' },
     {
       tag: <BsDatabaseFillGear />,
@@ -36,12 +36,10 @@ const Drawer = () => {
 
   const handleMouseEnter = () => {
     setIsMouseOverDrawer(true)
- 
   }
 
   const handleMouseLeave = () => {
     setIsMouseOverDrawer(false)
- 
   }
 
   useEffect(() => {

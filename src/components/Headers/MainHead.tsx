@@ -88,7 +88,7 @@ const MainHead = () => {
         onMouseLeave={handleMouseLeave}
         className={`fixed max-xl:w-[92%] max-lg:w-[87%]  justify-center min-xl:top-0 max-xl:bottom-0  z-[70] max-xl:rounded-t-2xl min-xl:rounded-b-2xl bg-white  text-white max-xl:border-t-4 min-xl:border-b-4 border-[#2f27ce] flex items-start px-4 shadow-md`}
       >
-        <div className='px-5 flex gap-7 items-start overflow-x-auto py-2'>
+        <div className='px-5 flex flex-wrap gap-7 items-start overflow-x-auto py-2'>
           {icons.map((icon, index) => {
             const isActive = pathname.includes(icon.destination)
             return (
