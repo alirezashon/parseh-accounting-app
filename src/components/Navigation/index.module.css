@@ -17,6 +17,7 @@
   font-weight: bold;
   width: 100%;
   display: flex;
+  align-items: center;
   padding: 0vh;
   border: ridge 2px #2f27ce;
 
@@ -38,7 +39,7 @@
 }
 
 .iconName {
-  font-size: 25px;
+  font-size: 20px;
 }
 
 @media (max-width: 777px) {

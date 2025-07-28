@@ -24,7 +24,7 @@ interface Person {
 }
 
 interface SearchSelectInputProps extends BaseInputProps {
-  options: Person[]
+  options?: Person[]
   onSelect: (id: number) => void
 }
 
@@ -51,7 +51,7 @@ const SearchPersonInput = ({
     setFocused(false)
   }
 
-  const filtered = options.filter((opt) =>
+  const filtered = options?.filter((opt) =>
     opt.name.toLowerCase().includes(value.toLowerCase())
   )
 
@@ -84,7 +84,7 @@ const SearchPersonInput = ({
           />
         </div>
 
-        {focused && filtered.length > 0 && (
+        {focused && filtered && filtered.length > 0 && (
           <ul className='absolute z-10 w-full mt-1 bg-white border border-blue-300 rounded-xl shadow-lg max-h-60 overflow-auto'>
             {filtered.map((item) => (
               <li

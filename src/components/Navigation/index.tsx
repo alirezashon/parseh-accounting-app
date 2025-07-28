@@ -8,10 +8,7 @@ import { BsDatabaseFillGear } from 'react-icons/bs'
 import { IoDocumentAttach } from 'react-icons/io5'
 import { AiFillSetting } from 'react-icons/ai'
 
-interface Props {
-  setDrawerOpen: (status: boolean) => void
-}
-const Drawer: React.FC<Props> = ({ setDrawerOpen }) => {
+const Drawer = () => {
   const [drawerWidth, setDrawerWidth] = useState<number>(20)
   const [isMouseOverDrawer, setIsMouseOverDrawer] = useState<boolean>(false)
   const [pathname, setPathname] = useState<string>('')
@@ -39,12 +36,12 @@ const Drawer: React.FC<Props> = ({ setDrawerOpen }) => {
 
   const handleMouseEnter = () => {
     setIsMouseOverDrawer(true)
-    setDrawerOpen(true)
+ 
   }
 
   const handleMouseLeave = () => {
     setIsMouseOverDrawer(false)
-    setDrawerOpen(false)
+ 
   }
 
   useEffect(() => {

@@ -5,7 +5,33 @@ import ComponentSearchable from '@/components/hub/Forms/types/Inputs/ComponentSe
 import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import { useState } from 'react'
 import { FaTrash, FaPlus, FaUser } from 'react-icons/fa'
-
+export const dummyPeople = [
+  {
+    id: 1,
+    name: 'علیرضا محمدی',
+    image: 'https://randomuser.me/api/portraits/men/11.jpg',
+  },
+  {
+    id: 2,
+    name: 'مریم رضایی',
+    image: 'https://randomuser.me/api/portraits/women/21.jpg',
+  },
+  {
+    id: 3,
+    name: 'حسین کریمی',
+    image: 'https://randomuser.me/api/portraits/men/31.jpg',
+  },
+  {
+    id: 4,
+    name: 'نگار عسگری',
+    image: 'https://randomuser.me/api/portraits/women/41.jpg',
+  },
+  {
+    id: 5,
+    name: 'پوریا قنبری',
+    image: 'https://randomuser.me/api/portraits/men/51.jpg',
+  },
+]
 type Shareholder = {
   id: number
   name: string
@@ -46,37 +72,10 @@ const AddShareholders = () => {
     (acc, item) => acc + Number(item.percentage || 0),
     0
   )
-  const dummyPeople = [
-    {
-      id: 1,
-      name: 'علیرضا محمدی',
-      image: 'https://randomuser.me/api/portraits/men/11.jpg',
-    },
-    {
-      id: 2,
-      name: 'مریم رضایی',
-      image: 'https://randomuser.me/api/portraits/women/21.jpg',
-    },
-    {
-      id: 3,
-      name: 'حسین کریمی',
-      image: 'https://randomuser.me/api/portraits/men/31.jpg',
-    },
-    {
-      id: 4,
-      name: 'نگار عسگری',
-      image: 'https://randomuser.me/api/portraits/women/41.jpg',
-    },
-    {
-      id: 5,
-      name: 'پوریا قنبری',
-      image: 'https://randomuser.me/api/portraits/men/51.jpg',
-    },
-  ]
 
   return (
     <>
-      <FormHead />
+      <FormHead formName='افزودن سهامدار' />
       <div className='space-y-6 bg-white p-8 shadow-2xl shadow-blue-300'>
         <div className='flex items-center justify-between border-b border-blue-100 pb-2'>
           <h2 className='text-xl font-semibold text-blue-700 flex items-center gap-2'>

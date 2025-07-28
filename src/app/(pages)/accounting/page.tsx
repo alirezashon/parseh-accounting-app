@@ -1,9 +1,11 @@
+import MainLayout from "@/layouts/Main"
 
 const Persons = () => {
   return (
-    <div>
-      
-    </div>
+    <MainLayout>
+      <>
+      </>
+    </MainLayout>
   )
 }
 
