@@ -1,7 +1,6 @@
-import Business from '@/components/Business'
 import MainLayout from '@/layouts/Main'
 
-const PersonsPage = () => {
+const ServicesPage = () => {
   return (
     <MainLayout>
       <></>
@@ -9,4 +8,4 @@ const PersonsPage = () => {
   )
 }
 
-export default PersonsPage
+export default ServicesPage

@@ -1,10 +1,11 @@
 import AddPersons from '@/components/Persons/Add'
+import MainLayout from '@/layouts/Main'
 
 const AddPersonsPage = () => {
   return (
-    <div>
+    <MainLayout>
       <AddPersons />
-    </div>
+    </MainLayout>
   )
 }
 

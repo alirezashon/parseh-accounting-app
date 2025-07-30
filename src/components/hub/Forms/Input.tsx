@@ -19,23 +19,25 @@ const Input = ({
 }) => {
   return (
     <div className='flex flex-col transition-all duration-700'>
-      <label
-        className={`font-medium ${
-          inputState === 'in'
-            ? 'text-blue-500'
-            : inputState === 'ok'
-            ? 'text-green-500'
-            : inputState === 'unique'
-            ? 'text-red-300 '
-            : inputState === 'need'
-            ? 'text-yellow-500'
-            : inputState === 'error'
-            ? 'text-red-500'
-            : 'text-gray-500'
-        }`}
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          className={`font-medium ${
+            inputState === 'in'
+              ? 'text-blue-500'
+              : inputState === 'ok'
+              ? 'text-green-500'
+              : inputState === 'unique'
+              ? 'text-red-300 '
+              : inputState === 'need'
+              ? 'text-yellow-500'
+              : inputState === 'error'
+              ? 'text-red-500'
+              : 'text-gray-500'
+          }`}
+        >
+          {label}
+        </label>
+      )}
       <input
         onFocus={focused}
         placeholder={placeholder}

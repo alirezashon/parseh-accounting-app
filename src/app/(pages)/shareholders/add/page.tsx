@@ -1,10 +1,11 @@
 import AddShareholders from '@/components/ShareHolders/Add'
+import MainLayout from '@/layouts/Main'
 
 const AddShareholdersPage = () => {
   return (
-    <div>
+    <MainLayout>
       <AddShareholders />
-    </div>
+    </MainLayout>
   )
 }
 

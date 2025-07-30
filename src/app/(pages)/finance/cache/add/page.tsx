@@ -1,11 +1,12 @@
 import AddCache from '@/components/Finance/Cache/Add'
+import MainLayout from '@/layouts/Main'
 
-const AddShareholdersPage = () => {
+const AddCachePage = () => {
   return (
-    <div>
+    <MainLayout>
       <AddCache />
-    </div>
+    </MainLayout>
   )
 }
 
-export default AddShareholdersPage
+export default AddCachePage

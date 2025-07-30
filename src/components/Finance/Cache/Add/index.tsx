@@ -43,7 +43,7 @@ const AddCache = () => {
 
   return (
     <>
-      <FormHead />
+      <FormHead formName='افزودن صندوق' />
       <div className='w-full max-w-7xl mx-auto bg-white border border-t-0 shadow-xs shadow-[#2f27cec6] border-[#2F27CE] rounded-b-2xl px-6 py-5 '>
         <div className='flex justify-center mb-20'>
           <SiAmazonelasticache color='#2F27CE' />

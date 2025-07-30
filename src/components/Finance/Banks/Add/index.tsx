@@ -44,7 +44,7 @@ const AddBank = () => {
 
   return (
     <>
-      <FormHead />
+      <FormHead formName='ایجاد حساب بانکی' />
       <div className='w-full max-w-7xl mx-auto bg-white border border-[#2F27CE] rounded-b-2xl px-6 py-10'>
         <div className='flex justify-center mb-4'>
           <Image

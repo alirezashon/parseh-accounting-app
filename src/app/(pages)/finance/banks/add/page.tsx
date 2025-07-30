@@ -1,10 +1,11 @@
 import AddBank from '@/components/Finance/Banks/Add'
+import MainLayout from '@/layouts/Main'
 
 const AddBankPage = () => {
   return (
-    <div>
+    <MainLayout>
       <AddBank />
-    </div>
+    </MainLayout>
   )
 }
 

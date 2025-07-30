@@ -1,10 +1,7 @@
+import MainLayout from '@/layouts/Main'
 
-const Persons = () => {
-  return (
-    <div>
-      shoshol
-    </div>
-  )
+const CachePage = () => {
+  return <MainLayout>d</MainLayout>
 }
 
-export default Persons
+export default CachePage
