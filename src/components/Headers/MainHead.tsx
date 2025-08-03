@@ -67,7 +67,7 @@ const MainHead = ({
 
         {/* آیکون‌ها */}
         <div className='flex-1 flex justify-end items-start gap-3 overflow-x-auto py-2 px-3'>
-          {icons &&
+    da      {icons &&
             icons.map((icon, index) => {
               const isActive = pathname.includes(`${icon.destination}`)
               return (
