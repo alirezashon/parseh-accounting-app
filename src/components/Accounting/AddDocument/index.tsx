@@ -118,6 +118,7 @@ export default function AddDocument() {
                   placeholder='شرح'
                   value={row.description}
                   onChange={(val) => updateRow(index, 'description', val)}
+                  className='rounded-0'
                 />
               </div>
               <div className='w-32'>
@@ -151,6 +152,7 @@ export default function AddDocument() {
                   placeholder='شرح'
                   value={row.description}
                   onChange={(val) => updateRow(index, 'description', val)}
+                  className='rounded-0'
                 />
               </div>
               <div className='ml-auto mt-1'>
