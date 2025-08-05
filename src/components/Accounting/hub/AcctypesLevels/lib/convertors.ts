@@ -51,24 +51,44 @@ export const convertGeneralData = async () => {
   return result
 }
 
-export const convertSpeceficsData = async (
-  gl_id: number
-): Promise<SpecificScheme[]> => {
+export const convertSpeceficsData = async (gl_id: number) => {
   const accessToken = (await getCookieByKey('access_token')) || ''
   const entryData: SpecificScheme[] =
     (await GetSpecifics({ accessToken, gl_id })) || []
 
-  const result = entryData.map((row, index) => {
-    return {
-      id: row.sl_code,
-      chpid:row.sl_id,
-      chtitle: row.accountgroup_title,
-      chstatus: row.accountgroup_code,
-      chlevel: row.accountgroup_title,
-      lev1_count: row.accountgroup_code,
-      chlabel: row.accountgroup_title,
-    }
-  })
+  const result =
+    entryData.map((row, index) => {
+      return {
+        id: row.sl_code,
+        chpid: row.sl_id,
+        chtitle: row.sl_title,
+        chstatus: row.sl_title_en,
+        chlevel: row.sl_title,
+        lev1_count: row.sl_code,
+        chlabel: row.sl_title,
+      }
+    }) || []
+
+  return result
+}
+
+export const convertSpeceficsData = async (gl_id: number) => {
+  const accessToken = (await getCookieByKey('access_token')) || ''
+  const entryData: SpecificScheme[] =
+    (await GetSpecifics({ accessToken, gl_id })) || []
+
+  const result =
+    entryData.map((row, index) => {
+      return {
+        id: row.sl_code,
+        chpid: row.sl_id,
+        chtitle: row.sl_title,
+        chstatus: row.sl_title_en,
+        chlevel: row.sl_title,
+        lev1_count: row.sl_code,
+        chlabel: row.sl_title,
+      }
+    }) || []
 
   return result
 }
