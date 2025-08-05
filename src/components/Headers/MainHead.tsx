@@ -1,57 +1,57 @@
-"use client";
-import Image from "next/image";
-import { useState, useEffect } from "react";
+'use client'
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 interface Action {
-  icon: any;
-  act?: () => void;
-  label?: string;
+  icon: any
+  act?: () => void
+  label?: string
 }
 
 const MainHead = ({
   icons,
   title,
 }: {
-  title?: string;
+  title?: string
   icons?: {
-    icon: any;
-    destination?: string;
-    act?: () => void;
-    label?: string;
-    subList?: Action[];
-  }[];
+    icon: any
+    destination?: string
+    act?: () => void
+    label?: string
+    subList?: Action[]
+  }[]
 }) => {
-  const [headerHeight, setHeaderHeight] = useState<number>(10);
-  const [isHovering, setIsHovering] = useState(false);
-  const [pathname, setPathname] = useState("");
+  const [headerHeight, setHeaderHeight] = useState<number>(10)
+  const [isHovering, setIsHovering] = useState(false)
+  const [pathname, setPathname] = useState('')
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setPathname(window.location.pathname);
+    if (typeof window !== 'undefined') {
+      setPathname(window.location.pathname)
     }
-  }, []);
+  }, [])
 
-  const handleMouseEnter = () => setIsHovering(true);
-  const handleMouseLeave = () => setIsHovering(false);
+  const handleMouseEnter = () => setIsHovering(true)
+  const handleMouseLeave = () => setIsHovering(false)
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout
     if (isHovering) {
       interval = setInterval(() => {
-        setHeaderHeight((prev) => Math.min(prev + 1, 25));
-      }, 10);
+        setHeaderHeight((prev) => Math.min(prev + 1, 25))
+      }, 10)
     } else {
       interval = setInterval(() => {
-        setHeaderHeight((prev) => Math.max(prev - 1, 8));
-      }, 10);
+        setHeaderHeight((prev) => Math.max(prev - 1, 8))
+      }, 10)
     }
-    return () => clearInterval(interval);
-  }, [isHovering]);
+    return () => clearInterval(interval)
+  }, [isHovering])
 
   return (
     <div className="w-full flex justify-center">
       <div
-        style={{ height: `${headerHeight}vh`, transition: "height 0.4s" }}
+        style={{ height: `${headerHeight}vh`, transition: 'height 0.4s' }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={`  fixed w-[92%] xl:w-[80%] z-[25] top-0 xl:rounded-b-2xl rounded-t-2xl bg-white text-white border-b-4 border-[#2f27ce] flex items-start justify-between px-4 shadow-md`}
@@ -68,7 +68,7 @@ const MainHead = ({
         </div>
 
         {title && (
-          <div className="absolute left-1/2 transform -translate-x-1/2 bg-white rounded-b-xl px-5 text-blue-700 text-[40px] font-bold pointer-events-none">
+          <div className="absolute border-4  shadow-xs   shadow-blue-400 border-t-0 left-1/2 transform -translate-x-1/2 bg-white rounded-b-xl px-5 text-blue-700 text-[40px] font-bold pointer-events-none">
             {title}
           </div>
         )}
@@ -77,20 +77,20 @@ const MainHead = ({
         <div className="flex justify-end items-start gap-3 overflow-x-auto py-2 px-3">
           {icons &&
             icons.map((icon, index) => {
-              const isActive = pathname.includes(`${icon.destination}`);
+              const isActive = pathname.includes(`${icon.destination}`)
               return (
                 <div
                   key={index}
                   onClick={() => {
-                    if (icon.act) icon.act();
+                    if (icon.act) icon.act()
                     else if (icon.destination)
-                      window.location.href = icon.destination;
+                      window.location.href = icon.destination
                   }}
                   className={`flex flex-col items-center justify-center px-3 rounded-md text-sm transition-all duration-300
                     ${
                       isActive
-                        ? "bg-[#0f20a4] text-white border-b-4 border-blue-700"
-                        : "text-[#2f27ce]"
+                        ? 'bg-[#0f20a4] text-white border-b-4 border-blue-700'
+                        : 'text-[#2f27ce]'
                     }
                     hover:bg-[#0f20a4] hover:text-white cursor-pointer`}
                 >
@@ -101,12 +101,12 @@ const MainHead = ({
                     </div>
                   )}
                 </div>
-              );
+              )
             })}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MainHead;
+export default MainHead

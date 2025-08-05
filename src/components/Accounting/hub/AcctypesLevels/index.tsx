@@ -112,7 +112,7 @@ const AcctypesLevels = ({ levelo }: { levelo: number }) => {
   const [editableRow, setEditableRow] = useState<TreeChartInterface | null>(
     null
   )
-
+  
   const toggleNode = (id: number) => {
     setOpenTrees((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
