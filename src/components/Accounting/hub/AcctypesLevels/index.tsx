@@ -1,7 +1,7 @@
 'use client'
 import MainHead from '@/components/Headers/MainHead'
 import MainLayout from '@/layouts/Main'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AiFillSetting } from 'react-icons/ai'
 import { BsDatabaseFillGear } from 'react-icons/bs'
 import {
@@ -12,6 +12,7 @@ import {
   FaPlusCircle,
 } from 'react-icons/fa'
 import { FaChartPie, FaDiagramProject } from 'react-icons/fa6'
+import { getAllTreeData } from './lib/convertors'
 
 export interface TreeChartInterface {
   id: number
@@ -23,96 +24,92 @@ export interface TreeChartInterface {
   chlabel?: string | null
 }
 
-const generateMockTreeData = (
-  maxLevel: number = 3,
-  maxItemsPerLevel: number = 10
-): TreeChartInterface[] => {
-  let idCounter = 1
-  const data: TreeChartInterface[] = []
+// const generateMockTreeData = (
+//   maxLevel: number = 3,
+//   maxItemsPerLevel: number = 10
+// ): TreeChartInterface[] => {
+//   let idCounter = 1
+//   const data: TreeChartInterface[] = []
 
-  const generateChildren = (parentId: number, level: number) => {
-    if (level > maxLevel) return
+//   const generateChildren = (parentId: number, level: number) => {
+//     if (level > maxLevel) return
 
-    const count = Math.min(2, maxItemsPerLevel) // Max 2 per node to keep tree shape
-    for (let i = 0; i < count; i++) {
-      const newItem: TreeChartInterface = {
-        id: idCounter,
-        chpid: parentId,
-        chtitle: `Level ${level} - Node ${idCounter}`,
-        chstatus: 1,
-        chlevel: level,
-        lev1_count: 0,
-      }
-      data.push(newItem)
-      const currentId = idCounter
-      idCounter++
-      generateChildren(currentId, level + 1)
-    }
-  }
+//     const count = Math.min(2, maxItemsPerLevel)
+//     for (let i = 0; i < count; i++) {
+//       const newItem: TreeChartInterface = {
+//         id: idCounter,
+//         chpid: parentId,
+//         chtitle: `Level ${level} - Node ${idCounter}`,
+//         chstatus: 1,
+//         chlevel: level,
+//         lev1_count: 0,
+//       }
+//       data.push(newItem)
+//       const currentId = idCounter
+//       idCounter++
+//       generateChildren(currentId, level + 1)
+//     }
+//   }
 
-  // Start with top-level nodes (level 0)
-  for (let i = 0; i < maxItemsPerLevel; i++) {
-    const rootItem: TreeChartInterface = {
-      id: idCounter,
-      chpid: 0,
-      chtitle: `Level 0 - Node ${idCounter}`,
-      chstatus: 1,
-      chlevel: 0,
-      lev1_count: 0,
-    }
-    data.push(rootItem)
-    const rootId = idCounter
-    idCounter++
-    generateChildren(rootId, 1)
-  }
+//   for (let i = 0; i < maxItemsPerLevel; i++) {
+//     const rootItem: TreeChartInterface = {
+//       id: idCounter,
+//       chpid: 0,
+//       chtitle: `Level 0 - Node ${idCounter}`,
+//       chstatus: 1,
+//       chlevel: 0,
+//       lev1_count: 0,
+//     }
+//     data.push(rootItem)
+//     const rootId = idCounter
+//     idCounter++
+//     generateChildren(rootId, 1)
+//   }
 
-  return data
-}
+//   return data
+// }
 
-const mockData: TreeChartInterface[] = generateMockTreeData()
+// const mockData: TreeChartInterface[] = generateMockTreeData()
 
 const levelol: string[][] = [
   [
     'bg-blue-200  py-4',
     'bg-blue-300 mt-5 py-4 rounded-xl',
-    'bg-blue-400 mt-5 py-4 rounded-xl',
-    'bg-blue-500 mt-5 py-4 rounded-xl',
+    'bg-indigo-400 mt-5 py-4 rounded-xl',
+    'bg-purple-500 mt-5 py-4 rounded-xl',
     '',
-  ], // برای UL لایه‌ها نیازی به استایل نیست
-
-  [
-    // استایل Box هر لایه
-    'bg-white my-3 border-y-8 border-blue-300 hover:bg-blue-50 transition-all duration-300 shadow-sm rounded-xl',
-    'bg-blue-50 my-2 border-l-4 border-blue-300 hover:bg-blue-100 transition-all duration-300 shadow-md rounded-xl',
-    'bg-blue-100 my-3 border-l-4 border-blue-400 hover:bg-blue-200 transition-all duration-300 shadow-md rounded-xl',
-    'bg-blue-200 my-3 border-l-4 border-indigo-300 hover:bg-indigo-200 transition-all duration-300 shadow-md rounded-xl',
   ],
-
   [
-    // لیبل
+    'bg-white my-3 border-y-8 border-blue-300 hover:bg-blue-100 transition-all duration-300 shadow rounded-xl',
+    'bg-blue-50 my-2 border-l-4 border-blue-400 hover:bg-blue-200 transition-all duration-300 shadow-md rounded-xl',
+    'bg-indigo-100 my-3 border-l-4 border-indigo-400 hover:bg-indigo-300 transition-all duration-300 shadow-md rounded-xl',
+    'bg-purple-100 my-3 border-l-4 border-purple-300 hover:bg-purple-200 transition-all duration-300 shadow-md rounded-xl',
+  ],
+  [
     'bg-blue-100 text-blue-800 border-2 rounded-lg',
     'bg-blue-200 text-blue-800',
-    'bg-blue-300 text-blue-900',
-    'bg-white rounded text-indigo-900',
+    'bg-indigo-300 text-indigo-900',
+    'bg-purple-200 text-purple-900',
   ],
-
-  [
-    // بدنه متن و آیکون‌ها
-    'text-blue-800',
-    'text-blue-900',
-    'text-blue-700',
-    'text-blue-600',
-  ],
+  ['text-blue-800', 'text-blue-900', 'text-indigo-700', 'text-purple-800'],
   ['', '', '', ''],
 ]
 
 const AcctypesLevels = ({ levelo }: { levelo: number }) => {
-  const [treeData, setTreeData] = useState<TreeChartInterface[]>(mockData)
+  const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
   const [openTrees, setOpenTrees] = useState<number[]>([])
   const [editableRow, setEditableRow] = useState<TreeChartInterface | null>(
     null
   )
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getAllTreeData()
+      setTreeData(data)
+    }
+
+    fetchData()
+  }, [])
+
   const toggleNode = (id: number) => {
     setOpenTrees((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
@@ -129,12 +126,31 @@ const AcctypesLevels = ({ levelo }: { levelo: number }) => {
     setEditableRow(null)
   }
 
+  const handleAddNode = (parentId: number, level: number) => {
+    const children = treeData.filter((item) => item.chpid === parentId)
+    if (children.length >= 5) return
+
+    const newId = Math.max(...treeData.map((x) => x.id)) + 1
+    const newNode: TreeChartInterface = {
+      id: newId,
+      chpid: parentId,
+      chtitle: 'زیرشاخه جدید',
+      chstatus: 1,
+      chlevel: level + 1,
+      lev1_count: 0,
+    }
+    setTreeData((prev) => [...prev, newNode])
+    setOpenTrees((prev) => [...new Set([...prev, parentId, newId])])
+    setEditableRow(newNode)
+  }
+
   const renderTree = (parentId: number, level = 0): React.JSX.Element => {
     const nodes = treeData.filter((node) => node.chpid === parentId)
     return (
       <ul className={` ${levelol[0][level]}`}>
         {nodes.map((node) => {
           const isEditing = editableRow?.id === node.id
+          const children = treeData.filter((item) => item.chpid === node.id)
           return (
             <li key={node.id} className={`mx-5 px-4 py-3 ${levelol[1][level]}`}>
               <div
@@ -199,13 +215,15 @@ const AcctypesLevels = ({ levelo }: { levelo: number }) => {
                           setEditableRow(node)
                         }}
                       />
-                      <FaPlusCircle
-                        className="text-xl cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          alert(`افزودن زیرشاخه برای: ${node.chtitle}`)
-                        }}
-                      />
+                      {children.length < 5 && (
+                        <FaPlusCircle
+                          className="text-xl cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleAddNode(node.id, level)
+                          }}
+                        />
+                      )}
                     </>
                   )}
                 </div>
@@ -224,6 +242,7 @@ const AcctypesLevels = ({ levelo }: { levelo: number }) => {
   return (
     <MainLayout>
       <MainHead
+        title="جدول حساب ها"
         icons={[
           {
             icon: <FaChartPie size={30} />,
@@ -247,6 +266,7 @@ const AcctypesLevels = ({ levelo }: { levelo: number }) => {
           },
         ]}
       />
+
       <div className="p-6 bg-blue-50 min-h-screen">
         <div className="text-xl font-bold mb-6 text-blue-700">جدول حساب ها</div>
         <div className="rounded-md p-4 shadow">{renderTree(0)}</div>
