@@ -1,4 +1,4 @@
-import { EasyInsertVoucherScheme } from '@/interfaces'
+import { Detail, EasyInsertVoucherScheme, Header } from '@/interfaces'
 
 export const get_vouchertype = async ({
   accessToken,
@@ -28,7 +28,7 @@ export const InsertEasyVoucher = async ({
   data,
   accessToken,
 }: {
-  data: EasyInsertVoucherScheme
+  data: { header: Header; details: Detail[] }
   accessToken: string
 }) => {
   try {
@@ -41,7 +41,7 @@ export const InsertEasyVoucher = async ({
           'Content-Type': 'application/json',
           authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ header: data.types[0], details: data.types[1] }),
+        body: JSON.stringify(data),
       }
     )
 

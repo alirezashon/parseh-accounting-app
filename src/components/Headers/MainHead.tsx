@@ -77,14 +77,13 @@ const MainHead = ({
         <div className="flex justify-end items-start gap-3 overflow-x-auto py-2 px-3">
           {icons &&
             icons.map((icon, index) => {
-              const isActive = pathname.includes(`${icon.destination}`)
+              const isActive = pathname === `${icon.destination}`
               return (
                 <div
                   key={index}
                   onClick={() => {
                     if (icon.act) icon.act()
-                    else if (icon.destination)
-                      window.location.href = icon.destination
+                    else if (icon.destination) open(icon.destination)
                   }}
                   className={`flex flex-col items-center justify-center px-3 rounded-md text-sm transition-all duration-300
                     ${

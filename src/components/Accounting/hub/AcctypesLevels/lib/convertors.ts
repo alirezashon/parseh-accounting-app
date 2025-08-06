@@ -1,24 +1,20 @@
-import {
-  AccountGroupsScheme,
-  DetailedScheme,
-  DetailTypeScheme,
-  GeneralScheme,
-  SpecificScheme,
-} from '@/interfaces'
 import { GetDetailed } from '@/services/detailed'
 import { GetDetailTypes } from '@/services/detailTypes'
 import { GetGenerals } from '@/services/general'
 import { GetAccountGroups } from '@/services/global'
 import { GetSpecifics } from '@/services/specific'
 import { getCookieByKey } from '@/utils/cookies'
-import { TreeChartInterface } from '..'
+import { TreeChartInterface } from './data'
+
+let treeCache: TreeChartInterface[] | null = null
 
 export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
+  if (treeCache) return treeCache // ✅ اگر قبلاً گرفته شده، مستقیم بده
+
   const accessToken = (await getCookieByKey('access_token')) || ''
   const finalTree: TreeChartInterface[] = []
- 
-  const accGroups: AccountGroupsScheme[] =
-    (await GetAccountGroups({ accessToken })) || []
+
+  const accGroups = (await GetAccountGroups({ accessToken })) || []
   accGroups.forEach((row) => {
     finalTree.push({
       id: row.accountgroup_id,
@@ -30,8 +26,8 @@ export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
       chlabel: row.accountgroup_title,
     })
   })
- 
-  const generals: GeneralScheme[] = (await GetGenerals({ accessToken })) || []
+
+  const generals = (await GetGenerals({ accessToken })) || []
   generals.forEach((row) => {
     finalTree.push({
       id: row.gl_id,
@@ -44,9 +40,8 @@ export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
     })
   })
 
-  // --- سطح 2: Specifics
   for (const gl of generals) {
-    const specifics: SpecificScheme[] =
+    const specifics =
       (await GetSpecifics({ accessToken, gl_id: gl.gl_id })) || []
     specifics.forEach((row) => {
       finalTree.push({
@@ -61,13 +56,11 @@ export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
     })
   }
 
-  // --- سطح 3: Detail Types
-  const detailTypes: DetailTypeScheme[] =
-    (await GetDetailTypes({ accessToken })) || []
+  const detailTypes = (await GetDetailTypes({ accessToken })) || []
   detailTypes.forEach((row) => {
     finalTree.push({
       id: row.DLTypeID,
-      chpid: 0, // یا اگه والد داری از اون استفاده کن
+      chpid: 0,
       chtitle: row.Title,
       chstatus: row.DLTypeID,
       chlevel: 3,
@@ -76,9 +69,8 @@ export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
     })
   })
 
-  // --- سطح 4: Detailed
   for (const dt of detailTypes) {
-    const detailed: DetailedScheme[] =
+    const detailed =
       (await GetDetailed({ accessToken, DLTypeID: dt.DLTypeID })) || []
     detailed.forEach((row) => {
       finalTree.push({
@@ -93,5 +85,6 @@ export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
     })
   }
 
+  treeCache = finalTree // ✅ کش کن برای دفعات بعد
   return finalTree
 }

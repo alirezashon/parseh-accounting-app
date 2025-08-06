@@ -13,89 +13,11 @@ import {
 } from 'react-icons/fa'
 import { FaChartPie, FaDiagramProject } from 'react-icons/fa6'
 import { getAllTreeData } from './lib/convertors'
+import { levelol, TreeChartInterface } from './lib/data'
+import { HiClipboardDocumentList, HiDocumentPlus } from 'react-icons/hi2'
+import { MdCategory } from 'react-icons/md'
 
-export interface TreeChartInterface {
-  id: number
-  chpid: number
-  chtitle: string
-  chstatus: number
-  chlevel: number
-  lev1_count: number
-  chlabel?: string | null
-}
-
-// const generateMockTreeData = (
-//   maxLevel: number = 3,
-//   maxItemsPerLevel: number = 10
-// ): TreeChartInterface[] => {
-//   let idCounter = 1
-//   const data: TreeChartInterface[] = []
-
-//   const generateChildren = (parentId: number, level: number) => {
-//     if (level > maxLevel) return
-
-//     const count = Math.min(2, maxItemsPerLevel)
-//     for (let i = 0; i < count; i++) {
-//       const newItem: TreeChartInterface = {
-//         id: idCounter,
-//         chpid: parentId,
-//         chtitle: `Level ${level} - Node ${idCounter}`,
-//         chstatus: 1,
-//         chlevel: level,
-//         lev1_count: 0,
-//       }
-//       data.push(newItem)
-//       const currentId = idCounter
-//       idCounter++
-//       generateChildren(currentId, level + 1)
-//     }
-//   }
-
-//   for (let i = 0; i < maxItemsPerLevel; i++) {
-//     const rootItem: TreeChartInterface = {
-//       id: idCounter,
-//       chpid: 0,
-//       chtitle: `Level 0 - Node ${idCounter}`,
-//       chstatus: 1,
-//       chlevel: 0,
-//       lev1_count: 0,
-//     }
-//     data.push(rootItem)
-//     const rootId = idCounter
-//     idCounter++
-//     generateChildren(rootId, 1)
-//   }
-
-//   return data
-// }
-
-// const mockData: TreeChartInterface[] = generateMockTreeData()
-
-const levelol: string[][] = [
-  [
-    'bg-blue-200  py-4',
-    'bg-blue-300 mt-5 py-4 rounded-xl',
-    'bg-indigo-400 mt-5 py-4 rounded-xl',
-    'bg-purple-500 mt-5 py-4 rounded-xl',
-    '',
-  ],
-  [
-    'bg-white my-3 border-y-8 border-blue-300 hover:bg-blue-100 transition-all duration-300 shadow rounded-xl',
-    'bg-blue-50 my-2 border-l-4 border-blue-400 hover:bg-blue-200 transition-all duration-300 shadow-md rounded-xl',
-    'bg-indigo-100 my-3 border-l-4 border-indigo-400 hover:bg-indigo-300 transition-all duration-300 shadow-md rounded-xl',
-    'bg-purple-100 my-3 border-l-4 border-purple-300 hover:bg-purple-200 transition-all duration-300 shadow-md rounded-xl',
-  ],
-  [
-    'bg-blue-100 text-blue-800 border-2 rounded-lg',
-    'bg-blue-200 text-blue-800',
-    'bg-indigo-300 text-indigo-900',
-    'bg-purple-200 text-purple-900',
-  ],
-  ['text-blue-800', 'text-blue-900', 'text-indigo-700', 'text-purple-800'],
-  ['', '', '', ''],
-]
-
-const AcctypesLevels = ({ levelo }: { levelo: number }) => {
+const AcctypesLevels = () => {
   const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
   const [openTrees, setOpenTrees] = useState<number[]>([])
   const [editableRow, setEditableRow] = useState<TreeChartInterface | null>(
@@ -245,28 +167,23 @@ const AcctypesLevels = ({ levelo }: { levelo: number }) => {
         title="جدول حساب ها"
         icons={[
           {
-            icon: <FaChartPie size={30} />,
-            label: 'گزارش‌ها',
-            destination: '/reports',
+            icon: <MdCategory size={30} />,
+            label: 'جدول حساب ها',
+            destination: '/accounting/acctypes',
           },
           {
-            icon: <BsDatabaseFillGear size={30} />,
-            label: 'کسب‌و‌کار',
-            destination: '/bussines',
+            icon: <HiDocumentPlus size={30} />,
+            label: 'سند جدید',
+            destination: '/accounting/add',
           },
+
           {
-            icon: <FaDiagramProject size={30} />,
-            label: 'ارتباطات',
-            destination: '/relations',
-          },
-          {
-            icon: <AiFillSetting size={30} />,
-            label: 'تنظیمات',
-            destination: '/setting',
+            icon: <HiClipboardDocumentList size={30} />,
+            label: 'لیست اسناد',
+            destination: '/accounting',
           },
         ]}
       />
-
       <div className="p-6 bg-blue-50 min-h-screen">
         <div className="text-xl font-bold mb-6 text-blue-700">جدول حساب ها</div>
         <div className="rounded-md p-4 shadow">{renderTree(0)}</div>

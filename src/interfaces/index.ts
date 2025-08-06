@@ -101,3 +101,36 @@ export interface VoucherTypeScheme {
   Title_En: string
   Description: string
 }
+export interface Header {
+  VoucherType: number
+  FiscalYearRef: number
+  BranchRef: number
+  Number: number
+  Date: string
+  Description: string
+  Description_En: string
+  amount: number
+  CurrencyRef: number
+  trans_type: number
+  Signature: string
+}
+
+export interface Detail {
+  RowNumber: number
+  FollowUpNumber: string
+  FollowUpDate: string
+  Item_amount: number
+  Item_percent: number
+  AccountGroupRef: number
+  GLRef: number
+  SLRef: number
+  SLCode: string
+  DLLevel4: string
+  DLLevel5: string
+  DLTypeRef4: number
+  DLTypeRef5: number
+  Description: string
+  Description_En: string
+  receiver_delivery: string
+  Quantity: number
+}
