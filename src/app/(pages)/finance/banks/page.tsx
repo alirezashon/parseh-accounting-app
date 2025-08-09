@@ -1,7 +1,7 @@
-import MainLayout from '@/layouts/Main'
+import Banks from '@/components/Finance/Banks'
 
 const Persons = () => {
-  return <MainLayout> </MainLayout>
+  return <Banks />
 }
 
 export default Persons

@@ -1,13 +1,6 @@
-import Finance from '@/components/Wizard/layouts/Finance'
-import MainLayout from '@/layouts/Main'
-import React from 'react'
-
+import Finance from '@/components/Finance'
 const FinancePage = () => {
-  return (
-    <MainLayout>
-      <></>
-    </MainLayout>
-  )
+  return <Finance />
 }
 
 export default FinancePage
