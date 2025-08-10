@@ -40,8 +40,6 @@ const AddCache = () => {
   }
 
   const handleSubmit = () => {
-    console.log('✅ اطلاعات ارسال شد:', CacheData)
-    // ارسال API
   }
 
   return (
