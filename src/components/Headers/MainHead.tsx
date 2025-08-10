@@ -54,7 +54,7 @@ const MainHead = ({
         style={{ height: `${headerHeight}vh`, transition: 'height 0.4s' }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`  fixed w-[92%] xl:w-[80%] z-[25] top-0 xl:rounded-b-2xl rounded-t-2xl bg-white text-white border-b-4 border-[#2f27ce] flex items-start justify-between px-4 shadow-md`}
+        className={`  fixed w-[80%] xl:w-[80%] z-[45] max-lg:bottom-0 min-lg:top-0 xl:rounded-b-2xl rounded-t-2xl bg-white  text-white border-b-4 border-[#2f27ce] flex items-start justify-between px-4 shadow-md`}
       >
         {/* لوگو */}
         <div className="flex items-center justify-center h-full py-2">
@@ -68,7 +68,7 @@ const MainHead = ({
         </div>
 
         {title && (
-          <div className="absolute border-4  shadow-xs   shadow-blue-400 border-t-0 left-1/2 transform -translate-x-1/2 bg-white rounded-b-xl px-5 text-blue-700 text-[40px] font-bold pointer-events-none">
+          <div className="fixed top-[0px] text-nowrap border-4  shadow-xs   shadow-blue-400 border-t-0 left-1/2 transform -translate-x-1/2 bg-white rounded-b-xl px-5 text-blue-700 text-[40px] font-bold pointer-events-none">
             {title}
           </div>
         )}
