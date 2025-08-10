@@ -76,7 +76,7 @@ const SearchPersonInput = ({
             placeholder={placeholder}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 200)}
-            className='w-full px-4 py-2 border-2 border-blue-400 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 bg-white pr-10'
+            className='w-full min-w-3xs px-4 py-2 border-2 border-blue-400 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 bg-white pr-10'
           />
           <FiPlus
             className='absolute left-3 hover:bg-blue-100 hover:scale-125  rounded-full top-1/2 -translate-y-1/2 text-blue-600 hover:text-blue-800 cursor-pointer text-lg'

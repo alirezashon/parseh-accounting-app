@@ -25,12 +25,15 @@ const Finance = () => {
             destination: '/accounting/cache',
           },
           {
-            // icon: <TbCreditCardPay size={30} />,
             icon: <GiCardRandom size={30} />,
             label: ' بانک ها',
             destination: '/finance/banks',
           },
-
+          {
+            icon: <BsDatabaseFillAdd size={30} />,
+            label: ' ایجاد',
+            destination: '/finance/banks/add',
+          },
           {
             icon: <BsDatabaseFillAdd size={30} />,
             label: ' ایجاد',

@@ -1,4 +1,4 @@
-import ReceiveMoneyForm from '@/components/Finance/Received'
+import ReceiveMoneyForm from '@/components/Persons/Received'
 import MainLayout from '@/layouts/Main'
 
 const ReceievedPage = () => {

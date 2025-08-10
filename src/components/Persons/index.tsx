@@ -1,46 +1,51 @@
 'use client'
 import { useState } from 'react'
 import EditableTable from '../Accounting/hub/DetailedBlankTable'
-import ListHead from '../Headers/ListHead'
 import { DiDatabase } from 'react-icons/di'
 import { RiUserAddFill } from 'react-icons/ri'
 import { ImMenu3 } from 'react-icons/im'
+import MainHead from '../Headers/MainHead'
 
 const Persons = () => {
   const [activeTab, setActiveTab] = useState('همه')
   const [isMobile, setIsMobile] = useState(false)
   return (
     <div>
-      <ListHead
-        formName='اشخاص'
-        actions={[
+      <MainHead
+        title="اشخاص"
+        icons={[
           {
-            icon: <DiDatabase className='text-2xl' />,
-            act: () => '',
-            label: ' داده ها',
+            icon: <DiDatabase className="text-2xl" />,
+            label: 'لیست اشخاص',
+            destination: '/persons',
           },
           {
-            icon: <RiUserAddFill className='text-2xl' />,
-            act: () => '',
-            label: 'ایجاد',
+            icon: <RiUserAddFill className="text-2xl" />,
+            label: 'ایجاد شخص',
+            destination: '/persons/add',
           },
           {
-            icon: <ImMenu3 className='text-2xl' />,
+            label: 'دریافت از شخص',
+            icon: <RiUserAddFill className="text-2xl" />,
+            destination: '/persons/received',
+          },
+          {
+            icon: <ImMenu3 className="text-2xl" />,
             act: () => '',
-            label: 'سایر',
+            label: 'دریاقت از شخص',
             subList: [
               {
-                icon: <ImMenu3 className='text-2xl' />,
+                icon: <ImMenu3 className="text-2xl" />,
                 act: () => '',
                 label: 'سایر',
               },
               {
-                icon: <DiDatabase className='text-2xl' />,
+                icon: <DiDatabase className="text-2xl" />,
                 act: () => '',
                 label: ' داده ها',
               },
               {
-                icon: <RiUserAddFill className='text-2xl' />,
+                icon: <RiUserAddFill className="text-2xl" />,
                 act: () => '',
                 label: 'ایجاد',
               },
@@ -48,7 +53,7 @@ const Persons = () => {
           },
         ]}
       />
-      <div className='relative w-full border-b border-gray-300 '>
+      <div className="relative w-full border-b border-gray-300 ">
         <div
           className={`flex ${isMobile ? 'relative h-12 overflow-hidden' : ''}`}
         >
@@ -112,7 +117,7 @@ const Persons = () => {
         ]}
         onRowClick={(row) => console.log(row)}
         color={'#2F27CE'}
-        className='mt-7 rounded-sm'
+        className="mt-7 rounded-sm"
       />
     </div>
   )

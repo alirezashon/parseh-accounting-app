@@ -1,5 +1,4 @@
-'use client'
-import MainHead from '@/components/Headers/MainHead'
+'use client' 
 import Drawer from '@/components/Navigation'
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
