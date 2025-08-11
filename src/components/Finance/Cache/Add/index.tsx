@@ -4,14 +4,12 @@ import Input from '@/components/hub/Forms/Input'
 import SingleSelectList from '@/components/hub/Forms/SingleSelectList'
 import SwitchBox from '@/components/hub/Forms/SwitchBox'
 import Image from 'next/image'
-import { SiAmazonelasticache } from 'react-icons/si'
 import MainHead from '@/components/Headers/MainHead'
 import { GiCardPick, GiCardRandom } from 'react-icons/gi'
 import { PiCoinsFill } from 'react-icons/pi'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
 
 const AddCache = () => {
-  const [activeTab, setActiveTab] = useState<1 | 2>(1)
   const [CacheData, setCacheData] = useState({
     code: '',
     name: '',
@@ -39,8 +37,7 @@ const AddCache = () => {
     }))
   }
 
-  const handleSubmit = () => {
-  }
+  const handleSubmit = () => {}
 
   return (
     <>
