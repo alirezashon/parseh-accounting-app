@@ -1,6 +1,8 @@
 'use client'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { FaCircleLeft } from 'react-icons/fa6'
 
 interface Action {
   icon: any
@@ -25,6 +27,7 @@ const MainHead = ({
   const [isHovering, setIsHovering] = useState(false)
   const [pathname, setPathname] = useState('')
 
+  const router = useRouter()
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setPathname(window.location.pathname)
@@ -51,7 +54,7 @@ const MainHead = ({
         style={{ height: `${headerHeight}vh` }}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
-        className={`
+        className={` z-20
           fixed w-[90%] xl:w-[80%] 
           hover:z-50
           max-lg:bottom-0 min-lg:top-0 
@@ -62,7 +65,6 @@ const MainHead = ({
           shadow-lg transition-all duration-300
         `}
       >
-        {/* لوگو */}
         <div className="flex items-center justify-center h-full py-2">
           <Image
             src="/images/logol.png"
@@ -75,11 +77,18 @@ const MainHead = ({
 
         {/* عنوان */}
         {title && (
-          <div className="fixed top-0 max-lg:hidden border-4 border-t-0 border-blue-500 shadow-md 
+          <div
+            className="fixed top-0 flex gap-4 max-lg:hidden border-4 border-t-0 border-blue-500 shadow-md 
             left-1/2 transform -translate-x-1/2 
-            bg-white rounded-b-xl px-5 py-1 text-blue-700 
-            text-2xl font-bold pointer-events-none">
-            {title}
+            bg-white rounded-b-xl px-5 py-7 text-blue-700 
+            text-2xl font-bold pointer-events-none"
+          >
+            <p>{title}</p>
+            <FaCircleLeft
+              onClick={() => router.back()}
+              size={33}
+              className="cursor-pointer hover:rotate-12"
+            />
           </div>
         )}
 

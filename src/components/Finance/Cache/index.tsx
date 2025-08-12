@@ -7,6 +7,7 @@ import MainLayout from '@/layouts/Main'
 import { RefObject, useRef, useState } from 'react'
 import { BsDatabaseFillAdd } from 'react-icons/bs'
 import { FaCashRegister } from 'react-icons/fa'
+import { FaMoneyBillTrendUp } from 'react-icons/fa6'
 import { GiCardPick, GiCardRandom } from 'react-icons/gi'
 import { IoCloseCircle } from 'react-icons/io5'
 import { PiCoinsFill } from 'react-icons/pi'
@@ -96,16 +97,15 @@ const CashBoxes = () => {
             label: 'لیست مالی',
             destination: '/finance',
           },
-
           {
             icon: <GiCardRandom size={30} />,
             label: ' بانک ها',
             destination: '/finance/banks',
           },
           {
-            icon: <BsDatabaseFillAdd size={30} />,
-            label: ' ایجاد',
-            destination: '/finance/banks/add',
+            icon: <FaMoneyBillTrendUp size={30} />,
+            label: 'تنخواه گردان',
+            destination: '/finance/imprest',
           },
           {
             icon: <BsDatabaseFillAdd size={30} />,
@@ -192,7 +192,6 @@ const CashBoxes = () => {
           </div>
         )}
       </div>
-
       <style jsx>{`
         @keyframes slideInX {
           from {
