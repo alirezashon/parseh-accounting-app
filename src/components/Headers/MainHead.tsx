@@ -38,7 +38,7 @@ const MainHead = ({
     let interval: NodeJS.Timeout
     if (isHovering) {
       interval = setInterval(() => {
-        setHeaderHeight((prev) => Math.min(prev + 1, 22))
+        setHeaderHeight((prev) => Math.min(prev + 1, 32))
       }, 15)
     } else {
       interval = setInterval(() => {
@@ -61,7 +61,7 @@ const MainHead = ({
           xl:rounded-b-2xl 
           bg-gradient-to-r from-blue-50 to-white
           border-b-4 border-[#2f27ce]
-          flex items-start justify-between px-4
+          flex items-end justify-between px-4 
           shadow-lg transition-all duration-300
         `}
       >

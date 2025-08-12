@@ -17,14 +17,14 @@ export function middleware(request: NextRequest) {
       '/atministiyaramiyeytor/Loginatimn' &&
     request.nextUrl.pathname !== '/failed'
   ) {
-    if (!isAuthenticated) {
-      return NextResponse.redirect(
-        new URL(
-          `${process?.env?.NEXT_PUBLIC_APP_URL || ''}/auth/login`,
-          request.url
-        )
-      )
-    }
+    // if (!isAuthenticated) {
+    //   return NextResponse.redirect(
+    //     new URL(
+    //       `${process?.env?.NEXT_PUBLIC_APP_URL || ''}/auth/login`,
+    //       request.url
+    //     )
+    //   )
+    // }
     if (userStatus === 'INACTIVE') {
       return NextResponse.redirect(
         new URL(
