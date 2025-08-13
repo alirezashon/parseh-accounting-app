@@ -92,7 +92,6 @@ export default function Imprest() {
             افزودن تنخواه
           </button>
         </div>
-
         {cards.map((card, index) => (
           <CardItem
             key={card.id}
@@ -107,6 +106,7 @@ export default function Imprest() {
     </MainLayout>
   )
 }
+Array.from({length:50},()=>{})
 
 // 'use client'
 // import { useState } from 'react'
