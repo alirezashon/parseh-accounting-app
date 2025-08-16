@@ -1,0 +1,130 @@
+/* .basketBox {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: #f7f7f7;
+  width: 280px;
+  max-height: 100%;
+  overflow-y: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cardItem {
+  background: linear-gradient(135deg, #0077ff, #00c0ff);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bankName {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.cardNumber {
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin-top: auto;
+  font-weight: bold;
+}
+
+.owner {
+  font-size: 14px;
+  opacity: 0.8;
+} */
+
+.basketBox {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 20px;
+  background-color: #f2f2f2;
+  width: 300px;
+  max-height: 100%;
+  overflow-y: auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transform: rotateX(5deg) rotateY(-5deg);
+  border: 1px solid #ccc;
+}
+
+.cardItem {
+  background: linear-gradient(135deg, #0077ff, #00c0ff);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  height: 160px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(12deg) translateZ(5px);
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.25),
+    0 2px 10px rgba(255, 255, 255, 0.05) inset;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: rotateX(0deg) translateZ(15px) scale(1.02);
+    box-shadow:
+      0 20px 40px rgba(0, 0, 0, 0.3),
+      0 4px 15px rgba(255, 255, 255, 0.05) inset;
+    z-index: 10;
+  }
+}
+
+.cardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bankName {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.cardNumber {
+  font-size: 18px;
+  letter-spacing: 2px;
+  margin-top: auto;
+  font-weight: bold;
+}
+
+.owner {
+  font-size: 14px;
+  opacity: 0.85;
+}

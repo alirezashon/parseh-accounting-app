@@ -7,6 +7,7 @@ import { MdCategory, MdOutlineAddCard } from 'react-icons/md'
 import { useState } from 'react'
 import { bankCardImage } from './Cards/MatchingBankCards'
 import BankCard from './Cards/BankCard'
+import { BiBasket } from 'react-icons/bi'
 export interface ImprestInterface {
   sheba: string
   dateTime: string
@@ -75,7 +76,7 @@ const Banks = () => {
           },
         ]}
       />
-      <div className="select-none relative min-h-screen p-6 bg-gradient-to-bl from-[#2794ce6e] to-[#aac4f489] rounded-2xl overflow-hidden">
+      <div className="  select-none relative min-h-screen p-6 bg-gradient-to-bl from-[#2794ce6e] to-[#aac4f489] rounded-2xl overflow-hidden">
         <div className="flex justify-end mb-6">
           <button
             onClick={addCard}
@@ -85,25 +86,29 @@ const Banks = () => {
             افزودن تنخواه
           </button>
         </div>
-
-        {cards.map((card, index) => (
-          <BankCard
-            cards={{
-              sheba: 'shebashesha',
-              dateTime: '333',
-              balance: '334433334433334433',
-              bankCode: card.bankCode,
-            }}
-            position={{ x: 333 + card.x, y: card.y }}
-            // index: number
-            // onPositionChange: (index: number, pos: { x: number; y: number }) => void
-            // onClick: () => void
-            key={index}
-            index={index}
-            onPositionChange={updatePosition}
-            onClick={() => console.log('Edit', card)}
-          />
-        ))}
+        <div className="">
+          {cards.map((card, index) => (
+            <BankCard
+              cards={{
+                sheba: 'shebashesha',
+                dateTime: '333',
+                balance: '334433334433334433',
+                bankCode: card.bankCode,
+              }}
+              position={{ x: 333 + card.x, y: card.y }}
+              // index: number
+              // onPositionChange: (index: number, pos: { x: number; y: number }) => void
+              // onClick: () => void
+              key={index}
+              index={index}
+              onPositionChange={updatePosition}
+              onClick={() => console.log('Edit', card)}
+            />
+          ))}
+        </div>
+        <div className="">
+          <BiBasket className="text-blue-700 text-[99px]" />
+        </div>
       </div>
     </MainLayout>
   )

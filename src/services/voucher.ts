@@ -1,4 +1,4 @@
-import { Detail, EasyInsertVoucherScheme, Header } from '@/interfaces'
+import { Detail, Header } from '@/interfaces'
 
 export const get_vouchertype = async ({
   accessToken,

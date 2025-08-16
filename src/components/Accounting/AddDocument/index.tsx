@@ -111,7 +111,6 @@ export default function AddDocument() {
           },
         ]}
       />
-
       {/* مشخصات سربرگ */}
       <Divider title="مشخصات سربرگ سند" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -119,7 +118,6 @@ export default function AddDocument() {
           <div key={i}>{renderHeaderInput(field)}</div>
         ))}
       </div>
-
       {/* سطرهای سند */}
       <Divider title="سطرهای سند" />
       <div className="flex flex-col gap-4">

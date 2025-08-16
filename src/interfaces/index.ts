@@ -47,53 +47,7 @@ export interface IUserResponse {
   user_role_id: number
   role_count: number
 }
-export interface EasyInsertVoucherScheme {
-  types: [
-    {
-      BranchRef: number
-      Date: string
-      VoucherType: number
-      IsCurrencyBased: number
-      Description: string
-      Description_En: string
-      State: number
-      IsTemporary: number
-      IsExternal: number
-      ReferenceNumber: number
-      ShowCurrencyFields: number
-      IsReadonly: number
-      FiscalYearRef: number
-      Signature: string
-    },
-    {
-      RowNumber: number
-      AccountGroupRef: number
-      GLRef: number
-      SLRef: number
-      SLCode: string
-      Debit: number
-      Credit: number
-      Description: string
-      Description_En: string
-      FollowUpNumber: string
-      FollowUpDate: string
-      Quantity: number
-      DLLevel4: string
-      DLLevel5: string
-      DLTypeRef4: number
-      DLTypeRef5: number
-      CurrencyRef: number
-      IsHavalehdar: number
-      TaxAccountType: number
-      TaxStateType: number
-      TransactionType: number
-      PurchaseOrSale: number
-      ItemOrService: number
-      PartyRef: number
-      TaxAmount: number
-    }[]
-  ]
-}
+
 export interface VoucherTypeScheme {
   VoucherTypeID: number
   Code: number
@@ -102,35 +56,45 @@ export interface VoucherTypeScheme {
   Description: string
 }
 export interface Header {
-  VoucherType: number
-  FiscalYearRef: number
   BranchRef: number
-  Number: number
   Date: string
+  VoucherTypeRef: number
+  IsCurrencyBased: number
   Description: string
   Description_En: string
-  amount: number
-  CurrencyRef: number
-  trans_type: number
+  State: number
+  IsTemporary: number
+  IsExternal: number
+  ReferenceNumber: number
+  ShowCurrencyFields: number
+  IsReadonly: number
+  FiscalYearRef: number
   Signature: string
 }
 
 export interface Detail {
   RowNumber: number
-  FollowUpNumber: string
-  FollowUpDate: string
-  Item_amount: number
-  Item_percent: number
   AccountGroupRef: number
   GLRef: number
   SLRef: number
   SLCode: string
+  Debit: number
+  Credit: number
+  Description: string
+  Description_En: string
+  FollowUpNumber: string
+  FollowUpDate: string
+  Quantity: number
   DLLevel4: string
   DLLevel5: string
   DLTypeRef4: number
   DLTypeRef5: number
-  Description: string
-  Description_En: string
-  receiver_delivery: string
-  Quantity: number
+  CurrencyRef: number
+  TaxAccountType: number
+  TaxStateType: number
+  TransactionType: number
+  PurchaseOrSale: number
+  ItemOrService: number
+  PartyRef: number
+  TaxAmount: number
 }
