@@ -32,7 +32,6 @@ textarea {
   outline: none;
   padding: 0.12px 1vh;
   font-size: 16px;
-  border-radius: 7px;
   min-height: 40px;
 }
 input {

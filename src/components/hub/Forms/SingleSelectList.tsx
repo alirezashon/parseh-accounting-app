@@ -62,7 +62,6 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
         </span>
         <span className='text-gray-400'>&#x25BC;</span>
       </div>
-
       {isOpen && (
         <div className='absolute py-5 max-h-[40vh] overflow-auto w-full border border-gray-300 bg-white rounded-md mt-2 shadow-md z-10'>
           <div className='sticky top-0 w-full flex items-center'>
@@ -109,5 +108,4 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
     </div>
   )
 }
-
 export default SingleSelectList

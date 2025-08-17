@@ -1,7 +1,10 @@
 'use client'
-import MainHead from '@/components/Headers/MainHead'
-import MainLayout from '@/layouts/Main'
-import { useEffect, useState } from 'react' 
+import { getAllTreeData } from '@/components/Accounting/hub/AcctypesLevels/lib/convertors'
+import {
+  levelol,
+  TreeChartInterface,
+} from '@/components/Accounting/hub/AcctypesLevels/lib/data'
+import { useEffect, useState } from 'react'
 import {
   FaChevronLeft,
   FaCheckCircle,
@@ -9,12 +12,8 @@ import {
   FaEdit,
   FaPlusCircle,
 } from 'react-icons/fa'
-import { getAllTreeData } from './lib/convertors'
-import { levelol, TreeChartInterface } from './lib/data'
-import { HiClipboardDocumentList, HiDocumentPlus } from 'react-icons/hi2'
-import { MdCategory } from 'react-icons/md'
 
-const AcctypesLevels = () => {
+const Selectree = () => {
   const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
   const [openTrees, setOpenTrees] = useState<number[]>([])
   const [editableRow, setEditableRow] = useState<TreeChartInterface | null>(
@@ -158,35 +157,7 @@ const AcctypesLevels = () => {
     )
   }
 
-  return (
-    <MainLayout>
-      <MainHead
-        title="جدول حساب ها"
-        icons={[
-          {
-            icon: <MdCategory size={30} />,
-            label: 'جدول حساب ها',
-            destination: '/accounting/acctypes',
-          },
-          {
-            icon: <HiDocumentPlus size={30} />,
-            label: 'سند جدید',
-            destination: '/accounting/add',
-          },
-
-          {
-            icon: <HiClipboardDocumentList size={30} />,
-            label: 'لیست اسناد',
-            destination: '/accounting',
-          },
-        ]}
-      />
-      <div className="p-6 bg-blue-50 min-h-screen">
-        <div className="text-xl font-bold mb-6 text-blue-700">جدول حساب ها</div>
-        <div className="rounded-md p-4 shadow">{renderTree(0)}</div>
-      </div>
-    </MainLayout>
-  )
+  return <div className="rounded-md p-4 shadow">{renderTree(0)}</div>
 }
 
-export default AcctypesLevels
+export default Selectree

@@ -45,10 +45,10 @@ const Input = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={` ${
+        className={` ${className} ${
           ["error", "unique", "need"].includes(inputState as string) &&
           errorClass
-        } input border bg-white border-gray-300   rounded px-3 py-2 ${
+        } input border bg-white border-gray-300  px-3  ${
           inputState === "in"
             ? "bg-blue-50 shadow-sm shadow-blue-500 text-blue-900"
             : inputState === "ok"
@@ -58,7 +58,7 @@ const Input = ({
             : inputState === "need"
             ? "bg-yellow-100 shadow-sm shadow-yellow-500 text-[#f70909]"
             : inputState === "error" && "bg-red-50 shadow-sm shadow-red-500"
-        } ${className}`}
+        }`}
       />
       <b
         className={`px-1 ${

@@ -1,11 +1,13 @@
 'use client'
 import MainHead from '@/components/Headers/MainHead'
+import Calendar from '@/components/hub/Calendar'
 import Divider from '@/components/hub/Forms/Divider'
 import Input from '@/components/hub/Forms/Input'
 import SingleSelectList from '@/components/hub/Forms/SingleSelectList'
 import TextArea from '@/components/hub/Forms/TextArea'
 import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import MultiSelectTrees from '@/components/hub/MultiSelectTrees'
+import { Detail, Header } from '@/interfaces'
 import { useState } from 'react'
 import { FaTrash, FaPlus } from 'react-icons/fa6'
 import { HiClipboardDocumentList, HiDocumentPlus } from 'react-icons/hi2'
@@ -13,13 +15,14 @@ import { MdCategory } from 'react-icons/md'
 
 const headerFields = [
   { key: 'code', label: 'شماره سند', type: 'text' },
+    { key: '', label: 'شماره سند', type: 'text' },
   { key: 'date', label: 'تاریخ', type: 'date' },
-  {
-    key: 'project',
-    label: 'پروژه',
-    type: 'select',
-    options: ['پروژه ۱', 'پروژه ۲'],
-  },
+  // {
+  //   key: 'project',
+  //   label: 'پروژه',
+  //   type: 'select',
+  //   options: ['پروژه ۱', 'پروژه ۲'],
+  // },
   { key: 'description', label: 'توضیحات', type: 'textarea' },
 ]
 
@@ -28,8 +31,8 @@ interface DocumentRow {
   detailed: string
   description: string
   debit: number
+  credit: number
 }
-
 export default function AddDocument() {
   const [formHeader, setFormHeader] = useState(
     Object.fromEntries(
@@ -39,9 +42,57 @@ export default function AddDocument() {
       ])
     )
   )
-
+  const [formData, setFormData] = useState<{
+    header: Header
+    details: Detail[]
+  }>({
+    header: {
+      BranchRef: 0,
+      Date: new Date().toISOString().split('T')[0],
+      VoucherTypeRef: 0,
+      IsCurrencyBased: 0,
+      Description: '',
+      Description_En: '',
+      State: 0,
+      IsTemporary: 0,
+      IsExternal: 0,
+      ReferenceNumber: 0,
+      ShowCurrencyFields: 0,
+      IsReadonly: 0,
+      FiscalYearRef: 0,
+      Signature: '',
+    },
+    details: [
+      {
+        RowNumber: 1,
+        AccountGroupRef: 0,
+        GLRef: 0,
+        SLRef: 0,
+        SLCode: '',
+        Debit: 0,
+        Credit: 0,
+        Description: '',
+        Description_En: '',
+        FollowUpNumber: '',
+        FollowUpDate: '',
+        Quantity: 0,
+        DLLevel4: '',
+        DLLevel5: '',
+        DLTypeRef4: 0,
+        DLTypeRef5: 0,
+        CurrencyRef: 0,
+        TaxAccountType: 0,
+        TaxStateType: 0,
+        TransactionType: 0,
+        PurchaseOrSale: 0,
+        ItemOrService: 0,
+        PartyRef: 0,
+        TaxAmount: 0,
+      },
+    ],
+  })
   const [documents, setDocuments] = useState<DocumentRow[]>([
-    { account: '', detailed: '', description: '', debit: 0 },
+    { account: '', detailed: '', description: '', debit: 0, credit: 0 },
   ])
 
   const renderHeaderInput = ({ key, label, type, options = [] }: any) => {
@@ -85,8 +136,49 @@ export default function AddDocument() {
   const addNewRow = () => {
     setDocuments((prev) => [
       ...prev,
-      { account: '', detailed: '', description: '', debit: 0 },
+      { account: '', detailed: '', description: '', debit: 0, credit: 0 },
     ])
+  }
+  const handleSubmit = () => {
+    const mappedDetails: Detail[] = documents.map((row, index) => ({
+      RowNumber: index + 1,
+      AccountGroupRef: 0,
+      GLRef: parseInt(row.account) || 0,
+      SLRef: parseInt(row.detailed) || 0,
+      SLCode: '',
+      Debit: row.debit || 0,
+      Credit: row.credit || 0,
+      Description: row.description,
+      Description_En: '',
+      FollowUpNumber: '',
+      FollowUpDate: '',
+      Quantity: 0,
+      DLLevel4: '',
+      DLLevel5: '',
+      DLTypeRef4: 0,
+      DLTypeRef5: 0,
+      CurrencyRef: 0,
+      TaxAccountType: 0,
+      TaxStateType: 0,
+      TransactionType: 0,
+      PurchaseOrSale: 0,
+      ItemOrService: 0,
+      PartyRef: 0,
+      TaxAmount: 0,
+    }))
+
+    const fullData: { header: Header; details: Detail[] } = {
+      header: {
+        ...formData.header,
+        Description: formHeader.description,
+        Date: formHeader.date,
+        ReferenceNumber: Number(formHeader.code),
+      },
+      details: mappedDetails,
+    }
+
+    console.log('🔄 Sending Document:', fullData)
+    // اینجا بفرست به API...
   }
 
   return (
@@ -120,29 +212,37 @@ export default function AddDocument() {
       </div>
       {/* سطرهای سند */}
       <Divider title="سطرهای سند" />
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col overflow-x-auto">
         {documents.map((row, index) => (
           <div
             key={index}
-            className="bg-white rounded-xl p-4 shadow-sm border border-blue-100 hover:shadow-md transition-all flex flex-wrap gap-4 items-end"
+            className="flex items-center  w-full "
           >
-            <div className="min-w-[200px] flex-1">
+            <div className="min-w-[200px] flex-1 hover:shadow-md transition-all ">
               <MultiSelectTrees
                 trees={treeData}
-                placeholder="انتخاب حساب‌ها"
+                placeholder="کد معین"
+                label={index === 0 ? 'کد معین' : ''}
                 onSelect={(ids) => console.log('انتخاب‌شده‌ها:', ids)}
               />
             </div>
-            <div className="w-32">
+            <div className="min-w-[200px] flex-1">
+              <MultiSelectTrees
+                trees={treeData}
+                placeholder="کد تفضیلی"
+                label={index === 0 ? 'کد تفضیلی' : ''}
+                onSelect={(ids) => console.log('انتخاب‌شده‌ها:', ids)}
+              />
+            </div>
+            <div className="min-w-[200px] flex-1">
               <InputNumber
                 label={index === 0 ? 'بدهکار' : ''}
                 placeholder="بدهکار"
-                type="number"
-                value={row.debit}
+                 value={row.debit}
                 onChange={(val) => updateRow(index, 'debit', val)}
               />
             </div>
-            <div className="w-32">
+            <div className="min-w-[200px] flex-1">
               <InputNumber
                 label={index === 0 ? 'بستانکار' : ''}
                 placeholder="بستانکار"
@@ -159,6 +259,29 @@ export default function AddDocument() {
                 onChange={(val) => updateRow(index, 'description', val)}
               />
             </div>
+            <div className="flex-1 min-w-[200px]">
+              <Input
+              className='rounded-0'
+                label={index === 0 ? 'شماره پیگیری' : ''}
+                placeholder="شماره پیگیری"
+                value={row.description}
+                onChange={(val) => updateRow(index, 'description', val)}
+              />
+            </div>
+            <div className="flex-1 min-w-[200px]">
+              <Calendar
+                setDate={() => ''}
+                placeholder="تاریخ پیگیری"
+                label={index === 0 ? 'تاریخ پیگیری' : ''}
+              />
+            </div>
+            <div className="flex-1 min-w-[200px]">
+              <SingleSelectList
+                label={index === 0 ? 'مرکز هزینه / پروژه' : ''}
+                items={[{ id: 'i', label: ' o' }]}
+                setSelectedItems={(id) => id}
+              />
+            </div>
             <button
               onClick={() => deleteRow(index)}
               className="ml-auto text-red-600 hover:text-red-800 hover:scale-110 transition-all"
@@ -167,15 +290,21 @@ export default function AddDocument() {
             </button>
           </div>
         ))}
-
-        {/* دکمه افزودن */}
-        <button
-          onClick={addNewRow}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all self-start"
-        >
-          <FaPlus />
-          افزودن سطر جدید
-        </button>
+        <div className="flex items-center">
+          <button
+            onClick={handleSubmit}
+            className="flex items-center justify-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all self-start"
+          >
+            ثبت سند حسابداری
+          </button>
+          <button
+            onClick={addNewRow}
+            className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all self-start"
+          >
+            <FaPlus />
+            افزودن سطر جدید
+          </button>
+        </div>
       </div>
     </div>
   )

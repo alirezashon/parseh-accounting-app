@@ -12,6 +12,7 @@ interface InputNumberProps {
   inputState?: InputStatus
   placeholder?: string
   message?: string
+  className?:string
 }
 
 const InputNumber = ({
@@ -22,9 +23,10 @@ const InputNumber = ({
   inputState,
   placeholder,
   message,
+  className
 }: InputNumberProps) => {
   const [local, setLocal] = useState(value)
-
+const Class = 3
   const handleChange = (val: number) => {
     let newVal = val
 
@@ -66,7 +68,7 @@ const InputNumber = ({
           }}
           value={local}
           placeholder={placeholder}
-          className={`w-full pr-10 text-right border bg-white border-gray-300 rounded px-3  outline-none  
+          className={`w-full pr-10 text-right border bg-white border-gray-300  px-3  outline-none  
           ${
             ['error', 'unique', 'need'].includes(inputState as string) &&
             errorClass

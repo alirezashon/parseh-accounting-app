@@ -55,7 +55,7 @@ const MultiSelectTrees: React.FC<RadioTreeSelectorProps> = ({
       )}
 
       <div
-        className='border border-gray-300 rounded-md h-10 py-2 px-4 cursor-pointer flex justify-between items-center bg-white relative z-10'
+        className='border border-gray-300 h-10 py-2 px-4 cursor-pointer flex justify-between items-center bg-white relative z-10'
         onClick={toggleDropdown}
       >
         <span className='text-gray-700'>
