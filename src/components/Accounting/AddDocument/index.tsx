@@ -1,4 +1,12 @@
 'use client'
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import ReactDOM from 'react-dom'
 import MainHead from '@/components/Headers/MainHead'
 import Calendar from '@/components/hub/Calendar'
 import Divider from '@/components/hub/Forms/Divider'
@@ -8,47 +16,271 @@ import TextArea from '@/components/hub/Forms/TextArea'
 import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import MultiSelectTrees from '@/components/hub/MultiSelectTrees'
 import { Detail, Header } from '@/interfaces'
-import { useState } from 'react'
 import { FaTrash, FaPlus } from 'react-icons/fa6'
 import { HiClipboardDocumentList, HiDocumentPlus } from 'react-icons/hi2'
 import { MdCategory } from 'react-icons/md'
+import { treeData } from './lib/data'
+import { FaTimes } from 'react-icons/fa'
 
-const headerFields = [
+export type FieldConfig = {
+  key: string
+  label?: string
+  type:
+    | 'text'
+    | 'date'
+    | 'textarea'
+    | 'select'
+    | 'number'
+    | 'calendar'
+    | 'singleselect'
+    | 'multiselecttrees'
+  options?: string[] // برای select
+  placeholder?: string
+  min?: number
+  max?: number
+}
+
+type HeaderState<TKeys extends string> = Record<TKeys, any>
+
+type Update = (val: any) => void
+
+export function makeKhaleFormJozi<TKeys extends string>(
+  state: HeaderState<TKeys>,
+  setState: React.Dispatch<React.SetStateAction<HeaderState<TKeys>>>
+) {
+  return function khaleFormJozi(cfg: FieldConfig) {
+    const { key, label = '', type, options = [], placeholder } = cfg
+    const value = state[key as TKeys]
+    const update: Update = (val) =>
+      setState((prev) => ({ ...prev, [key]: val }))
+
+    let control: React.ReactNode = null
+    switch (type) {
+      case 'text':
+      case 'date':
+        control = (
+          <Input
+            label={label}
+            value={value ?? ''}
+            onChange={update}
+            placeholder={placeholder}
+            className="w-full"
+          />
+        )
+        break
+      case 'textarea':
+        control = (
+          <TextArea
+            label={label}
+            value={value ?? ''}
+            onChange={update}
+            placeholder={placeholder}
+          />
+        )
+        break
+      case 'select':
+        control = (
+          <SingleSelectList
+            label={label}
+            items={options.map((o, i) => ({ id: i, label: o }))}
+            setSelectedItems={(id: number | string) =>
+              update(options[id as number])
+            }
+          />
+        )
+        break
+      case 'number':
+        control = (
+          <InputNumber
+            label={label}
+            value={Number(value) || 0}
+            onChange={update}
+            placeholder={placeholder || '0'}
+          />
+        )
+        break
+      case 'calendar':
+        control = (
+          <Calendar
+            label={label}
+            placeholder={placeholder}
+            setDate={(iso: string) => update(iso)}
+          />
+        )
+        break
+      case 'singleselect':
+        control = (
+          <SingleSelectList
+            label={label}
+            items={(options || []).map((o, i) => ({ id: i, label: o }))}
+            setSelectedItems={(id: number | string) =>
+              update(options![id as number])
+            }
+          />
+        )
+        break
+      case 'multiselecttrees':
+        control = (
+          <MultiSelectTrees
+            trees={treeData}
+            placeholder={placeholder || label}
+            label={label}
+            onSelect={(ids: string[]) => update(ids)}
+          />
+        )
+        break
+      default:
+        control = null
+    }
+
+    return <div className="hamghzis w-full">{control}</div>
+  }
+}
+
+/** HoverModal
+ * مودال سبک که با هاور روی trigger باز می‌شود؛ با خروج موس، ESC، کلیک روی بیرون یا دکمه ضربدر بسته می‌شود.
+ * هنگام بازشدن، صفحه به اندازه ارتفاع مودال به پایین اسکرول می‌کند (در صورت نیاز کاربر).
+ * برای اطمینان از بالاتر بودن، در پرتال body با z-50 رندر می‌شود.
+ */
+export function HoverModal({
+  trigger,
+  children,
+  widthClass = 'max-w-xl w-full',
+  dir = 'rtl',
+}: {
+  trigger: React.ReactNode
+  children: React.ReactNode
+  widthClass?: string
+  dir?: 'rtl' | 'ltr'
+}) {
+  const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLDivElement | null>(null)
+  const modalRef = useRef<HTMLDivElement | null>(null)
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  // بازشدن با هاور
+  const onEnter = () => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
+    setOpen(true)
+  }
+  const onLeave = () => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current)
+    hoverTimeout.current = setTimeout(() => setOpen(false), 120)
+  }
+
+  // بستن با ESC
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  // اسکرول به اندازه مودال هنگام باز شدن
+  useLayoutEffect(() => {
+    if (open && modalRef.current) {
+      const h = modalRef.current.offsetHeight || 0
+      window.scrollBy({ top: h, behavior: 'smooth' })
+    }
+  }, [open])
+
+  // موقعیت‌دهی نزدیک trigger
+  const [coords, setCoords] = useState<{ top: number; left: number } | null>(
+    null
+  )
+  useLayoutEffect(() => {
+    if (!open) return
+    const el = triggerRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    // نمایش دقیقاً پایین-چپِ trigger در صفحه (با درنظر گرفتن اسکرول)
+    setCoords({
+      top: rect.bottom + window.scrollY + 8,
+      left: rect.left + window.scrollX,
+    })
+  }, [open])
+
+  // رندر پرتال مودال
+  const modal =
+    open && coords
+      ? ReactDOM.createPortal(
+          <div
+            dir={dir}
+            className="fixed inset-0 z-50"
+            aria-modal="true"
+            role="dialog"
+          >
+            {/* کلیک بیرون برای بستن */}
+            <div className="absolute inset-0" onClick={() => setOpen(false)} />
+
+            <div
+              ref={modalRef}
+              style={{ top: coords.top, left: coords.left }}
+              className={`absolute ${widthClass} rounded-2xl border border-slate-200 bg-white shadow-xl p-4`}
+              onMouseEnter={onEnter}
+              onMouseLeave={onLeave}
+            >
+              <button
+                aria-label="بستن"
+                onClick={() => setOpen(false)}
+                className="absolute -top-3 -end-3 inline-flex items-center justify-center rounded-full bg-white shadow p-2 text-slate-600 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
+              >
+                <FaTimes />
+              </button>
+              {children}
+            </div>
+          </div>,
+          document.body
+        )
+      : null
+
+  return (
+    <div
+      ref={triggerRef}
+      className="inline-block"
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+    >
+      {trigger}
+      {modal}
+    </div>
+  )
+}
+
+// =============== نمونه استفاده داخل فرم شما ==================
+const fieldList = [
   { key: 'code', label: 'شماره سند', type: 'text' },
-    { key: '', label: 'شماره سند', type: 'text' },
   { key: 'date', label: 'تاریخ', type: 'date' },
-  // {
-  //   key: 'project',
-  //   label: 'پروژه',
-  //   type: 'select',
-  //   options: ['پروژه ۱', 'پروژه ۲'],
-  // },
   { key: 'description', label: 'توضیحات', type: 'textarea' },
-]
+] as const
+
+type FieldKey = (typeof fieldList)[number]['key']
 
 interface DocumentRow {
-  account: string
-  detailed: string
+  account: string // GLRef
+  detailed: string // SLRef
   description: string
   debit: number
   credit: number
+  followUpNumber: string
+  followUpDate: string // ISO date (yyyy-mm-dd)
 }
+
 export default function AddDocument() {
-  const [formHeader, setFormHeader] = useState(
-    Object.fromEntries(
-      headerFields.map(({ key, type }) => [
-        key,
-        type === 'date' ? new Date().toISOString().split('T')[0] : '',
-      ])
-    )
-  )
+  const today = useMemo(() => new Date().toISOString().split('T')[0], [])
+
+  const [formHeader, setFormHeader] = useState<Record<FieldKey, string>>({
+    code: '',
+    date: today,
+    description: '',
+  })
+
   const [formData, setFormData] = useState<{
     header: Header
     details: Detail[]
   }>({
     header: {
       BranchRef: 0,
-      Date: new Date().toISOString().split('T')[0],
+      Date: today,
       VoucherTypeRef: 0,
       IsCurrencyBased: 0,
       Description: '',
@@ -62,83 +294,68 @@ export default function AddDocument() {
       FiscalYearRef: 0,
       Signature: '',
     },
-    details: [
-      {
-        RowNumber: 1,
-        AccountGroupRef: 0,
-        GLRef: 0,
-        SLRef: 0,
-        SLCode: '',
-        Debit: 0,
-        Credit: 0,
-        Description: '',
-        Description_En: '',
-        FollowUpNumber: '',
-        FollowUpDate: '',
-        Quantity: 0,
-        DLLevel4: '',
-        DLLevel5: '',
-        DLTypeRef4: 0,
-        DLTypeRef5: 0,
-        CurrencyRef: 0,
-        TaxAccountType: 0,
-        TaxStateType: 0,
-        TransactionType: 0,
-        PurchaseOrSale: 0,
-        ItemOrService: 0,
-        PartyRef: 0,
-        TaxAmount: 0,
-      },
-    ],
+    details: [],
   })
-  const [documents, setDocuments] = useState<DocumentRow[]>([
-    { account: '', detailed: '', description: '', debit: 0, credit: 0 },
-  ])
 
-  const renderHeaderInput = ({ key, label, type, options = [] }: any) => {
-    const value = formHeader[key]
-    const update = (val: string) =>
-      setFormHeader((prev) => ({ ...prev, [key]: val }))
+  const [documents, setDocuments] = useState<DocumentRow[]>(
+    Array.from({ length: 25 }, () => ({
+      account: '',
+      detailed: '',
+      description: '',
+      debit: 0,
+      credit: 0,
+      followUpNumber: '',
+      followUpDate: '',
+    }))
+  )
 
-    switch (type) {
-      case 'text':
-      case 'date':
-        return <Input label={label} value={value} onChange={update} />
-      case 'textarea':
-        return <TextArea label={label} value={value} onChange={update} />
-      case 'select':
-        return (
-          <SingleSelectList
-            label={label}
-            items={options.map((o: string, i: number) => ({ id: i, label: o }))}
-            setSelectedItems={(id) => update(options[id])}
-          />
-        )
-      default:
-        return null
-    }
-  }
+  // سازنده رندر فیلدها (نسخه جنریک جدید)
+  const khaleFormJozi = makeKhaleFormJozi(formHeader, setFormHeader)
 
-  const updateRow = (
+  const updateRow = <K extends keyof DocumentRow>(
     index: number,
-    field: keyof DocumentRow,
-    value: string | number
+    field: K,
+    value: DocumentRow[K]
   ) => {
     setDocuments((prev) =>
       prev.map((row, i) => (i === index ? { ...row, [field]: value } : row))
     )
   }
 
-  const deleteRow = (index: number) => {
+  const deleteRow = (index: number) =>
     setDocuments((prev) => prev.filter((_, i) => i !== index))
-  }
-
-  const addNewRow = () => {
+  const addNewRow = () =>
     setDocuments((prev) => [
       ...prev,
-      { account: '', detailed: '', description: '', debit: 0, credit: 0 },
+      {
+        account: '',
+        detailed: '',
+        description: '',
+        debit: 0,
+        credit: 0,
+        followUpNumber: '',
+        followUpDate: '',
+      },
     ])
+
+  const clearEmptyRows = () => {
+    setDocuments((prev) =>
+      prev.filter(
+        (r) => r.debit || r.credit || r.description || r.account || r.detailed
+      )
+    )
   }
+
+  const totalDebit = useMemo(
+    () => documents.reduce((s, r) => s + (Number(r.debit) || 0), 0),
+    [documents]
+  )
+  const totalCredit = useMemo(
+    () => documents.reduce((s, r) => s + (Number(r.credit) || 0), 0),
+    [documents]
+  )
+  const isBalanced = totalDebit === totalCredit
+
   const handleSubmit = () => {
     const mappedDetails: Detail[] = documents.map((row, index) => ({
       RowNumber: index + 1,
@@ -146,12 +363,12 @@ export default function AddDocument() {
       GLRef: parseInt(row.account) || 0,
       SLRef: parseInt(row.detailed) || 0,
       SLCode: '',
-      Debit: row.debit || 0,
-      Credit: row.credit || 0,
+      Debit: Number(row.debit) || 0,
+      Credit: Number(row.credit) || 0,
       Description: row.description,
       Description_En: '',
-      FollowUpNumber: '',
-      FollowUpDate: '',
+      FollowUpNumber: row.followUpNumber,
+      FollowUpDate: row.followUpDate,
       Quantity: 0,
       DLLevel4: '',
       DLLevel5: '',
@@ -172,17 +389,16 @@ export default function AddDocument() {
         ...formData.header,
         Description: formHeader.description,
         Date: formHeader.date,
-        ReferenceNumber: Number(formHeader.code),
+        ReferenceNumber: Number(formHeader.code) || 0,
       },
       details: mappedDetails,
     }
 
     console.log('🔄 Sending Document:', fullData)
-    // اینجا بفرست به API...
   }
 
   return (
-    <div className="space-y-8">
+    <div dir="rtl" className="grid gap-8 ">
       <MainHead
         title="ایجاد سند"
         icons={[
@@ -203,179 +419,185 @@ export default function AddDocument() {
           },
         ]}
       />
+
       {/* مشخصات سربرگ */}
       <Divider title="مشخصات سربرگ سند" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {headerFields.map((field, i) => (
-          <div key={i}>{renderHeaderInput(field)}</div>
+        {([...fieldList] as FieldConfig[]).map((field, i) => (
+          <div key={i}>{khaleFormJozi(field)}</div>
         ))}
       </div>
-      {/* سطرهای سند */}
-      <Divider title="سطرهای سند" />
-      <div className="flex flex-col overflow-x-auto">
-        {documents.map((row, index) => (
-          <div
-            key={index}
-            className="flex items-center  w-full "
-          >
-            <div className="min-w-[200px] flex-1 hover:shadow-md transition-all ">
-              <MultiSelectTrees
-                trees={treeData}
-                placeholder="کد معین"
-                label={index === 0 ? 'کد معین' : ''}
-                onSelect={(ids) => console.log('انتخاب‌شده‌ها:', ids)}
-              />
+
+      {/* پنل سطرهای سند با هدر چسبان داخلی */}
+      <Divider title="سطرهای سند" state='' />
+
+      <div className="rounded-2xl border-4 border-blue-100 bg-white shadow-sm overflow-hidden">
+        <div className="flex flex-col h-full min-h-0">
+          {/* Header (sticky) */}
+          <div className="sticky top-0 bg-white/80 backdrop-blur border-b-5 border-blue-300">
+            <div className="flex items-center gap-2 px-4 py-3">
+              <div className="text-slate-900 font-semibold text-sm">
+                سطرهای سند
+              </div>
+              <div className="ms-auto flex items-center gap-2">
+                {/* نمونه استفاده از HoverModal روی دکمه افزودن سطر */}
+                <HoverModal
+                  trigger={
+                    <button
+                      onClick={addNewRow}
+                      className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-slate-100 text-slate-800 hover:bg-slate-200 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    >
+                      <FaPlus />
+                      افزودن سطر
+                    </button>
+                  }
+                >
+                  <div className="space-y-2 text-sm">
+                    <div className="font-semibold">راهنمای سریع افزودن سطر</div>
+                    <ul className="list-disc pe-4 space-y-1 text-slate-700">
+                      <li>برای انتخاب کد معین/تفضیلی از درخت استفاده کنید.</li>
+                      <li>برای حرکت سریع، از Tab و Shift+Tab استفاده کنید.</li>
+                      <li>جمع بدهکار و بستانکار باید برابر باشد.</li>
+                    </ul>
+                  </div>
+                </HoverModal>
+
+                <button
+                  onClick={clearEmptyRows}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-red-600 text-white hover:bg-red-700 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+                  <FaTrash />
+                  حذف سطرهای خالی
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-indigo-600 text-white hover:bg-indigo-700 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                >
+                  ثبت سند
+                </button>
+              </div>
             </div>
-            <div className="min-w-[200px] flex-1">
-              <MultiSelectTrees
-                trees={treeData}
-                placeholder="کد تفضیلی"
-                label={index === 0 ? 'کد تفضیلی' : ''}
-                onSelect={(ids) => console.log('انتخاب‌شده‌ها:', ids)}
-              />
+
+            {/* نوار جمع‌ها */}
+            <div className="px-4 pb-2 text-xs text-slate-600 flex gap-4">
+              <BalanceBadge isBalanced={isBalanced} />
+              <span>جمع بدهکار: {totalDebit.toLocaleString('fa-IR')}</span>
+              <span>جمع بستانکار: {totalCredit.toLocaleString('fa-IR')}</span>
             </div>
-            <div className="min-w-[200px] flex-1">
-              <InputNumber
-                label={index === 0 ? 'بدهکار' : ''}
-                placeholder="بدهکار"
-                 value={row.debit}
-                onChange={(val) => updateRow(index, 'debit', val)}
-              />
-            </div>
-            <div className="min-w-[200px] flex-1">
-              <InputNumber
-                label={index === 0 ? 'بستانکار' : ''}
-                placeholder="بستانکار"
-                type="number"
-                value={row.debit}
-                onChange={(val) => updateRow(index, 'debit', val)}
-              />
-            </div>
-            <div className="flex-1 min-w-[200px]">
-              <Input
-                label={index === 0 ? 'شرح' : ''}
-                placeholder="شرح"
-                value={row.description}
-                onChange={(val) => updateRow(index, 'description', val)}
-              />
-            </div>
-            <div className="flex-1 min-w-[200px]">
-              <Input
-              className='rounded-0'
-                label={index === 0 ? 'شماره پیگیری' : ''}
-                placeholder="شماره پیگیری"
-                value={row.description}
-                onChange={(val) => updateRow(index, 'description', val)}
-              />
-            </div>
-            <div className="flex-1 min-w-[200px]">
-              <Calendar
-                setDate={() => ''}
-                placeholder="تاریخ پیگیری"
-                label={index === 0 ? 'تاریخ پیگیری' : ''}
-              />
-            </div>
-            <div className="flex-1 min-w-[200px]">
-              <SingleSelectList
-                label={index === 0 ? 'مرکز هزینه / پروژه' : ''}
-                items={[{ id: 'i', label: ' o' }]}
-                setSelectedItems={(id) => id}
-              />
-            </div>
-            <button
-              onClick={() => deleteRow(index)}
-              className="ml-auto text-red-600 hover:text-red-800 hover:scale-110 transition-all"
-            >
-              <FaTrash size={18} />
-            </button>
           </div>
-        ))}
-        <div className="flex items-center">
-          <button
-            onClick={handleSubmit}
-            className="flex items-center justify-center gap-2 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all self-start"
-          >
-            ثبت سند حسابداری
-          </button>
-          <button
-            onClick={addNewRow}
-            className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all self-start"
-          >
-            <FaPlus />
-            افزودن سطر جدید
-          </button>
+
+          {/* Body (scrollable) */}
+          <div className="max-h-[560px] overflow-auto p-3 sm:p-4">
+            {documents.map((row, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 p-2 rounded-xl transition shadow-[0_0_0_0_rgba(0,0,0,0)] hover:shadow-sm hover:bg-slate-50/60 border border-transparent hover:border-slate-100"
+              >
+                <div className="min-w-[200px] flex-1">
+                  <MultiSelectTrees
+                    trees={treeData}
+                    placeholder="کد معین"
+                    label={index === 0 ? 'کد معین' : ''}
+                    onSelect={(ids: string[]) =>
+                      updateRow(index, 'account', ids?.[0] ?? '')
+                    }
+                  />
+                </div>
+
+                <div className="min-w-[200px] flex-1">
+                  <MultiSelectTrees
+                    trees={treeData}
+                    placeholder="کد تفضیلی"
+                    label={index === 0 ? 'کد تفضیلی' : ''}
+                    onSelect={(ids: string[]) =>
+                      updateRow(index, 'detailed', ids?.[0] ?? '')
+                    }
+                  />
+                </div>
+
+                <div className="min-w-[160px] sm:min-w-[200px] flex-1">
+                  <InputNumber
+                    label={index === 0 ? 'بدهکار' : ''}
+                    placeholder="بدهکار"
+                    value={row.debit}
+                    onChange={(val: number) => updateRow(index, 'debit', val)}
+                  />
+                </div>
+
+                <div className="min-w-[160px] sm:min-w-[200px] flex-1">
+                  <InputNumber
+                    label={index === 0 ? 'بستانکار' : ''}
+                    placeholder="بستانکار"
+                    value={row.credit}
+                    onChange={(val: number) => updateRow(index, 'credit', val)}
+                  />
+                </div>
+
+                <div className="min-w-[200px] flex-1">
+                  <Input
+                    label={index === 0 ? 'شرح' : ''}
+                    placeholder="شرح"
+                    value={row.description}
+                    onChange={(val: string) =>
+                      updateRow(index, 'description', val)
+                    }
+                  />
+                </div>
+
+                <div className="min-w-[160px]">
+                  <Input
+                    label={index === 0 ? 'شماره پیگیری' : ''}
+                    placeholder="شماره پیگیری"
+                    value={row.followUpNumber}
+                    onChange={(val: string) =>
+                      updateRow(index, 'followUpNumber', val)
+                    }
+                  />
+                </div>
+
+                <div className="min-w-[160px]">
+                  <Calendar
+                    label={index === 0 ? 'تاریخ پیگیری' : ''}
+                    placeholder="تاریخ پیگیری"
+                    setDate={(iso: string) =>
+                      updateRow(index, 'followUpDate', iso)
+                    }
+                  />
+                </div>
+
+                <div className="min-w-[200px] flex-1">
+                  <SingleSelectList
+                    label={index === 0 ? 'مرکز هزینه / پروژه' : ''}
+                    items={[{ id: 'i', label: ' o' }]}
+                    setSelectedItems={() => null}
+                  />
+                </div>
+
+                <button
+                  onClick={() => deleteRow(index)}
+                  className="ms-auto inline-flex items-center justify-center rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-red-400"
+                  aria-label="حذف سطر"
+                  title="حذف سطر"
+                >
+                  <FaTrash size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-const treeData = [
-  {
-    id: '1',
-    label: 'دارایی ها',
-    children: [
-      { id: 2, label: 'دارایی های جاری' },
-      { id: 25, label: 'دارایی های غیر جاری' },
-    ],
-  },
-  {
-    id: '40',
-    label: 'بدهی ها',
-    children: [
-      { id: 41, label: 'بدهیهای جاری' },
-      { id: 57, label: 'بدهیهای غیر جاری' },
-    ],
-  },
-  {
-    id: '63',
-    label: 'حقوق صاحبان سهام',
-    children: [{ id: 64, label: 'حقوق صاحبان سهام' }],
-  },
-  {
-    id: '71',
-    label: 'خرید',
-    children: [
-      { id: 72, label: 'خرید کالا' },
-      { id: 73, label: 'برگشت از خرید' },
-      { id: 74, label: 'تخفیفات نقدی خرید' },
-    ],
-  },
-  {
-    id: '75',
-    label: 'فروش',
-    children: [
-      { id: 76, label: 'فروش کالا' },
-      { id: 77, label: 'برگشت از فروش' },
-      { id: 78, label: 'تخفیفات نقدی فروش' },
-    ],
-  },
-  {
-    id: '79',
-    label: 'درآمد',
-    children: [
-      { id: 80, label: 'درآمد های عملیاتی' },
-      { id: 85, label: 'درآمد های غیر عملیاتی' },
-    ],
-  },
-  {
-    id: '91',
-    label: 'هزینه ها',
-    children: [
-      { id: 92, label: 'هزینه های پرسنلی' },
-      { id: 111, label: 'هزینه های عملیاتی' },
-      { id: 123, label: 'هزینه های استهلاک' },
-      { id: 127, label: 'هزینه های بازاریابی و توزیع و فروش' },
-      { id: 131, label: 'هزینه های غیرعملیاتی' },
-    ],
-  },
-  {
-    id: '138',
-    label: 'سایر حساب ها',
-    children: [
-      { id: 139, label: 'حساب های انتظامی' },
-      { id: 142, label: 'حساب های کنترلی' },
-      { id: 144, label: 'حساب خلاصه سود و زیان' },
-    ],
-  },
-]
+function BalanceBadge({ isBalanced }: { isBalanced: boolean }) {
+  return (
+    <span
+      className={`${
+        isBalanced ? 'text-emerald-600' : 'text-rose-600'
+      } font-medium`}
+    >
+      {isBalanced ? 'تراز: متعادل' : 'تراز: نامتعادل'}
+    </span>
+  )
+}
