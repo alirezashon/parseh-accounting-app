@@ -53,7 +53,7 @@ const Class = 3
       : 'text-gray-500'
 
   return (
-    <div className='flex flex-col gap-1'>
+    <div className='flex flex-col  '>
       {label && (
         <label className={`font-medium  ${statusColor}`}>{label}</label>
       )}

@@ -44,11 +44,11 @@ type HeaderState<TKeys extends string> = Record<TKeys, any>
 
 type Update = (val: any) => void
 
-export function makeKhaleFormJozi<TKeys extends string>(
+export function buildForm<TKeys extends string>(
   state: HeaderState<TKeys>,
   setState: React.Dispatch<React.SetStateAction<HeaderState<TKeys>>>
 ) {
-  return function khaleFormJozi(cfg: FieldConfig) {
+  return function elementCreator(cfg: FieldConfig) {
     const { key, label = '', type, options = [], placeholder } = cfg
     const value = state[key as TKeys]
     const update: Update = (val) =>
@@ -137,11 +137,6 @@ export function makeKhaleFormJozi<TKeys extends string>(
   }
 }
 
-/** HoverModal
- * مودال سبک که با هاور روی trigger باز می‌شود؛ با خروج موس، ESC، کلیک روی بیرون یا دکمه ضربدر بسته می‌شود.
- * هنگام بازشدن، صفحه به اندازه ارتفاع مودال به پایین اسکرول می‌کند (در صورت نیاز کاربر).
- * برای اطمینان از بالاتر بودن، در پرتال body با z-50 رندر می‌شود.
- */
 export function HoverModal({
   trigger,
   children,
@@ -310,7 +305,7 @@ export default function AddDocument() {
   )
 
   // سازنده رندر فیلدها (نسخه جنریک جدید)
-  const khaleFormJozi = makeKhaleFormJozi(formHeader, setFormHeader)
+  const elementCreator = buildForm(formHeader, setFormHeader)
 
   const updateRow = <K extends keyof DocumentRow>(
     index: number,
@@ -424,12 +419,12 @@ export default function AddDocument() {
       <Divider title="مشخصات سربرگ سند" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {([...fieldList] as FieldConfig[]).map((field, i) => (
-          <div key={i}>{khaleFormJozi(field)}</div>
+          <div key={i}>{elementCreator(field)}</div>
         ))}
       </div>
 
       {/* پنل سطرهای سند با هدر چسبان داخلی */}
-      <Divider title="سطرهای سند" state='' />
+      <Divider title="سطرهای سند" state="" />
 
       <div className="rounded-2xl border-4 border-blue-100 bg-white shadow-sm overflow-hidden">
         <div className="flex flex-col h-full min-h-0">
@@ -487,11 +482,11 @@ export default function AddDocument() {
           </div>
 
           {/* Body (scrollable) */}
-          <div className="max-h-[560px] overflow-auto p-3 sm:p-4">
+          <div className="max-h-[560px] overflow-auto ">
             {documents.map((row, index) => (
               <div
                 key={index}
-                className="flex items-center gap-2 p-2 rounded-xl transition shadow-[0_0_0_0_rgba(0,0,0,0)] hover:shadow-sm hover:bg-slate-50/60 border border-transparent hover:border-slate-100"
+                className="flex items-center transition shadow-[0_0_0_0_rgba(0,0,0,0)] hover:shadow-sm hover:bg-slate-50/60 border border-transparent hover:border-slate-100"
               >
                 <div className="min-w-[200px] flex-1">
                   <MultiSelectTrees
