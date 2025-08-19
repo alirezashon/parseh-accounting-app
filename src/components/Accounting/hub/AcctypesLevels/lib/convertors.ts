@@ -1,90 +1,145 @@
-import { GetDetailed } from '@/services/detailed'
-import { GetDetailTypes } from '@/services/detailTypes'
-import { GetGenerals } from '@/services/general'
-import { GetAccountGroups } from '@/services/global'
-import { GetSpecifics } from '@/services/specific'
+// import { GetDetailed } from '@/services/detailed'
+// import { GetDetailTypes } from '@/services/detailTypes'
+// import { GetGenerals } from '@/services/general'
+// import { GetAccountGroups } from '@/services/global'
+// import { GetSpecifics } from '@/services/specific'
+// import { getCookieByKey } from '@/utils/cookies'
+// import { TreeChartInterface } from './data'
+
+// let treeCache: TreeChartInterface[] | null = null
+
+// export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
+//   if (treeCache) return treeCache
+//   const accessToken = (await getCookieByKey('access_token')) || ''
+//   const finalTree: TreeChartInterface[] = []
+
+//   const accGroups = (await GetAccountGroups({ accessToken })) || []
+//   accGroups.forEach((row) => {
+//     finalTree.push({
+//       id: row.accountgroup_id,
+//       chpid: 0,
+//       chtitle: row.accountgroup_title,
+//       chstatus: row.accountgroup_id,
+//       chlevel: 0,
+//       lev1_count: row.accountgroup_id,
+//       chlabel: row.accountgroup_title,
+//     })
+//   })
+
+//   const generals = (await GetGenerals({ accessToken })) || []
+//   generals.forEach((row) => {
+//     finalTree.push({
+//       id: row.gl_id,
+//       chpid: row.accountgroup_id,
+//       chtitle: row.gl_title,
+//       chstatus: row.gl_id,
+//       chlevel: 1,
+//       lev1_count: row.gl_id,
+//       chlabel: row.accountgroup_title,
+//     })
+//   })
+
+//   for (const gl of generals) {
+//     const specifics =
+//       (await GetSpecifics({ accessToken, gl_id: gl.gl_id })) || []
+//     specifics.forEach((row) => {
+//       finalTree.push({
+//         id: row.sl_id,
+//         chpid: gl.gl_id,
+//         chtitle: row.sl_title,
+//         chstatus: row.sl_id,
+//         chlevel: 2,
+//         lev1_count: row.sl_id,
+//         chlabel: row.sl_title,
+//       })
+//     })
+//   }
+
+//   const detailTypes = (await GetDetailTypes({ accessToken })) || []
+//   detailTypes.forEach((row) => {
+//     finalTree.push({
+//       id: row.DLTypeID,
+//       chpid: 0,
+//       chtitle: row.Title,
+//       chstatus: row.DLTypeID,
+//       chlevel: 3,
+//       lev1_count: row.DLTypeID,
+//       chlabel: row.Title,
+//     })
+//   })
+
+//   for (const dt of detailTypes) {
+//     const detailed =
+//       (await GetDetailed({ accessToken, DLTypeID: dt.DLTypeID })) || []
+//     detailed.forEach((row) => {
+//       finalTree.push({
+//         id: row.dl_id,
+//         chpid: dt.DLTypeID,
+//         chtitle: row.dl_title,
+//         chstatus: row.dl_id,
+//         chlevel: 4,
+//         lev1_count: row.dl_id,
+//         chlabel: row.dl_title,
+//       })
+//     })
+//   }
+
+//   treeCache = finalTree // ✅ کش کن برای دفعات بعد
+//   return finalTree
+// }
+
+import { GetAllTreeData } from '@/services/global'
 import { getCookieByKey } from '@/utils/cookies'
 import { TreeChartInterface } from './data'
 
 let treeCache: TreeChartInterface[] | null = null
 
 export const getAllTreeData = async (): Promise<TreeChartInterface[]> => {
-  if (treeCache) return treeCache // ✅ اگر قبلاً گرفته شده، مستقیم بده
+  if (treeCache) return treeCache
 
   const accessToken = (await getCookieByKey('access_token')) || ''
+  const response = (await GetAllTreeData({ accessToken })) || []
   const finalTree: TreeChartInterface[] = []
 
-  const accGroups = (await GetAccountGroups({ accessToken })) || []
-  accGroups.forEach((row) => {
+  response.forEach((accGroup) => {
+    // سطح 0: AccountGroup
     finalTree.push({
-      id: row.accountgroup_id,
+      id: accGroup.AccountGroupID,
       chpid: 0,
-      chtitle: row.accountgroup_title,
-      chstatus: row.accountgroup_id,
+      chtitle: accGroup.Title,
+      chstatus: accGroup.State || 1,
       chlevel: 0,
-      lev1_count: row.accountgroup_id,
-      chlabel: row.accountgroup_title,
+      lev1_count: accGroup.AccountGroupID,
+      chlabel: accGroup.Title,
     })
-  })
 
-  const generals = (await GetGenerals({ accessToken })) || []
-  generals.forEach((row) => {
-    finalTree.push({
-      id: row.gl_id,
-      chpid: row.accountgroup_id,
-      chtitle: row.gl_title,
-      chstatus: row.gl_id,
-      chlevel: 1,
-      lev1_count: row.gl_id,
-      chlabel: row.accountgroup_title,
-    })
-  })
-
-  for (const gl of generals) {
-    const specifics =
-      (await GetSpecifics({ accessToken, gl_id: gl.gl_id })) || []
-    specifics.forEach((row) => {
+    accGroup.GLs.forEach((gl) => {
+      // سطح 1: GL
       finalTree.push({
-        id: row.sl_id,
-        chpid: gl.gl_id,
-        chtitle: row.sl_title,
-        chstatus: row.sl_id,
-        chlevel: 2,
-        lev1_count: row.sl_id,
-        chlabel: row.sl_title,
+        id: gl.GLID,
+        chpid: accGroup.AccountGroupID,
+        chtitle: gl.Title,
+        chstatus: gl.State || 1,
+        chlevel: 1,
+        lev1_count: gl.GLID,
+        chlabel: gl.Title,
+      })
+
+      gl.SLs?.forEach((sl) => {
+        // سطح 2: SL
+        finalTree.push({
+          id: sl.SLID,
+          chpid: gl.GLID,
+          chtitle: sl.Title,
+          chstatus: sl.State || 1,
+          chlevel: 2,
+          lev1_count: sl.SLID,
+          chlabel: sl.Title,
+        })
       })
     })
-  }
-
-  const detailTypes = (await GetDetailTypes({ accessToken })) || []
-  detailTypes.forEach((row) => {
-    finalTree.push({
-      id: row.DLTypeID,
-      chpid: 0,
-      chtitle: row.Title,
-      chstatus: row.DLTypeID,
-      chlevel: 3,
-      lev1_count: row.DLTypeID,
-      chlabel: row.Title,
-    })
   })
 
-  for (const dt of detailTypes) {
-    const detailed =
-      (await GetDetailed({ accessToken, DLTypeID: dt.DLTypeID })) || []
-    detailed.forEach((row) => {
-      finalTree.push({
-        id: row.dl_id,
-        chpid: dt.DLTypeID,
-        chtitle: row.dl_title,
-        chstatus: row.dl_id,
-        chlevel: 4,
-        lev1_count: row.dl_id,
-        chlabel: row.dl_title,
-      })
-    })
-  }
-
-  treeCache = finalTree // ✅ کش کن برای دفعات بعد
+  treeCache = finalTree
   return finalTree
 }

@@ -25,64 +25,55 @@ export const GetAccountGroups = async ({
     console.log(error)
   }
 }
-
-
-// types.ts
 export interface SL {
-  SLID: number;
-  Code: string;
-  Title: string;
-  Title_En: string | null;
-  Nature: number | null;
-  IsTraceable: boolean | null;
-  IsMultiCurrency: boolean | null;
-  HasCurrencyConversion: boolean | null;
-  State: number | null;
-  Type: number | null;
-  DLTypes: unknown[]; // اگر نوع دقیق دارید، این را دقیق‌تر کنید
+  SLID: number
+  Code: string
+  Title: string
+  Title_En: string | null
+  Nature: number | null
+  IsTraceable: boolean | null
+  IsMultiCurrency: boolean | null
+  HasCurrencyConversion: boolean | null
+  State: number | null
+  Type: number | null
+  DLTypes: unknown[]
 }
-
-
-
 
 export interface GL {
-  GLID: number;
-  Code: string;
-  Title: string;
-  Title_En: string | null;
-  Nature: number | null;
-  Type: number | null;
-  State: number | null;
-  SLs: SL[];
+  GLID: number
+  Code: string
+  Title: string
+  Title_En: string | null
+  Nature: number | null
+  Type: number | null
+  State: number | null
+  SLs: SL[]
 }
 
-export interface AccountGroup {
-  AccountGroupID: number;
-  Code: string;
-  Title: string;
-  Title_En: string | null;
-  State: number | null;
-  Nature: number | null;
-  Type: number | null;
-  GLs: GL[];
+export interface TreeInterface {
+  AccountGroupID: number
+  Code: string
+  Title: string
+  Title_En: string | null
+  State: number | null
+  Nature: number | null
+  Type: number | null
+  GLs: GL[]
 }
-
-// ریشه‌ی داده:
-export type ChartOfAccounts = AccountGroup[];
-
 
 export const GetAllTreeData = async ({
   accessToken,
 }: {
   accessToken: string | undefined
-}): Promise<AccountGroupsScheme[] | undefined> => {
+}): Promise<TreeInterface[] | undefined> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/get_accountgroup`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/get_account_hierarchy?state=1`,
       {
         method: 'GET',
         headers: {
           authorization: `Bearer ${accessToken}`,
+          accept: 'application/json',
         },
         next: {
           revalidate: 12712,
@@ -91,10 +82,9 @@ export const GetAllTreeData = async ({
       }
     )
     if (!response.ok) return
-    return await response.json()
+    const result = await response.json()
+    return result.data
   } catch (error) {
     console.log(error)
   }
 }
-
-
