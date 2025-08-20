@@ -11,6 +11,7 @@ import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import Input from '@/components/hub/Forms/Input'
 import SingleSelectList from '@/components/hub/Forms/SingleSelectList'
 import Calendar from '@/components/hub/Calendar'
+import Selectree from './Selectree/Tree'
 
 const DocRows = () => {
   const today = useMemo(() => new Date().toISOString().split('T')[0], [])
@@ -204,14 +205,15 @@ const DocRows = () => {
                 className="flex items-center transition shadow-[0_0_0_0_rgba(0,0,0,0)] hover:shadow-sm hover:bg-slate-50/60 border border-transparent hover:border-slate-100"
               >
                 <div className="min-w-[200px] flex-1">
-                  <MultiSelectTrees
+                  {/* <MultiSelectTrees
                     trees={treeData}
                     placeholder="کد معین"
                     label={index === 0 ? 'کد معین' : ''}
                     onSelect={(ids: string[]) =>
                       updateRow(index, 'account', ids?.[0] ?? '')
                     }
-                  />
+                  /> */}
+                  <Selectree />
                 </div>
 
                 <div className="min-w-[200px] flex-1">
@@ -300,3 +302,8 @@ const DocRows = () => {
   )
 }
 export default DocRows
+//   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+//     {([...fieldList.details] as FieldConfig[]).map((field, i) => (
+//       <div key={i}>{elementCreator(field)}</div>
+//     ))}
+//   </div>

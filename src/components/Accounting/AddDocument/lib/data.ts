@@ -1,4 +1,3 @@
-
 export const treeData = [
   {
     id: '1',
@@ -87,17 +86,26 @@ export type FieldConfig = {
 }
 export type HeaderState<TKeys extends string> = Record<TKeys, string>
 export type Update = (val: any) => void
-export const fieldList = {header:[
-  { key: 'code', label: 'شماره سند', type: 'text' },
-  { key: 'date', label: 'تاریخ', type: 'date' },
-  { key: 'code', label: ' شماره فرعی', type: 'text' },
-  { key: 'code', label: 'شماره روزانه', type: 'text' },
-  { key: 'description', label: 'توضیحات', type: 'textarea' },
-] ,
-details:[
-
-]
+export const fieldList = {
+  header: [
+    { key: 'code', label: 'شماره سند', type: 'text' },
+    { key: 'date', label: 'تاریخ', type: 'date' },
+    { key: 'code', label: ' شماره فرعی', type: 'text' },
+    { key: 'code', label: 'شماره روزانه', type: 'text' },
+    { key: 'description', label: 'توضیحات', type: 'textarea' },
+  ],
+  details: [
+    { key: '', label: 'کد معین', type: 'text' },
+    { key: '', label: ' کد تفضیلی', type: 'text' },
+    { key: '', label: 'بدهکار', type: 'text' },
+    { key: '', label: 'بستانکار', type: 'text' },
+    { key: '', label: 'شرح ', type: 'text' },
+    { key: '', label: 'شماره پیگیری', type: 'text' },
+    { key: 'تاریخ پیگیری', label: 'شرح ', type: 'text' },
+    { key: 'مرکز هزینه', label: 'شرح ', type: 'text' },
+  ],
 }
+
 export type FieldKey = (typeof fieldList.header)[number]['key']
 export interface DocumentRow {
   account: string // GLRef
