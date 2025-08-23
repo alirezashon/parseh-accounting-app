@@ -5,13 +5,14 @@ import MultiSelectTrees from "@/components/hub/MultiSelectTrees"
 import { FieldConfig, HeaderState, treeData, Update } from "./data"
 import InputNumber from "@/components/hub/Forms/types/Inputs/Numerics"
 import Calendar from "@/components/hub/Calendar"
+import Selectree from "./Selectree/Tree"
 
- 
+
 export function buildForm<TKeys extends string>(
   state: HeaderState<TKeys>,
   setState: React.Dispatch<React.SetStateAction<HeaderState<TKeys>>>
 ) {
-  return function elementCreator(cfg: FieldConfig) {
+  return function elementCreator(cfg: FieldConfig, hideLabel?: boolean) {
     const { key, label = '', type, options = [], placeholder } = cfg
     const value = state[key as TKeys]
     const update: Update = (val) =>
@@ -23,7 +24,7 @@ export function buildForm<TKeys extends string>(
       case 'date':
         control = (
           <Input
-            label={label}
+            label={hideLabel ? '' : label}
             value={value ?? ''}
             onChange={update}
             placeholder={placeholder}
@@ -34,7 +35,7 @@ export function buildForm<TKeys extends string>(
       case 'textarea':
         control = (
           <TextArea
-            label={label}
+            label={hideLabel ? '' : label}
             value={value ?? ''}
             onChange={update}
             placeholder={placeholder}
@@ -44,7 +45,7 @@ export function buildForm<TKeys extends string>(
       case 'select':
         control = (
           <SingleSelectList
-            label={label}
+            label={hideLabel ? '' : label}
             items={options.map((o, i) => ({ id: i, label: o }))}
             setSelectedItems={(id: number | string) =>
               update(options[id as number])
@@ -55,7 +56,7 @@ export function buildForm<TKeys extends string>(
       case 'number':
         control = (
           <InputNumber
-            label={label}
+            label={hideLabel ? '' : label}
             value={Number(value) || 0}
             onChange={update}
             placeholder={placeholder || '0'}
@@ -65,7 +66,7 @@ export function buildForm<TKeys extends string>(
       case 'calendar':
         control = (
           <Calendar
-            label={label}
+            label={hideLabel ? '' : label}
             placeholder={placeholder}
             setDate={(iso: string) => update(iso)}
           />
@@ -74,7 +75,7 @@ export function buildForm<TKeys extends string>(
       case 'singleselect':
         control = (
           <SingleSelectList
-            label={label}
+            label={hideLabel ? '' : label}
             items={(options || []).map((o, i) => ({ id: i, label: o }))}
             setSelectedItems={(id: number | string) =>
               update(options![id as number])
@@ -87,8 +88,17 @@ export function buildForm<TKeys extends string>(
           <MultiSelectTrees
             trees={treeData}
             placeholder={placeholder || label}
-            label={label}
+            label={hideLabel ? '' : label}
             onSelect={(ids: string[]) => update(ids)}
+          />
+        )
+      case 'selectree':
+        control = (
+          <Selectree
+            // trees={treeData}
+            // placeholder={placeholder || label}
+            label={hideLabel ? '' : label}
+          // onSelect={(ids: string[]) => update(ids)}
           />
         )
         break

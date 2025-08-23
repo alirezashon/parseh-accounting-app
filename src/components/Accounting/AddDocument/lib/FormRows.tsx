@@ -3,7 +3,6 @@ import { DocumentRow, FieldConfig, FieldKey, fieldList, treeData } from './data'
 import { buildForm } from './ElementCreator'
 import { useMemo, useState } from 'react'
 import { Detail, Header } from '@/interfaces'
-import { HoverModal } from '../../hub/HoverModal'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 import { BalanceBadge } from '../../hub/BalanceBadage'
 import MultiSelectTrees from '@/components/hub/MultiSelectTrees'
@@ -27,34 +26,17 @@ const DocRows = () => {
       followUpDate: '',
     }))
   )
-  const [formHeader, setFormHeader] = useState<Record<FieldKey, string>>({
-    code: '',
-    date: today,
+  const [formRows, setFormRows] = useState<Record<FieldKey, string>>({
+    account: '',
+    detailed: '',
     description: '',
+    debit: '0',
+    credit: '0',
+    followUpNumber: '',
+    followUpDate: '',
   })
 
-  const [formData, setFormData] = useState<{
-    header: Header
-    details: Detail[]
-  }>({
-    header: {
-      BranchRef: 0,
-      Date: today,
-      VoucherTypeRef: 0,
-      IsCurrencyBased: 0,
-      Description: '',
-      Description_En: '',
-      State: 0,
-      IsTemporary: 0,
-      IsExternal: 0,
-      ReferenceNumber: 0,
-      ShowCurrencyFields: 0,
-      IsReadonly: 0,
-      FiscalYearRef: 0,
-      Signature: '',
-    },
-    details: [],
-  })
+
   const totalDebit = useMemo(
     () => documents.reduce((s, r) => s + (Number(r.debit) || 0), 0),
     [documents]
@@ -65,7 +47,7 @@ const DocRows = () => {
   )
   const isBalanced = totalDebit === totalCredit
 
-  const elementCreator = buildForm(formHeader, setFormHeader)
+  const elementCreator = buildForm(formRows, setFormRows)
   const mappedDetails: Detail[] = documents.map((row, index) => ({
     RowNumber: index + 1,
     AccountGroupRef: 0,
@@ -92,17 +74,9 @@ const DocRows = () => {
     PartyRef: 0,
     TaxAmount: 0,
   }))
-  const fullData: { header: Header; details: Detail[] } = {
-    header: {
-      ...formData.header,
-      Description: formHeader.description,
-      Date: formHeader.date,
-      ReferenceNumber: Number(formHeader.code) || 0,
-    },
-    details: mappedDetails,
-  }
+
   const handleSubmit = () => {
-    console.log('🔄 Sending Document:', fullData)
+    console.log('🔄 Sending Document:', formRows)
   }
 
   const updateRow = <K extends keyof DocumentRow>(
@@ -151,28 +125,13 @@ const DocRows = () => {
                 سطرهای سند
               </div>
               <div className="ms-auto flex items-center gap-2">
-                {/* نمونه استفاده از HoverModal روی دکمه افزودن سطر */}
-                <HoverModal
-                  trigger={
-                    <button
-                      onClick={addNewRow}
-                      className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-slate-100 text-slate-800 hover:bg-slate-200 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                    >
-                      <FaPlus />
-                      افزودن سطر
-                    </button>
-                  }
+                <button
+                  onClick={addNewRow}
+                  className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-slate-100 text-slate-800 hover:bg-slate-200 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 >
-                  <div className="space-y-2 text-sm">
-                    <div className="font-semibold">راهنمای سریع افزودن سطر</div>
-                    <ul className="list-disc pe-4 space-y-1 text-slate-700">
-                      <li>برای انتخاب کد معین/تفضیلی از درخت استفاده کنید.</li>
-                      <li>برای حرکت سریع، از Tab و Shift+Tab استفاده کنید.</li>
-                      <li>جمع بدهکار و بستانکار باید برابر باشد.</li>
-                    </ul>
-                  </div>
-                </HoverModal>
-
+                  <FaPlus />
+                  افزودن سطر
+                </button>
                 <button
                   onClick={clearEmptyRows}
                   className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm bg-red-600 text-white hover:bg-red-700 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-red-400"
@@ -202,18 +161,17 @@ const DocRows = () => {
             {documents.map((row, index) => (
               <div
                 key={index}
-                className="flex items-center transition shadow-[0_0_0_0_rgba(0,0,0,0)] hover:shadow-sm hover:bg-slate-50/60 border border-transparent hover:border-slate-100"
+                className="flex items-center transition hover:shadow-sm hover:bg-slate-50/60 "
               >
+                <div
+                  onClick={() => deleteRow(index)}
+                  className={`min-w-[40px]  sticky flex justify-center  ${index === 0 && ' translate-y-3 '} cursor-pointer z-20 right-0 bg-white mx-1 text-red-600 `}
+
+                >
+                  <FaTrash size={16} />
+                </div>
                 <div className="min-w-[200px] flex-1">
-                  {/* <MultiSelectTrees
-                    trees={treeData}
-                    placeholder="کد معین"
-                    label={index === 0 ? 'کد معین' : ''}
-                    onSelect={(ids: string[]) =>
-                      updateRow(index, 'account', ids?.[0] ?? '')
-                    }
-                  /> */}
-                  <Selectree />
+                  <Selectree label={index === 0 ? 'کد معین' : ''} />
                 </div>
 
                 <div className="min-w-[200px] flex-1">
@@ -285,25 +243,35 @@ const DocRows = () => {
                   />
                 </div>
 
-                <button
-                  onClick={() => deleteRow(index)}
-                  className="ms-auto inline-flex items-center justify-center rounded-lg p-2 text-red-600 hover:bg-red-50 hover:text-red-700 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-red-400"
-                  aria-label="حذف سطر"
-                  title="حذف سطر"
-                >
-                  <FaTrash size={16} />
-                </button>
+
               </div>
             ))}
+            {documents.map((row, index) => (
+              <div
+                key={index}
+                className="flex items-center transition hover:shadow-sm hover:bg-slate-50/60 "
+              >
+                <div
+                  onClick={() => deleteRow(index)}
+                  className={`min-w-[40px]  sticky flex justify-center  ${index === 0 && ' translate-y-3 '} cursor-pointer z-20 right-0 bg-white mx-1 text-red-600 `}
+
+                >
+                  <FaTrash size={16} />
+                </div>
+                <div className="max-h-[560px] overflow-auto  flex items-center transition hover:shadow-sm hover:bg-slate-50/60 ">
+                  {([...fieldList.details] as FieldConfig[]).map((field, i) => (
+                    <div key={i} className="">{elementCreator(field, index !== 0)}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+
+
           </div>
         </div>
-      </div>
+      </div >
     </>
   )
 }
-export default DocRows
-//   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-//     {([...fieldList.details] as FieldConfig[]).map((field, i) => (
-//       <div key={i}>{elementCreator(field)}</div>
-//     ))}
-//   </div>
+export default DocRows 

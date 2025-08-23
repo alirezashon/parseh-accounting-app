@@ -71,14 +71,15 @@ export type FieldConfig = {
   key: string
   label?: string
   type:
-    | 'text'
-    | 'date'
-    | 'textarea'
-    | 'select'
-    | 'number'
-    | 'calendar'
-    | 'singleselect'
-    | 'multiselecttrees'
+  | 'text'
+  | 'date'
+  | 'textarea'
+  | 'select'
+  | 'number'
+  | 'calendar'
+  | 'singleselect'
+  | 'multiselecttrees'
+  | 'selectree'
   options?: string[] // برای select
   placeholder?: string
   min?: number
@@ -89,20 +90,20 @@ export type Update = (val: any) => void
 export const fieldList = {
   header: [
     { key: 'code', label: 'شماره سند', type: 'text' },
-    { key: 'date', label: 'تاریخ', type: 'date' },
+    { key: 'Date', label: 'تاریخ', type: 'date' },
     { key: 'code', label: ' شماره فرعی', type: 'text' },
     { key: 'code', label: 'شماره روزانه', type: 'text' },
-    { key: 'description', label: 'توضیحات', type: 'textarea' },
+    { key: 'Description', label: 'توضیحات', type: 'textarea' },
   ],
   details: [
-    { key: '', label: 'کد معین', type: 'text' },
-    { key: '', label: ' کد تفضیلی', type: 'text' },
-    { key: '', label: 'بدهکار', type: 'text' },
-    { key: '', label: 'بستانکار', type: 'text' },
-    { key: '', label: 'شرح ', type: 'text' },
-    { key: '', label: 'شماره پیگیری', type: 'text' },
-    { key: 'تاریخ پیگیری', label: 'شرح ', type: 'text' },
-    { key: 'مرکز هزینه', label: 'شرح ', type: 'text' },
+    { key: 'refs', label: 'کد معین', type: 'selectree' },
+    { key: 'Detailed', label: ' کد تفضیلی', type: 'multiselecttrees' },
+    { key: 'Debit', label: 'بدهکار', type: 'number' },
+    { key: 'Credit', label: 'بستانکار', type: 'number' },
+    { key: 'Description', label: 'شرح ', type: 'text' },
+    { key: 'FollowUpNumber', label: 'شماره پیگیری', type: 'text' },
+    { key: 'FollowUpDate', label: 'تاریخ پیگیری', type: 'calendar' },
+    { key: 'DLTypeRef5', label: 'مرکز هزینه / پروژه', type: 'select' },
   ],
 }
 

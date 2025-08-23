@@ -32,7 +32,7 @@ const Calendar: React.FC<Props> = ({
 
   return (
     <div className="flex flex-col">
-      {label && <label> {label}</label>}
+      {label && <label className='text-gray-500'> {label}</label>}
       <div className="relative w-full">
         <DatePicker
           containerClassName={'w-full '}
@@ -44,7 +44,7 @@ const Calendar: React.FC<Props> = ({
           inputClass={`w-full border border-blue-200 ${
             hasError &&
             'border-red-300 border-none shadow-red-200 shadow-md error-input-animated'
-          } px-3 h-10 rounded-md `}
+          } px-3 h-10`}
         />
 
         <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400">
