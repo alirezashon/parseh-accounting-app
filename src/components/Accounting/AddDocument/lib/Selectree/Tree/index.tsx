@@ -373,21 +373,21 @@ const Selectree = ({ label, theme, treeData, onUnselect }: Props) => {
 
       <div
         ref={inputRef}
-        className="w-full p-3 border border-gray-300 shadow-sm flex justify-between items-center cursor-pointer"
+        className="w-full h-10 px-2 border border-gray-300 shadow-sm flex justify-between items-center cursor-pointer"
         onClick={() => setShowDropdown(!showDropdown)}
       >
         <span className="text-gray-700 text-sm truncate">
           {selectedNode?.chtitle || 'یک مورد انتخاب کنید'}
         </span>
-        <FaLocationArrow className="text-blue-400" />
+        <FaLocationArrow className="text-blue-400 rotate-135" />
       </div>
 
       {showDropdown && (
-        <div className="absolute z-50 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-[400px] overflow-y-auto p-2">
+        <div className="absolute z-50  w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-[400px] overflow-y-auto px-2">
           <input
             type="text"
             placeholder="جستجو در زیرشاخه‌ها..."
-            className="w-full p-2 border border-gray-300 mb-2 focus:outline-none focus:border-blue-400"
+            className="w-full   border border-gray-300   focus:outline-none focus:border-blue-400"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
           />

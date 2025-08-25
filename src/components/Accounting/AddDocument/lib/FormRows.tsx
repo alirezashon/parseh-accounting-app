@@ -179,7 +179,7 @@ const DocRows = () => {
                 <div className="min-w-[200px] flex-1">
                   {/* <Selectree label={index === 0 ? 'کد معین' : ''} /> */}
                   <Selectree
-                    label="انتخاب شاخه"
+              label={index === 0 ? 'کد معین' : ''}      
                     theme="my-theme"
                     treeData={treesData}
                     onUnselect={(allChildIds) => {
