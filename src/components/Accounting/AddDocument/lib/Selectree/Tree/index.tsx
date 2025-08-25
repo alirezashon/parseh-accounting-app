@@ -379,7 +379,7 @@ const Selectree = ({ label, theme, treeData, onUnselect }: Props) => {
         <span className="text-gray-700 text-sm truncate">
           {selectedNode?.chtitle || 'یک مورد انتخاب کنید'}
         </span>
-        <FaLocationArrow className="text-blue-400 rotate-135" />
+        <FaLocationArrow className="text-blue-400 rotate-135 hover:rotate-360 transition-all duration-700" />
       </div>
 
       {showDropdown && (
