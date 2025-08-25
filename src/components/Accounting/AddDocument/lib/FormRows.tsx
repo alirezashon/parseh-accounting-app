@@ -2,7 +2,7 @@ import Divider from '@/components/hub/Forms/Divider'
 import { DocumentRow, FieldConfig, FieldKey, fieldList, treeData } from './data'
 import { buildForm } from './ElementCreator'
 import { useMemo, useState } from 'react'
-import { Detail, Header } from '@/interfaces'
+import { Detail } from '@/interfaces'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 import { BalanceBadge } from '../../hub/BalanceBadage'
 import MultiSelectTrees from '@/components/hub/MultiSelectTrees'
@@ -35,7 +35,6 @@ const DocRows = () => {
     followUpNumber: '',
     followUpDate: '',
   })
-
 
   const totalDebit = useMemo(
     () => documents.reduce((s, r) => s + (Number(r.debit) || 0), 0),
@@ -165,15 +164,15 @@ const DocRows = () => {
               >
                 <div
                   onClick={() => deleteRow(index)}
-                  className={`min-w-[40px]  sticky flex justify-center  ${index === 0 && ' translate-y-3 '} cursor-pointer z-20 right-0 bg-white mx-1 text-red-600 `}
-
+                  className={`min-w-[40px]  sticky flex justify-center  ${
+                    index === 0 && ' translate-y-3 '
+                  } cursor-pointer z-20 right-0 bg-white mx-1 text-red-600 `}
                 >
                   <FaTrash size={16} />
                 </div>
                 <div className="min-w-[200px] flex-1">
                   <Selectree label={index === 0 ? 'کد معین' : ''} />
                 </div>
-
                 <div className="min-w-[200px] flex-1">
                   <MultiSelectTrees
                     trees={treeData}
@@ -242,8 +241,6 @@ const DocRows = () => {
                     setSelectedItems={() => null}
                   />
                 </div>
-
-
               </div>
             ))}
             {documents.map((row, index) => (
@@ -253,25 +250,25 @@ const DocRows = () => {
               >
                 <div
                   onClick={() => deleteRow(index)}
-                  className={`min-w-[40px]  sticky flex justify-center  ${index === 0 && ' translate-y-3 '} cursor-pointer z-20 right-0 bg-white mx-1 text-red-600 `}
-
+                  className={`min-w-[40px]  sticky flex justify-center  ${
+                    index === 0 && ' translate-y-3 '
+                  } cursor-pointer z-20 right-0 bg-white mx-1 text-red-600 `}
                 >
                   <FaTrash size={16} />
                 </div>
                 <div className="max-h-[560px] overflow-auto  flex items-center transition hover:shadow-sm hover:bg-slate-50/60 ">
                   {([...fieldList.details] as FieldConfig[]).map((field, i) => (
-                    <div key={i} className="">{elementCreator(field, index !== 0)}</div>
+                    <div key={i} className="">
+                      {elementCreator(field, index !== 0)}
+                    </div>
                   ))}
                 </div>
               </div>
             ))}
-
-
-
           </div>
         </div>
-      </div >
+      </div>
     </>
   )
 }
-export default DocRows 
+export default DocRows

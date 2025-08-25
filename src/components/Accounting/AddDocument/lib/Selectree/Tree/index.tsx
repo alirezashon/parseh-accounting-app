@@ -6,10 +6,11 @@ import {
 } from '../../../../hub/AcctypesLevels/lib/data'
 import { useEffect, useRef, useState } from 'react'
 import { FaChevronLeft } from 'react-icons/fa'
+import { FaLocationArrow } from 'react-icons/fa6'
 
-const Selectree = ({ label, theme }: { label?: string, theme?: string }) => {
+const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
   const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
-  const [openTrees, setOpenTrees] = useState<number[]>([])
+  const [openTrees, setOpenTrees] = useState<number[] | null>()
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState<TreeChartInterface[]>([])
   const [selectedId, setSelectedId] = useState<number | null>(null)
@@ -26,7 +27,9 @@ const Selectree = ({ label, theme }: { label?: string, theme?: string }) => {
 
   const toggleNode = (id: number) => {
     setOpenTrees((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+      prev?.includes(id)
+        ? prev.filter((x) => x !== id)
+        : [...(prev as number[]), id]
     )
   }
 
@@ -55,7 +58,9 @@ const Selectree = ({ label, theme }: { label?: string, theme?: string }) => {
 
   const focusNode = (node: TreeChartInterface) => {
     const parentIds = getParentIds(node.id)
-    setOpenTrees((prev) => [...new Set([...prev, ...parentIds, node.id])])
+    setOpenTrees((prev) => [
+      ...new Set([...(prev as number[]), ...parentIds, node.id]),
+    ])
 
     setTimeout(() => {
       const ref = nodeRefs.current[node.id]
@@ -83,15 +88,17 @@ const Selectree = ({ label, theme }: { label?: string, theme?: string }) => {
                 ref={(el) => {
                   nodeRefs.current[node.id] = el
                 }}
-                className={`transition-all duration-300 flex items-center gap-3 rounded-lg px-3 cursor-pointer border-b ${isSelected
-                  ? 'bg-blue-100 border-blue-500 text-blue-800 font-semibold'
-                  : 'hover:bg-gray-100 border-gray-100'
-                  }`}
+                className={`transition-all duration-300 flex items-center gap-3 rounded-lg px-3 cursor-pointer border-b ${
+                  isSelected
+                    ? 'bg-blue-100 border-blue-500 text-blue-800 font-semibold'
+                    : 'hover:bg-gray-100 border-gray-100'
+                }`}
                 onClick={() => toggleNode(node.id)}
               >
                 <FaChevronLeft
-                  className={`transition-transform duration-300 ${openTrees.includes(node.id) ? '-rotate-90' : ''
-                    } text-gray-500`}
+                  className={`transition-transform duration-300 ${
+                    openTrees?.includes(node.id) ? '-rotate-90' : ''
+                  } text-gray-500`}
                 />
                 <input
                   type="radio"
@@ -106,7 +113,7 @@ const Selectree = ({ label, theme }: { label?: string, theme?: string }) => {
                 </div>
               </div>
 
-              {openTrees.includes(node.id) && (
+              {(openTrees as number[]) && openTrees?.includes(node.id) && (
                 <div className="pl-6">{renderTree(node.id, level + 1)}</div>
               )}
             </li>
@@ -119,17 +126,24 @@ const Selectree = ({ label, theme }: { label?: string, theme?: string }) => {
   return (
     <div className="relative rounded-md shadow bg-white max-w-[800px]">
       {/* Search Box */}
-      <div className="relative z-10">
+      <div className="relative z-10 ">
         {label && (
-          <label className={`font-medium text-gray-500 ${theme}`}>{label}</label>
+          <label className={`font-medium text-gray-500 ${theme}`}>
+            {label}
+          </label>
         )}
-        <input
-          type="text"
-          placeholder="جستجوی زیرشاخه‌ها"
-          className="w-full p-3 border border-gray-300  shadow-sm focus:outline-none focus:border-2 focus:border-blue-400"
-          value={searchTerm}
-          onChange={(e) => handleSearch(e.target.value)}
-        />
+        <div className="relative flex items-center">
+          <input
+            type="text"
+            placeholder="جستجوی زیرشاخه‌ها"
+            className="w-full p-3 border border-gray-300  shadow-sm focus:outline-none focus:border-2 focus:border-blue-400"
+            value={searchTerm}
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <div className="absolute  transform-3d rotate-135 mx-1 left-0 translate-y- text-blue-400">
+            <FaLocationArrow />
+          </div>
+        </div>
         {searchResults.length > 0 && (
           <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-[300px] overflow-y-auto animate-slide-in z-20">
             {searchResults.map((item) => (
