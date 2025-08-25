@@ -1,7 +1,7 @@
 import Divider from '@/components/hub/Forms/Divider'
 import { DocumentRow, FieldConfig, FieldKey, fieldList, treeData } from './data'
 import { buildForm } from './ElementCreator'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Detail } from '@/interfaces'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 import { BalanceBadge } from '../../hub/BalanceBadage'
@@ -11,6 +11,8 @@ import Input from '@/components/hub/Forms/Input'
 import SingleSelectList from '@/components/hub/Forms/SingleSelectList'
 import Calendar from '@/components/hub/Calendar'
 import Selectree from './Selectree/Tree'
+import { getAllTreeData } from '../../hub/AcctypesLevels/lib/convertors'
+import { TreeChartInterface } from '../../hub/AcctypesLevels/lib/data'
 
 const DocRows = () => {
   const today = useMemo(() => new Date().toISOString().split('T')[0], [])
@@ -36,6 +38,10 @@ const DocRows = () => {
     followUpDate: '',
   })
 
+  const [treesData, setTreesData] = useState<TreeChartInterface[]>([])
+  useEffect(() => {
+    getAllTreeData().then((response) => setTreesData(response))
+  }, [])
   const totalDebit = useMemo(
     () => documents.reduce((s, r) => s + (Number(r.debit) || 0), 0),
     [documents]
@@ -171,7 +177,15 @@ const DocRows = () => {
                   <FaTrash size={16} />
                 </div>
                 <div className="min-w-[200px] flex-1">
-                  <Selectree label={index === 0 ? 'کد معین' : ''} />
+                  {/* <Selectree label={index === 0 ? 'کد معین' : ''} /> */}
+                  <Selectree
+                    label="انتخاب شاخه"
+                    theme="my-theme"
+                    treeData={treesData}
+                    onUnselect={(allChildIds) => {
+                      console.log('Unselected IDs:', allChildIds)
+                    }}
+                  />
                 </div>
                 <div className="min-w-[200px] flex-1">
                   <MultiSelectTrees

@@ -1,36 +1,64 @@
 // 'use client'
+
+// import { useEffect, useRef, useState, CSSProperties } from 'react'
+// import { createPortal } from 'react-dom'
 // import { getAllTreeData } from '@/components/Accounting/hub/AcctypesLevels/lib/convertors'
 // import {
-//   levelol,
 //   TreeChartInterface,
+//   levelol,
 // } from '../../../../hub/AcctypesLevels/lib/data'
-// import { useEffect, useRef, useState } from 'react'
 // import { FaChevronLeft } from 'react-icons/fa'
 // import { FaLocationArrow } from 'react-icons/fa6'
 
 // const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
-//   const [showOptions, setShowOptions] = useState<boolean>()
 //   const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
-//   const [openTrees, setOpenTrees] = useState<number[] | null>()
+//   const [openTrees, setOpenTrees] = useState<number[]>([])
 //   const [searchTerm, setSearchTerm] = useState('')
 //   const [searchResults, setSearchResults] = useState<TreeChartInterface[]>([])
-//   const [selectedId, setSelectedId] = useState<number | null>(null)
+//   const [selectedNode, setSelectedNode] = useState<TreeChartInterface | null>(
+//     null
+//   )
+//   const [showDropdown, setShowDropdown] = useState(false)
+//   const [dropdownStyle, setDropdownStyle] = useState<CSSProperties>({})
 
+//   const wrapperRef = useRef<HTMLDivElement | null>(null)
+//   const inputRef = useRef<HTMLDivElement | null>(null)
 //   const nodeRefs = useRef<Record<number, HTMLDivElement | null>>({})
 
 //   useEffect(() => {
-//     const fetchData = async () => {
-//       const data = await getAllTreeData()
-//       setTreeData(data)
-//     }
-//     fetchData()
+//     getAllTreeData().then((response) => setTreeData(response))
 //   }, [])
+
+//   useEffect(() => {
+//     const handleClickOutside = (event: MouseEvent) => {
+//       if (
+//         wrapperRef.current &&
+//         !wrapperRef.current.contains(event.target as Node)
+//       ) {
+//         setShowDropdown(false)
+//       }
+//     }
+//     document.addEventListener('mousedown', handleClickOutside)
+//     return () => document.removeEventListener('mousedown', handleClickOutside)
+//   }, [])
+
+//   const openDropdown = () => {
+//     if (inputRef.current) {
+//       const rect = inputRef.current.getBoundingClientRect()
+//       setDropdownStyle({
+//         position: 'absolute',
+//         top: rect.bottom + window.scrollY,
+//         left: rect.left + window.scrollX,
+//         width: rect.width,
+//         zIndex: 9999,
+//       })
+//       setShowDropdown(true)
+//     }
+//   }
 
 //   const toggleNode = (id: number) => {
 //     setOpenTrees((prev) =>
-//       prev?.includes(id)
-//         ? prev.filter((x) => x !== id)
-//         : [...(prev as number[]), id]
+//       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
 //     )
 //   }
 
@@ -55,13 +83,16 @@
 //       item.chtitle.toLowerCase().includes(lowerTerm)
 //     )
 //     setSearchResults(results)
+//     openDropdown()
 //   }
 
 //   const focusNode = (node: TreeChartInterface) => {
 //     const parentIds = getParentIds(node.id)
-//     setOpenTrees((prev) => [
-//       ...new Set([...(prev as number[]), ...parentIds, node.id]),
-//     ])
+//     setOpenTrees([...new Set([...openTrees, ...parentIds, node.id])])
+//     setSelectedNode(node)
+//     setSearchTerm('')
+//     setSearchResults([])
+//     setShowDropdown(false)
 
 //     setTimeout(() => {
 //       const ref = nodeRefs.current[node.id]
@@ -78,13 +109,11 @@
 //   const renderTree = (parentId: number, level = 0): React.JSX.Element => {
 //     const nodes = treeData.filter((node) => node.chpid === parentId)
 //     return (
-//       <ul className={` ${levelol[0][level]} w-[120%]`}>
+//       <ul className={`${levelol[0][level]} w-[120%]`}>
 //         {nodes.map((node) => {
-//           const children = treeData.filter((item) => item.chpid === node.id)
-//           const isSelected = selectedId === node.id
-
+//           const isSelected = selectedNode?.id === node.id
 //           return (
-//             <li key={node.id} className={` ${levelol[1][level]}`}>
+//             <li key={node.id} className={`${levelol[1][level]}`}>
 //               <div
 //                 ref={(el) => {
 //                   nodeRefs.current[node.id] = el
@@ -98,23 +127,22 @@
 //               >
 //                 <FaChevronLeft
 //                   className={`transition-transform duration-300 ${
-//                     openTrees?.includes(node.id) ? '-rotate-90' : ''
+//                     openTrees.includes(node.id) ? '-rotate-90' : ''
 //                   } text-gray-500`}
 //                 />
 //                 <input
 //                   type="radio"
-//                   checked={selectedId === node.id}
-//                   onChange={() => setSelectedId(node.id)}
+//                   checked={selectedNode?.id === node.id}
+//                   onChange={() => focusNode(node)}
 //                   onClick={(e) => e.stopPropagation()}
 //                   className="accent-blue-500"
 //                 />
-//                 <div className="flex-1 text-nowrap">
-//                   <span className="text-sm text-blue-400 ">{node.chtitle}</span>
-//                   {/* <div className="text-xs text-gray-500">{node.chlabel}</div> */}
+//                 <div className="flex-1 text-nowrap text-sm text-blue-400">
+//                   {node.chtitle}
 //                 </div>
 //               </div>
 
-//               {(openTrees as number[]) && openTrees?.includes(node.id) && (
+//               {openTrees.includes(node.id) && (
 //                 <div className="pl-6">{renderTree(node.id, level + 1)}</div>
 //               )}
 //             </li>
@@ -125,88 +153,103 @@
 //   }
 
 //   return (
-//     <div className="relative rounded-md shadow bg-white max-w-[800px]">
-//       {/* Search Box */}
-//       <div className="relative z-10 ">
-//         {label && (
-//           <label className={`font-medium text-gray-500 ${theme}`}>
-//             {label}
-//           </label>
-//         )}
-//         <div className="relative flex items-center">
-//           <input
-//             type="text"
-//             placeholder="جستجوی زیرشاخه‌ها"
-//             className="w-full p-3 border border-gray-300  shadow-sm focus:outline-none focus:border-2 focus:border-blue-400"
-//             value={searchTerm}
-//             onChange={(e) => handleSearch(e.target.value)}
-//           />
-//           <div className="absolute cursor-pointer transform-3d rotate-135 mx-1 left-0 translate-y- text-blue-400">
-//             <FaLocationArrow onClick={() => setShowOptions(!showOptions)} />
-//           </div>
-//         </div>
-//         {showOptions && searchResults.length > 0 && (
-//           <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-[300px] overflow-y-auto animate-slide-in z-20">
-//             {searchResults.map((item) => (
-//               <div
-//                 key={item.id}
-//                 onClick={() => focusNode(item)}
-//                 className="cursor-pointer hover:bg-blue-100 px-4 py-2 text-sm text-nowrap"
-//               >
-//                 {item.chtitle}
-//               </div>
-//             ))}
-//           </div>
-//         )}
+//     <div
+//       ref={wrapperRef}
+//       className="relative rounded-md bg-white max-w-[800px]"
+//     >
+//       {label && (
+//         <label className={`font-medium text-gray-500 ${theme}`}>{label}</label>
+//       )}
+
+//       {/* Input Display */}
+//       <div
+//         ref={inputRef}
+//         className="w-full p-3 border border-gray-300 shadow-sm flex justify-between items-center cursor-pointer"
+//         onClick={openDropdown}
+//       >
+//         <span className="text-gray-700 text-sm truncate">
+//           {selectedNode?.chtitle || 'یک مورد انتخاب کنید'}
+//         </span>
+//         <FaLocationArrow className="text-blue-400" />
 //       </div>
 
-//       {/* Tree View */}
-//       <div className="overflow-x-auto">{renderTree(0)}</div>
+//       {/* Portal Dropdown */}
+//       {showDropdown &&
+//         createPortal(
+//           <div
+//             style={dropdownStyle}
+//             className="bg-white border border-gray-300 rounded-lg shadow-lg max-h-[400px] overflow-y-auto p-2"
+//           >
+//             <input
+//               type="text"
+//               placeholder="جستجو در زیرشاخه‌ها..."
+//               className="w-full p-2 border border-gray-300 mb-2 focus:outline-none focus:border-blue-400"
+//               value={searchTerm}
+//               onChange={(e) => handleSearch(e.target.value)}
+//             />
+//             {showDropdown && (
+//               <div className="overflow-x-auto mt-2">{renderTree(0)}</div>
+//             )}
+//             {searchResults.length > 0 ? (
+//               searchResults.map((item) => (
+//                 <div
+//                   key={item.id}
+//                   onClick={() => focusNode(item)}
+//                   className="cursor-pointer hover:bg-blue-100 px-2 py-1 text-sm"
+//                 >
+//                   {item.chtitle}
+//                 </div>
+//               ))
+//             ) : (
+//               <div className="text-sm text-gray-400 px-2">
+//                 نتیجه‌ای یافت نشد
+//               </div>
+//             )}
+//           </div>,
+//           document.body
+//         )}
 //     </div>
 //   )
 // }
 
 // export default Selectree
+
 'use client'
-import { useEffect, useRef, useState } from 'react'
-import { getAllTreeData } from '@/components/Accounting/hub/AcctypesLevels/lib/convertors'
-import {
-  TreeChartInterface,
-  levelol,
-} from '../../../../hub/AcctypesLevels/lib/data'
+
+import { useRef, useState, useEffect, JSX } from 'react'
+import { TreeChartInterface, levelol } from '../../../../hub/AcctypesLevels/lib/data'
 import { FaChevronLeft } from 'react-icons/fa'
 import { FaLocationArrow } from 'react-icons/fa6'
 
-const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
-  const [showOptions, setShowOptions] = useState(false)
-  const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
+type Props = {
+  label?: string
+  theme?: string
+  treeData: TreeChartInterface[]
+  onUnselect?: (allChildIds: number[]) => void
+}
+
+const Selectree = ({ label, theme, treeData, onUnselect }: Props) => {
   const [openTrees, setOpenTrees] = useState<number[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState<TreeChartInterface[]>([])
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [selectedNode, setSelectedNode] = useState<TreeChartInterface | null>(null)
+  const [showDropdown, setShowDropdown] = useState(false)
 
   const wrapperRef = useRef<HTMLDivElement | null>(null)
+  const inputRef = useRef<HTMLDivElement | null>(null)
   const nodeRefs = useRef<Record<number, HTMLDivElement | null>>({})
 
-  // Load data
-  useEffect(() => {
-    getAllTreeData().then(setTreeData)
-  }, [])
-
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
         wrapperRef.current &&
         !wrapperRef.current.contains(event.target as Node)
       ) {
-        setShowOptions(false)
+        setShowDropdown(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
   const toggleNode = (id: number) => {
@@ -225,6 +268,14 @@ const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
     return ids
   }
 
+  const getAllChildIds = (id: number): number[] => {
+    const collect = (parentId: number): number[] => {
+      const children = treeData.filter((item) => item.chpid === parentId)
+      return children.flatMap((child) => [child.id, ...collect(child.id)])
+    }
+    return collect(id)
+  }
+
   const handleSearch = (term: string) => {
     setSearchTerm(term)
     if (!term.trim()) {
@@ -236,13 +287,22 @@ const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
       item.chtitle.toLowerCase().includes(lowerTerm)
     )
     setSearchResults(results)
-    setShowOptions(true)
   }
 
   const focusNode = (node: TreeChartInterface) => {
+    if (selectedNode?.id === node.id) {
+      // اگر دوباره روش کلیک شد، unselect کن
+      setSelectedNode(null)
+      const allChildIds = getAllChildIds(node.id)
+      onUnselect?.(allChildIds)
+      return
+    }
+
     const parentIds = getParentIds(node.id)
-    setOpenTrees((prev) => [...new Set([...prev, ...parentIds, node.id])])
-    setShowOptions(false)
+    setOpenTrees([...new Set([...openTrees, ...parentIds, node.id])])
+    setSelectedNode(node)
+    setSearchTerm('')
+    setSearchResults([])
 
     setTimeout(() => {
       const ref = nodeRefs.current[node.id]
@@ -256,12 +316,12 @@ const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
     }, 300)
   }
 
-  const renderTree = (parentId: number, level = 0): React.JSX.Element => {
+  const renderTree = (parentId: number, level = 0): JSX.Element => {
     const nodes = treeData.filter((node) => node.chpid === parentId)
     return (
       <ul className={`${levelol[0][level]} w-[120%]`}>
         {nodes.map((node) => {
-          const isSelected = selectedId === node.id
+          const isSelected = selectedNode?.id === node.id
           return (
             <li key={node.id} className={`${levelol[1][level]}`}>
               <div
@@ -282,8 +342,8 @@ const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
                 />
                 <input
                   type="radio"
-                  checked={selectedId === node.id}
-                  onChange={() => setSelectedId(node.id)}
+                  checked={selectedNode?.id === node.id}
+                  onChange={() => focusNode(node)}
                   onClick={(e) => e.stopPropagation()}
                   className="accent-blue-500"
                 />
@@ -305,47 +365,51 @@ const Selectree = ({ label, theme }: { label?: string; theme?: string }) => {
   return (
     <div
       ref={wrapperRef}
-      className="relative rounded-md shadow bg-white max-w-[800px]"
+      className="relative rounded-md bg-white max-w-[800px]"
     >
-      {/* Search Box */}
-      <div className="relative z-10">
-        {label && (
-          <label className={`font-medium text-gray-500 ${theme}`}>
-            {label}
-          </label>
-        )}
-        <div className="relative flex items-center">
+      {label && (
+        <label className={`font-medium text-gray-500 ${theme}`}>{label}</label>
+      )}
+
+      <div
+        ref={inputRef}
+        className="w-full p-3 border border-gray-300 shadow-sm flex justify-between items-center cursor-pointer"
+        onClick={() => setShowDropdown(!showDropdown)}
+      >
+        <span className="text-gray-700 text-sm truncate">
+          {selectedNode?.chtitle || 'یک مورد انتخاب کنید'}
+        </span>
+        <FaLocationArrow className="text-blue-400" />
+      </div>
+
+      {showDropdown && (
+        <div className="absolute z-50 mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-[400px] overflow-y-auto p-2">
           <input
             type="text"
-            placeholder="جستجوی زیرشاخه‌ها"
-            className="w-full p-3 border border-gray-300 shadow-sm focus:outline-none focus:border-2 focus:border-blue-400"
+            placeholder="جستجو در زیرشاخه‌ها..."
+            className="w-full p-2 border border-gray-300 mb-2 focus:outline-none focus:border-blue-400"
             value={searchTerm}
             onChange={(e) => handleSearch(e.target.value)}
-            onFocus={() => searchTerm && setShowOptions(true)}
           />
-          <div className="absolute left-2 text-blue-400 cursor-pointer">
-            <FaLocationArrow onClick={() => setShowOptions((prev) => !prev)} />
-          </div>
-        </div>
-
-        {/* Dropdown */}
-        {showOptions && searchResults.length > 0 && (
-          <div className="absolute left-0 right-0 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-[300px] overflow-y-auto z-50">
-            {searchResults.map((item) => (
+          {searchResults.length > 0 ? (
+            searchResults.map((item) => (
               <div
                 key={item.id}
                 onClick={() => focusNode(item)}
-                className="cursor-pointer hover:bg-blue-100 px-4 py-2 text-sm text-nowrap"
+                className="cursor-pointer hover:bg-blue-100 px-2 py-1 text-sm"
               >
                 {item.chtitle}
               </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Tree View */}
-      <div className="overflow-x-auto">{renderTree(0)}</div>
+            ))
+          ) : (
+            <div className="text-sm text-gray-400 px-2">
+              نتیجه‌ای یافت نشد
+            </div>
+          )}
+          {/* درخت در همین dropdown */}
+          <div className="overflow-x-auto mt-2">{renderTree(0)}</div>
+        </div>
+      )}
     </div>
   )
 }
