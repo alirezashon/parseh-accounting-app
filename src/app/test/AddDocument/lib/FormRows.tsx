@@ -13,32 +13,7 @@ import Selectree from './Selectree/Tree'
 import { getAllTreeData } from '@/components/Accounting/hub/AcctypesLevels/lib/convertors'
 import { TreeChartInterface } from '@/components/Accounting/hub/AcctypesLevels/lib/data'
 import { BalanceBadge } from '@/components/Accounting/hub/BalanceBadage'
-// const mappedDetails: Detail[] = documents.map((row, index) => ({
-//   RowNumber: index + 1,
-//   AccountGroupRef: 0,
-//   GLRef: parseInt(row.account) || 0,
-//   SLRef: parseInt(row.detailed) || 0,
-//   SLCode: '',
-//   Debit: Number(row.debit) || 0,
-//   Credit: Number(row.credit) || 0,
-//   Description: row.description,
-//   Description_En: '',
-//   FollowUpNumber: row.followUpNumber,
-//   FollowUpDate: row.followUpDate,
-//   Quantity: 0,
-//   DLLevel4: '',
-//   DLLevel5: '',
-//   DLTypeRef4: 0,
-//   DLTypeRef5: 0,
-//   CurrencyRef: 0,
-//   TaxAccountType: 0,
-//   TaxStateType: 0,
-//   TransactionType: 0,
-//   PurchaseOrSale: 0,
-//   ItemOrService: 0,
-//   PartyRef: 0,
-//   TaxAmount: 0,
-// }))
+
 const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
   const [documents, setDocuments] = useState<DocumentRow[]>(
     Array.from({ length: 25 }, () => ({
@@ -60,7 +35,34 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
     followUpNumber: '',
     followUpDate: '',
   })
-
+  const [details, setDetails] = useState<Detail[]>(
+    documents.map((row, index) => ({
+      RowNumber: index + 1,
+      AccountGroupRef: 0,
+      GLRef: parseInt(row.account) || 0,
+      SLRef: parseInt(row.detailed) || 0,
+      SLCode: '',
+      Debit: Number(row.debit) || 0,
+      Credit: Number(row.credit) || 0,
+      Description: row.description,
+      Description_En: '',
+      FollowUpNumber: row.followUpNumber,
+      FollowUpDate: row.followUpDate,
+      Quantity: 0,
+      DLLevel4: '',
+      DLLevel5: '',
+      DLTypeRef4: 0,
+      DLTypeRef5: 0,
+      CurrencyRef: 0,
+      TaxAccountType: 0,
+      TaxStateType: 0,
+      TransactionType: 0,
+      PurchaseOrSale: 0,
+      ItemOrService: 0,
+      PartyRef: 0,
+      TaxAmount: 0,
+    }))
+  )
   const [treesData, setTreesData] = useState<TreeChartInterface[]>([])
   useEffect(() => {
     getAllTreeData().then((response) => setTreesData(response))
@@ -74,34 +76,40 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
     [documents]
   )
   const isBalanced = totalDebit === totalCredit
+  const elementCreator = buildForm(
+    formRows,
+    setFormRows,
+    (changes: Record<string, string>) => {
+      const row: Detail = {
+        RowNumber: 1,
+        AccountGroupRef: 0,
+        GLRef: parseInt(changes.account) || 0,
+        SLRef: parseInt(changes.detailed) || 0,
+        SLCode: '',
+        Debit: Number(changes.debit) || 0,
+        Credit: Number(changes.credit) || 0,
+        Description: changes.description,
+        Description_En: '',
+        FollowUpNumber: changes.followUpNumber,
+        FollowUpDate: changes.followUpDate,
+        Quantity: 0,
+        DLLevel4: '',
+        DLLevel5: '',
+        DLTypeRef4: 0,
+        DLTypeRef5: 0,
+        CurrencyRef: 0,
+        TaxAccountType: 0,
+        TaxStateType: 0,
+        TransactionType: 0,
+        PurchaseOrSale: 0,
+        ItemOrService: 0,
+        PartyRef: 0,
+        TaxAmount: 0,
+      }
 
-  const elementCreator = buildForm(formRows, setFormRows)
-  const mappedDetails: Detail[] = documents.map((row, index) => ({
-    RowNumber: index + 1,
-    AccountGroupRef: 0,
-    GLRef: parseInt(row.account) || 0,
-    SLRef: parseInt(row.detailed) || 0,
-    SLCode: '',
-    Debit: Number(row.debit) || 0,
-    Credit: Number(row.credit) || 0,
-    Description: row.description,
-    Description_En: '',
-    FollowUpNumber: row.followUpNumber,
-    FollowUpDate: row.followUpDate,
-    Quantity: 0,
-    DLLevel4: '',
-    DLLevel5: '',
-    DLTypeRef4: 0,
-    DLTypeRef5: 0,
-    CurrencyRef: 0,
-    TaxAccountType: 0,
-    TaxStateType: 0,
-    TransactionType: 0,
-    PurchaseOrSale: 0,
-    ItemOrService: 0,
-    PartyRef: 0,
-    TaxAmount: 0,
-  }))
+      onChange([row]) // چون فقط یک ردیفه، در آرایه می‌ذاریم
+    }
+  )
 
   const updateRow = <K extends keyof DocumentRow>(
     index: number,

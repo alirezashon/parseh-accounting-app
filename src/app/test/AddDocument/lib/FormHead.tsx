@@ -15,7 +15,6 @@ const DocHead = ({ onChange }: { onChange: (headers: Header) => void }) => {
 
   const [formData, setFormData] = useState<{
     header: Header
-    details: Detail[]
   }>({
     header: {
       BranchRef: 0,
@@ -33,17 +32,46 @@ const DocHead = ({ onChange }: { onChange: (headers: Header) => void }) => {
       FiscalYearRef: 0,
       Signature: '',
     },
-    details: [],
   })
-  const elementCreator = buildForm(formHeader, (formHead) => {
-    setFormHeader(formHead)
-    onChange({
-      ...formData.header,
-      Description: formHeader.description,
-      Date: formHeader.date,
-      ReferenceNumber: Number(formHeader.code) || 0,
-    })
-  })
+  const elementCreator = buildForm(
+    formHeader,
+    setFormHeader,
+    (changes: Record<string, string>) => {
+      const row: Detail = {
+        RowNumber: 1,
+        AccountGroupRef: 0,
+        GLRef: parseInt(changes.account) || 0,
+        SLRef: parseInt(changes.detailed) || 0,
+        SLCode: '',
+        Debit: Number(changes.debit) || 0,
+        Credit: Number(changes.credit) || 0,
+        Description: changes.description,
+        Description_En: '',
+        FollowUpNumber: changes.followUpNumber,
+        FollowUpDate: changes.followUpDate,
+        Quantity: 0,
+        DLLevel4: '',
+        DLLevel5: '',
+        DLTypeRef4: 0,
+        DLTypeRef5: 0,
+        CurrencyRef: 0,
+        TaxAccountType: 0,
+        TaxStateType: 0,
+        TransactionType: 0,
+        PurchaseOrSale: 0,
+        ItemOrService: 0,
+        PartyRef: 0,
+        TaxAmount: 0,
+      }
+
+      onChange({
+        ...formData.header,
+        Description: formHeader.description,
+        Date: formHeader.date,
+        ReferenceNumber: Number(formHeader.code) || 0,
+      })
+    }
+  )
 
   return (
     <>
