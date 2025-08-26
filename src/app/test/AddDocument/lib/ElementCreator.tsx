@@ -2,24 +2,41 @@ import Input from '@/components/hub/Forms/Input'
 import SingleSelectList from '@/components/hub/Forms/SingleSelectList'
 import TextArea from '@/components/hub/Forms/TextArea'
 import MultiSelectTrees from '@/components/hub/MultiSelectTrees'
-import { FieldConfig, HeaderState, treeData, Update } from './data'
+import { FieldConfig, treeData } from './data'
 import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import Calendar from '@/components/hub/Calendar'
 import Selectree from './Selectree/Tree'
-import { Detail } from '@/interfaces'
-
+ 
 export function buildForm<TKeys extends string>(
-  state: HeaderState<TKeys>,
-  setState: React.Dispatch<React.SetStateAction<HeaderState<TKeys>>>,
-  changeData: (val:Record<string,string>) => void
+  state: Record<string, FieldConfig>,
+  setState: React.Dispatch<React.SetStateAction<Record<string, FieldConfig>>>,
+  changeData: (val: Record<string, string>) => void
 ) {
   return function elementCreator(cfg: FieldConfig, hideLabel?: boolean) {
     const { key, label = '', type, options = [], placeholder } = cfg
-    const value = state[key as TKeys]
-    const update: Update = (val: HeaderState<TKeys>) => {
-      setState((prev) => ({ ...prev, [key]: val }))
-      changeData(val)
+    const value = state[key]?.value ?? ''
+
+    const update = (val: string | number) => {
+      setState((prev) => {
+        const updated = {
+          ...prev,
+          [key]: {
+            ...prev[key],
+            value: val,
+          },
+        }
+
+        // استخراج همه مقادیر برای ارسال به changeData
+        const result: Record<string, string> = {}
+        for (const k in updated) {
+          result[k] = String(updated[k]?.value ?? '')
+        }
+
+        changeData(result)
+        return updated
+      })
     }
+
     let control: React.ReactNode = null
     switch (type) {
       case 'text':
@@ -27,7 +44,7 @@ export function buildForm<TKeys extends string>(
         control = (
           <Input
             label={hideLabel ? '' : label}
-            value={value ?? ''}
+            value={(value as string) ?? ''}
             onChange={update}
             placeholder={placeholder}
             className="w-full"
@@ -38,7 +55,7 @@ export function buildForm<TKeys extends string>(
         control = (
           <TextArea
             label={hideLabel ? '' : label}
-            value={value ?? ''}
+            value={(value as string) ?? ''}
             onChange={update}
             placeholder={placeholder}
           />

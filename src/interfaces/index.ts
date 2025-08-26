@@ -58,6 +58,9 @@ export interface VoucherTypeScheme {
 export interface Header {
   BranchRef: number
   Date: string
+  Number: number
+  Sequence: number
+  DailyNumber: number
   VoucherTypeRef: number
   IsCurrencyBased: number
   Description: string

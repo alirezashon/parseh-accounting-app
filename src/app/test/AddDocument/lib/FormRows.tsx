@@ -1,5 +1,5 @@
 import Divider from '@/components/hub/Forms/Divider'
-import { DocumentRow, FieldConfig, FieldKey, fieldList, treeData } from './data'
+import { DocumentRow, FieldConfig, fieldList, treeData } from './data'
 import { buildForm } from './ElementCreator'
 import { useEffect, useMemo, useState } from 'react'
 import { Detail } from '@/interfaces'
@@ -34,6 +34,29 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
     credit: '0',
     followUpNumber: '',
     followUpDate: '',
+  })
+  const [formHeader, setFormHeader] = useState<Record<string, FieldConfig>>({
+    AccountGroupRef: {
+      key: 'AccountGroupRef',
+      type: 'selectree',
+    },
+    DLLevel4: {
+      key: 'DLLevel4',
+      type: 'calendar',
+    },
+    Debit: {
+      key: 'Sequence',
+      type: 'text',
+    },
+    Credit: {
+      key: 'DailyNumber',
+      type: 'number',
+    },
+    Description: {
+      key: 'Description',
+      type: 'textarea',
+    },
+    FollowUpNumber: { key: 'FollowUpNumber', label: '', type: 'textarea' },
   })
   const [details, setDetails] = useState<Detail[]>(
     documents.map((row, index) => ({

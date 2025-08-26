@@ -14,6 +14,7 @@ export default function AddDocument() {
     details: Detail[]
   }>()
   const onSubmit = async () => {
+    if(!finalData) return
     console.table(finalData)
     await InsertEasyVoucher({ data: finalData as any, accessToken: '' })
   }
@@ -57,7 +58,7 @@ export default function AddDocument() {
       />
       <div
         onClick={onSubmit}
-        className="flex z-20 justify-center sticky bottom-0 items-center gap-2 rounded-lg px-3 py-2 text-sm bg-indigo-600 text-white hover:bg-indigo-700 active:translate-y-px focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        className="flex z-20 justify-center sticky bottom-1 items-center gap-2 rounded-lg px-2 py-2 text-sm bg-indigo-600 text-white hover:bg-[#2F27CE] active:translate-y-px focus:outline-none focus:ring-2 focus:ring-indigo-400"
       >
         ثبت سند
       </div>

@@ -1,5 +1,5 @@
 import Divider from '@/components/hub/Forms/Divider'
-import { FieldConfig, FieldKey, fieldList } from './data'
+import { FieldConfig, fieldList } from './data'
 import { buildForm } from './ElementCreator'
 import { useMemo, useState } from 'react'
 import { Detail, Header } from '@/interfaces'
@@ -7,32 +7,29 @@ import { Detail, Header } from '@/interfaces'
 const DocHead = ({ onChange }: { onChange: (headers: Header) => void }) => {
   const today = useMemo(() => new Date().toISOString().split('T')[0], [])
 
-  const [formHeader, setFormHeader] = useState<Record<FieldKey, string>>({
-    code: '',
-    date: today,
-    description: '',
-  })
-
-  const [formData, setFormData] = useState<{
-    header: Header
-  }>({
-    header: {
-      BranchRef: 0,
-      Date: today,
-      VoucherTypeRef: 0,
-      IsCurrencyBased: 0,
-      Description: '',
-      Description_En: '',
-      State: 0,
-      IsTemporary: 0,
-      IsExternal: 0,
-      ReferenceNumber: 0,
-      ShowCurrencyFields: 0,
-      IsReadonly: 0,
-      FiscalYearRef: 0,
-      Signature: '',
+  const [formHeader, setFormHeader] = useState<Record<string, FieldConfig>>({
+    Number: {
+      key: 'Number',
+      type: 'text',
+    },
+    Date: {
+      key: 'Date',
+      type: 'calendar',
+    },
+    Sequence: {
+      key: 'Sequence',
+      type: 'text',
+    },
+    DailyNumber: {
+      key: 'DailyNumber',
+      type: 'number',
+    },
+    Description: {
+      key: 'Description',
+      type: 'textarea',
     },
   })
+
   const elementCreator = buildForm(
     formHeader,
     setFormHeader,
@@ -63,13 +60,7 @@ const DocHead = ({ onChange }: { onChange: (headers: Header) => void }) => {
         PartyRef: 0,
         TaxAmount: 0,
       }
-
-      onChange({
-        ...formData.header,
-        Description: formHeader.description,
-        Date: formHeader.date,
-        ReferenceNumber: Number(formHeader.code) || 0,
-      })
+      onChange)
     }
   )
 
