@@ -2,76 +2,68 @@ import Input from '@/components/hub/Forms/Input'
 import SingleSelectList from '@/components/hub/Forms/SingleSelectList'
 import TextArea from '@/components/hub/Forms/TextArea'
 import MultiSelectTrees from '@/components/hub/MultiSelectTrees'
-import { FieldConfig, treeData } from './data'
 import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import Calendar from '@/components/hub/Calendar'
 import Selectree from './Selectree/Tree'
- 
+import { FieldConfig, treeData } from './data'
+
 export function buildForm<TKeys extends string>(
-  state: Record<string, FieldConfig>,
-  setState: React.Dispatch<React.SetStateAction<Record<string, FieldConfig>>>,
-  changeData: (val: Record<string, string>) => void
+  state: Record<TKeys, string | number>,
+  setState: React.Dispatch<
+    React.SetStateAction<Record<TKeys, string | number>>
+  >,
+  onChange?: (values: Record<TKeys, string>) => void
 ) {
   return function elementCreator(cfg: FieldConfig, hideLabel?: boolean) {
     const { key, label = '', type, options = [], placeholder } = cfg
-    const value = state[key]?.value ?? ''
+    const value = state[key as TKeys] ?? ''
 
     const update = (val: string | number) => {
       setState((prev) => {
         const updated = {
           ...prev,
-          [key]: {
-            ...prev[key],
-            value: val,
-          },
+          [key]: val,
+        }
+        console.log(val)
+        if (onChange) {
+          const mapped: Record<TKeys, string> = {} as any
+          for (const k in updated) {
+            mapped[k as TKeys] = String(updated[k])
+          }
+          onChange(mapped)
         }
 
-        // استخراج همه مقادیر برای ارسال به changeData
-        const result: Record<string, string> = {}
-        for (const k in updated) {
-          result[k] = String(updated[k]?.value ?? '')
-        }
-
-        changeData(result)
         return updated
       })
     }
 
     let control: React.ReactNode = null
+
     switch (type) {
       case 'text':
       case 'date':
         control = (
           <Input
             label={hideLabel ? '' : label}
-            value={(value as string) ?? ''}
+            value={String(value)}
             onChange={update}
             placeholder={placeholder}
             className="w-full"
           />
         )
         break
+
       case 'textarea':
         control = (
           <TextArea
             label={hideLabel ? '' : label}
-            value={(value as string) ?? ''}
+            value={String(value)}
             onChange={update}
             placeholder={placeholder}
           />
         )
         break
-      case 'select':
-        control = (
-          <SingleSelectList
-            label={hideLabel ? '' : label}
-            items={options.map((o, i) => ({ id: i, label: o }))}
-            setSelectedItems={(id: number | string) =>
-              update(options[id as number])
-            }
-          />
-        )
-        break
+
       case 'number':
         control = (
           <InputNumber
@@ -82,6 +74,7 @@ export function buildForm<TKeys extends string>(
           />
         )
         break
+
       case 'calendar':
         control = (
           <Calendar
@@ -91,36 +84,39 @@ export function buildForm<TKeys extends string>(
           />
         )
         break
+
+      case 'select':
       case 'singleselect':
         control = (
           <SingleSelectList
             label={hideLabel ? '' : label}
-            items={(options || []).map((o, i) => ({ id: i, label: o }))}
-            setSelectedItems={(id: number | string) =>
-              update(options![id as number])
-            }
+            items={options.map((o, i) => ({ id: i, label: o }))}
+            setSelectedItems={(id) => update(options[id as number])}
           />
         )
         break
+
       case 'multiselecttrees':
         control = (
           <MultiSelectTrees
             trees={treeData}
             placeholder={placeholder || label}
             label={hideLabel ? '' : label}
-            onSelect={(ids: string[]) => update(ids)}
+            onSelect={(ids) => update(ids.join(','))}
           />
         )
+        break
+
       case 'selectree':
         control = (
           <Selectree
             treeData={treeData}
-            // placeholder={placeholder || label}
             label={hideLabel ? '' : label}
-            // onSelect={(ids: string[]) => update(ids)}
+            // TODO: implement `onSelect` if needed
           />
         )
         break
+
       default:
         control = null
     }

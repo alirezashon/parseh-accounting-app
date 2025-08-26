@@ -70,7 +70,6 @@ export const treeData = [
 export type FieldConfig = {
   key: string
   label?: string
-  value?: string | number
   type:
     | 'text'
     | 'date'
@@ -86,6 +85,7 @@ export type FieldConfig = {
   min?: number
   max?: number
 }
+export type HeaderState<TKeys extends string> = Record<TKeys, string>
 export type Update = (val: any) => void
 export const fieldList = {
   header: [
@@ -105,13 +105,6 @@ export const fieldList = {
     { key: 'FollowUpDate', label: 'تاریخ پیگیری', type: 'calendar' },
     { key: 'DLTypeRef5', label: 'مرکز هزینه / پروژه', type: 'select' },
   ],
-}
-export interface DocumentRow {
-  account: string // GLRef
-  detailed: string // SLRef
-  description: string
-  debit: number
-  credit: number
-  followUpNumber: string
-  followUpDate: string // ISO date (yyyy-mm-dd)
-}
+} as const
+
+export type FieldKey = (typeof fieldList.header)[number]['key']
