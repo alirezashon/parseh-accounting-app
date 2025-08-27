@@ -1,5 +1,53 @@
 import { Detail, Header } from '@/interfaces'
 
+export const GetVoucherList = async ({
+  accessToken,
+}: {
+  accessToken: string | undefined
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/get_voucher_list`,
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (!response.ok) return
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const GetVoucherItemList = async ({
+  accessToken,
+  sisaydi,
+}: {
+  accessToken: string | undefined
+  sisaydi: string
+}) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/get_voucheritem_list?sys_id=${sisaydi}`,
+      {
+        method: 'GET',
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    if (!response.ok) return
+    return await response.json()
+  } catch (error) {
+    console.log(error)
+  }
+}
 export const get_vouchertype = async ({
   accessToken,
 }: {
@@ -23,7 +71,6 @@ export const get_vouchertype = async ({
     console.log(error)
   }
 }
-
 export const InsertEasyVoucher = async ({
   data,
   accessToken,
