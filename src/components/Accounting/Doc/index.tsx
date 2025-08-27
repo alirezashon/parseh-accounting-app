@@ -1,85 +1,53 @@
 'use client'
-import MainHead from '../Headers/MainHead'
-import EditableTable from './hub/DetailedBlankTable'
-import { useEffect, useState } from 'react'
-import { MdCategory } from 'react-icons/md'
-import { HiClipboardDocumentList, HiDocumentPlus } from 'react-icons/hi2'
-import { useRouter } from 'next/navigation'
+import { getCookieByKey } from '@/actions/cookieToken'
+import { Header, VoucherItem } from '@/interfaces'
 import MainLayout from '@/layouts/Main'
-import { GetVoucherList } from '@/services/voucher'
-import { getCookieByKey, setCookieByKey } from '@/utils/cookies'
-import { VoucherList } from '@/interfaces'
+import { GetVoucherItemList } from '@/services/voucher'
+import { useEffect, useState } from 'react'
+import EditableTable from '../hub/DetailedBlankTable'
+import DocHead from '../AddDocument/lib/FormHead'
+import { FieldConfig, fieldList } from '../AddDocument/lib/data'
 
-const Accounting = () => {
-  const [activeTab, setActiveTab] = useState('همه')
-  const [voucherList, setVoucherList] = useState<VoucherList[]>([])
-  const router = useRouter()
+const Document = () => {
+  const [voucherItemList, setVoucherItemList] = useState<VoucherItem[]>([])
+  const [documentHead, setDocumentHead] = useState<Header>()
 
   useEffect(() => {
-    const fetchData = async () => {
-      const accessToken = getCookieByKey('access_token') || ''
-      await GetVoucherList({ accessToken }).then((response) => {
-        if (response as VoucherList[]) setVoucherList(response)
+    const getData = async () => {
+      await getCookieByKey('access_token').then(async (token) => {
+        await getCookieByKey('viewdocmockinewdsamothlyioghlia').then(
+          async (data) => {
+            const docHead = JSON.parse(`${data}`)
+            if (docHead.sys_id) {
+              setDocumentHead(docHead as Header)
+              await GetVoucherItemList({
+                accessToken: token as string,
+                sisaydi: docHead.sys_id as string,
+              }).then((response) => {
+                if (response as VoucherItem[]) setVoucherItemList(response)
+              })
+            }
+          }
+        )
       })
     }
-    fetchData()
+    getData()
   }, [])
-  console.log(voucherList)
   return (
     <MainLayout>
-      <MainHead
-        title="لیست اسناد"
-        icons={[
-          {
-            icon: <HiClipboardDocumentList size={30} />,
-            label: 'لیست اسناد',
-            destination: '/accounting',
-          },
-          {
-            icon: <HiDocumentPlus size={30} />,
-            label: 'سند جدید',
-            destination: '/accounting/add',
-          },
-          {
-            icon: <MdCategory size={30} />,
-            label: 'جدول حساب ها',
-            destination: '/accounting/acctypes',
-          },
-        ]}
+      <DocHead
+        onChange={
+          (documentHead) => ''
+          // setVoucherItemList((prev) => ({
+          //   ...prev,
+          //   header: documentHead,
+          // }))
+        }
+        data={fieldList.header as FieldConfig[]}
       />
-
-      <div className="relative w-full border-b border-gray-300 ">
-        <div
-          className={`flex ${
-            'innerWidth < 777'.length ? 'relative h-12 overflow-hidden' : ''
-          }`}
-        >
-          {['همه', 'پیش نویس', 'تایید شده', 'دستی', 'اتوماتیک'].map(
-            (tab, i) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex text-nowrap bg-white cursor-pointer items-center gap-2 px-4 py-2 text-sm transition-all duration-200
-                ${
-                  activeTab === tab
-                    ? 'border-b-2 border-[#2F27CE] text-[#2F27CE] bg-white z-10 shadow-md'
-                    : 'border-b-2 border-transparent text-gray-500'
-                }`}
-                style={{
-                  marginRight: 'innerWidth < 777'.length && i !== 0 ? -25 : 0,
-                  position: 'innerWidth < 777'.length ? 'relative' : 'static',
-                }}
-              >
-                {/* <span className='text-xl'>{tab.icon}</span> */}
-                <span>{tab}</span>
-              </button>
-            )
-          )}
-        </div>
-      </div>
       <EditableTable
         searchMode
-        rows={voucherList.map((item, index) => ({
+        rows={voucherItemList.map((item, index) => ({
           id: index,
           ...item,
         }))}
@@ -126,12 +94,8 @@ const Accounting = () => {
           { key: 'sys_app', label: 'sys_app', type: 'text' },
         ]}
         onRowClick={(row) => {
-          open(`/accounting/doc`)
-          setCookieByKey(
-            'viewdocmockinewdsamothlyioghlia',
-            JSON.stringify(row),
-            1
-          )
+          //   open(`/accounting/doc`)
+          //   setCookieByKey('viewdocmockinewdsamothlyioghlia', `${row.sys_id}`, 1)
         }}
         color={'#2F27CE'}
         className="mt-7 rounded-sm"
@@ -140,4 +104,4 @@ const Accounting = () => {
   )
 }
 
-export default Accounting
+export default Document

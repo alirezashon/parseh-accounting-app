@@ -71,15 +71,15 @@ export type FieldConfig = {
   key: string
   label?: string
   type:
-  | 'text'
-  | 'date'
-  | 'textarea'
-  | 'select'
-  | 'number'
-  | 'calendar'
-  | 'singleselect'
-  | 'multiselecttrees'
-  | 'selectree'
+    | 'text'
+    | 'date'
+    | 'textarea'
+    | 'select'
+    | 'number'
+    | 'calendar'
+    | 'singleselect'
+    | 'multiselecttrees'
+    | 'selectree'
   options?: string[] // برای select
   placeholder?: string
   min?: number
@@ -89,10 +89,10 @@ export type HeaderState<TKeys extends string> = Record<TKeys, string>
 export type Update = (val: any) => void
 export const fieldList = {
   header: [
-    { key: 'code', label: 'شماره سند', type: 'text' },
+    { key: 'Number', label: 'شماره سند', type: 'text' },
     { key: 'Date', label: 'تاریخ', type: 'date' },
-    { key: 'code', label: ' شماره فرعی', type: 'text' },
-    { key: 'code', label: 'شماره روزانه', type: 'text' },
+    { key: 'Sequence', label: ' شماره فرعی', type: 'text' },
+    { key: 'DailyNumber', label: 'شماره روزانه', type: 'text' },
     { key: 'Description', label: 'توضیحات', type: 'textarea' },
   ],
   details: [
@@ -105,15 +105,6 @@ export const fieldList = {
     { key: 'FollowUpDate', label: 'تاریخ پیگیری', type: 'calendar' },
     { key: 'DLTypeRef5', label: 'مرکز هزینه / پروژه', type: 'select' },
   ],
-}
+}  
 
 export type FieldKey = (typeof fieldList.header)[number]['key']
-export interface DocumentRow {
-  account: string // GLRef
-  detailed: string // SLRef
-  description: string
-  debit: number
-  credit: number
-  followUpNumber: string
-  followUpDate: string // ISO date (yyyy-mm-dd)
-}
