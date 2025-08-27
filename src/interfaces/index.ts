@@ -101,6 +101,40 @@ export interface Detail {
   PartyRef: number
   TaxAmount: number
 }
+export interface VoucherList {
+  VoucherID: number
+  LedgerRef: number
+  FiscalYearRef: number
+  BranchRef: number
+  Number: number
+  Sequence: number
+  DailyNumber: number
+  AuxiliaryNumber: string
+  Date: string
+  VoucherTypeRef: number
+  Creator: number
+  CreationDate: string
+  LastModifier: number
+  LastModificationDate: string
+  Description: string
+  Description_En: string
+  State: number
+  IsTemporary: number
+  IsCurrencyBased: number
+  IsExternal: number
+  ReferenceNumber: number
+  ShowCurrencyFields: number
+  IsReadonly: number
+  Version: null
+  cust_id: number
+  sys_id: string
+  sys_status: number
+  sys_st_date_pe_c: string
+  sys_st_date_pe: string
+  sys_st_date_en: string
+  sys_type: number
+  sys_app: number
+}
 export interface VoucherItem {
   VoucherItemID: number
   VoucherRef: number

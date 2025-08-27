@@ -1,15 +1,30 @@
 'use client'
 import MainHead from '../Headers/MainHead'
 import EditableTable from './hub/DetailedBlankTable'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { MdCategory } from 'react-icons/md'
 import { HiClipboardDocumentList, HiDocumentPlus } from 'react-icons/hi2'
 import { useRouter } from 'next/navigation'
 import MainLayout from '@/layouts/Main'
+import { GetVoucherList } from '@/services/voucher'
+import { getCookieByKey } from '@/utils/cookies'
+import { VoucherList } from '@/interfaces'
 
 const Accounting = () => {
   const [activeTab, setActiveTab] = useState('همه')
+  const [voucherList, setVoucherList] = useState<VoucherList[]>([])
   const router = useRouter()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const accessToken = getCookieByKey('access_token') || ''
+      await GetVoucherList({ accessToken }).then((response) => {
+        if (response as VoucherList[]) setVoucherList(response)
+      })
+    }
+    fetchData()
+  }, [])
+  console.log(voucherList)
   return (
     <MainLayout>
       <MainHead
@@ -64,22 +79,9 @@ const Accounting = () => {
       </div>
       <EditableTable
         searchMode
-        rows={Array.from({ length: 24 }, (_, i) => ({
-          id: i,
-          code: '100' + i,
-          currency: activeTab + 'شرکتلی',
-          currencyAmount: 'ایران',
-          amountIRR: 'تهران',
-          city: 'تهران',
-          mobile: '09120000001',
-          phone: '02112345678',
-          nationalId: '1234567890',
-          economicCode: '9876543210',
-          registrationNumber: '555666',
-          email: 'ali@example.com',
-          isActive: 'بله',
-          birthDate: '1370/01/01',
-          joinDate: '1400/01/01',
+        rows={voucherList.map((item, index) => ({
+          id: index,
+          ...item,
         }))}
         fields={[
           { key: 'VoucherID', label: 'شناسه رسید', type: 'text' },
