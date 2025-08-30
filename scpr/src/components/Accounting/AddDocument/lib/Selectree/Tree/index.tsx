@@ -1,5 +1,4 @@
 'use client'
-import { getAllTreeData } from '@/components/Accounting/hub/AcctypesLevels/lib/convertors'
 import {
   levelol,
   TreeChartInterface,
@@ -15,7 +14,7 @@ type Props = {
   onUnselect?: (allChildIds: number[]) => void
 }
 
-const Selectree = ({ label, theme, onUnselect }: Props) => {
+const Selectree = ({ label, theme, onUnselect, data }: Props) => {
   const [openTrees, setOpenTrees] = useState<number[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [searchResults, setSearchResults] = useState<TreeChartInterface[]>([])
@@ -23,20 +22,11 @@ const Selectree = ({ label, theme, onUnselect }: Props) => {
     null
   )
   const [showDropdown, setShowDropdown] = useState(false)
-  const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
 
   const wrapperRef = useRef<HTMLDivElement | null>(null)
   const inputRef = useRef<HTMLDivElement | null>(null)
   const nodeRefs = useRef<Record<number, HTMLDivElement | null>>({})
 
-  useEffect(() => {
-    const fetchData = async ()=>{
-
-      await getAllTreeData().then((response) => {
-        if (response as TreeChartInterface[]) setTreeData(response)
-        })
-      }
-  }, [])
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -58,18 +48,20 @@ const Selectree = ({ label, theme, onUnselect }: Props) => {
 
   const getParentIds = (nodeId: number): number[] => {
     const ids: number[] = []
-    let current = treeData.find((item) => item.id === nodeId)
+    let current = data?.find((item) => item.id === nodeId)
     while (current && current.chpid !== 0) {
       ids.unshift(current.chpid)
-      current = treeData.find((item) => item.id === current!.chpid)
+      current = data?.find((item) => item.id === current!.chpid)
     }
     return ids
   }
 
   const getAllChildIds = (id: number): number[] => {
     const collect = (parentId: number): number[] => {
-      const children = treeData.filter((item) => item.chpid === parentId)
-      return children.flatMap((child) => [child.id, ...collect(child.id)])
+      const children = data?.filter((item) => item.chpid === parentId)
+      return (
+        children?.flatMap((child) => [child.id, ...collect(child.id)]) || []
+      )
     }
     return collect(id)
   }
@@ -81,9 +73,9 @@ const Selectree = ({ label, theme, onUnselect }: Props) => {
       return
     }
     const lowerTerm = term.toLowerCase()
-    const results = treeData.filter((item) =>
-      item.chtitle.toLowerCase().includes(lowerTerm)
-    )
+    const results =
+      data?.filter((item) => item.chtitle.toLowerCase().includes(lowerTerm)) ||
+      []
     setSearchResults(results)
   }
 
@@ -115,10 +107,10 @@ const Selectree = ({ label, theme, onUnselect }: Props) => {
   }
 
   const renderTree = (parentId: number, level = 0): JSX.Element => {
-    const nodes = treeData.filter((node) => node.chpid === parentId)
+    const nodes = data?.filter((node) => node.chpid === parentId)
     return (
       <ul className={`${levelol[0][level]} w-[120%]`}>
-        {nodes.map((node) => {
+        {nodes?.map((node) => {
           const isSelected = selectedNode?.id === node.id
           return (
             <li key={node.id} className={`${levelol[1][level]}`}>
