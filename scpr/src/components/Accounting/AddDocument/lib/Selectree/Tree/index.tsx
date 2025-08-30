@@ -30,9 +30,12 @@ const Selectree = ({ label, theme, onUnselect }: Props) => {
   const nodeRefs = useRef<Record<number, HTMLDivElement | null>>({})
 
   useEffect(() => {
-    getAllTreeData().then((response) => {
-      if (response as TreeChartInterface[]) setTreeData(response)
-    })
+    const fetchData = async ()=>{
+
+      await getAllTreeData().then((response) => {
+        if (response as TreeChartInterface[]) setTreeData(response)
+        })
+      }
   }, [])
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

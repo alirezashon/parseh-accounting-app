@@ -4,8 +4,6 @@ import { buildForm } from './ElementCreator'
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Detail } from '@/interfaces'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
-import { getAllTreeData } from '@/components/Accounting/hub/AcctypesLevels/lib/convertors'
-import { TreeChartInterface } from '@/components/Accounting/hub/AcctypesLevels/lib/data'
 import { BalanceBadge } from '@/components/Accounting/hub/BalanceBadage'
 
 type RowState = {
