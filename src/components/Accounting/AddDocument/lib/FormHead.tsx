@@ -12,7 +12,6 @@ const DocHead = ({
   onChange: (header: Header) => void
 }) => {
   const today = useMemo(() => new Date().toISOString().split('T')[0], [])
-
   const [formHeader, setFormHeader] = useState<Record<string, string | number>>(
     {
       Number: '',

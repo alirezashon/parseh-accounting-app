@@ -24,7 +24,6 @@ export function buildForm<TKeys extends string>(
           ...prev,
           [key]: val,
         }
-        console.log(val)
         if (onChange) {
           const mapped: Record<TKeys, string> = {} as any
           for (const k in updated) {
@@ -40,8 +39,7 @@ export function buildForm<TKeys extends string>(
     let control: React.ReactNode = null
 
     switch (type) {
-      case 'text':
-      case 'date':
+      case 'text': 
         control = (
           <Input
             label={hideLabel ? '' : label}

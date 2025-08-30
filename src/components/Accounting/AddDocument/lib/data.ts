@@ -90,7 +90,7 @@ export type Update = (val: any) => void
 export const fieldList = {
   header: [
     { key: 'Number', label: 'شماره سند', type: 'text' },
-    { key: 'Date', label: 'تاریخ', type: 'date' },
+    { key: 'Date', label: 'تاریخ', type: 'calendar' },
     { key: 'Sequence', label: ' شماره فرعی', type: 'text' },
     { key: 'DailyNumber', label: 'شماره روزانه', type: 'text' },
     { key: 'Description', label: 'توضیحات', type: 'textarea' },
