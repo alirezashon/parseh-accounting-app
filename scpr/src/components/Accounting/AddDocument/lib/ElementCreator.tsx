@@ -6,6 +6,9 @@ import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import Calendar from '@/components/hub/Calendar'
 import Selectree from './Selectree/Tree'
 import { FieldConfig, treeData } from './data'
+import { useState } from 'react'
+import { getAllTreeData } from '../../hub/AcctypesLevels/lib/convertors'
+import { TreeChartInterface } from '../../hub/AcctypesLevels/lib/data'
 
 export function buildForm<TKeys extends string>(
   state: Record<TKeys, string | number>,
@@ -14,10 +17,11 @@ export function buildForm<TKeys extends string>(
   >,
   onChange?: (values: Record<TKeys, string>) => void
 ) {
+  // const [generalGlSl,setGeneralGlSl] = useState
+
   return function elementCreator(cfg: FieldConfig, hideLabel?: boolean) {
     const { key, label = '', type, options = [], placeholder } = cfg
     const value = state[key as TKeys] ?? ''
-
     const update = (val: string | number) => {
       setState((prev) => {
         const updated = {
@@ -111,7 +115,9 @@ export function buildForm<TKeys extends string>(
         control = (
           <Selectree
             label={hideLabel ? '' : label}
-            // TODO: implement `onSelect` if needed
+            data={async () => await getAllTreeData() as TreeChartInterface[]}
+            onSelect={(node) => update(node.id)}
+            onUnselect={() => update('')}
           />
         )
         break
