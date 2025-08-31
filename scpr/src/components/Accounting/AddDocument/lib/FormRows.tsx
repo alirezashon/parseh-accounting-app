@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Detail } from '@/interfaces'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 import { BalanceBadge } from '@/components/Accounting/hub/BalanceBadage'
+import { getAllTreeData } from '../../hub/AcctypesLevels/lib/convertors'
+import { TreeChartInterface } from '../../hub/AcctypesLevels/lib/data'
 
 type RowState = {
   refs: string | number
@@ -29,7 +31,7 @@ const EMPTY_ROW: RowState = {
 }
 
 const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
-  // ── 1) هر سطر state خودش را دارد
+  const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
   const [documents, setDocuments] = useState<RowState[]>(
     Array.from({ length: 25 }, () => ({ ...EMPTY_ROW }))
   )
@@ -45,7 +47,15 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
   )
   const isBalanced = totalDebit === totalCredit
 
-  // ── 3) details را از روی documents مشتق کن (بدون setState)
+  useEffect(() => {
+    const fetchData = async () => {
+      await getAllTreeData().then((result) => {
+        if (result as TreeChartInterface[]) setTreeData(result)
+      })
+    }
+    // fetchData()
+  }, [])
+
   const details = useMemo<Detail[]>(() => {
     const det = documents.map((row, index) => {
       const [accGroup, glRef, slRef] = String(row.refs || '')
@@ -83,9 +93,7 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
     return det
   }, [documents])
 
-  // ── 4) فقط وقتی details تغییر کرد، به پدر خبر بده
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     onChange(details)
   }, [details])
 
@@ -178,13 +186,13 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
           {/* Body (scrollable) */}
           <div className="max-h-[560px] overflow-auto ">
             {documents.map((row, index) => {
-              // 👇 نکتهٔ مهم: از keyof RowState استفاده کن تا TS راضی باشه
               const elementCreator = buildForm<keyof RowState>(
                 row as Record<keyof RowState, string | number>,
                 rowSetterFactory(index) as React.Dispatch<
                   React.SetStateAction<Record<keyof RowState, string | number>>
                 >,
-                undefined // پدر را وسط تایپ صدا نزنیم
+                undefined, // پدر را وسط تایپ صدا نزنیم
+                treeData
               )
 
               return (

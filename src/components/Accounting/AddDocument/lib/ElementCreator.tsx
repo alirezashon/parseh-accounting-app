@@ -6,24 +6,26 @@ import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import Calendar from '@/components/hub/Calendar'
 import Selectree from './Selectree/Tree'
 import { FieldConfig, treeData } from './data'
+import { TreeChartInterface } from '../../hub/AcctypesLevels/lib/data'
 
 export function buildForm<TKeys extends string>(
   state: Record<TKeys, string | number>,
   setState: React.Dispatch<
     React.SetStateAction<Record<TKeys, string | number>>
   >,
-  onChange?: (values: Record<TKeys, string>) => void
+  onChange?: (values: Record<TKeys, string>) => void,
+  treeDat?: TreeChartInterface[]
 ) {
   return function elementCreator(cfg: FieldConfig, hideLabel?: boolean) {
     const { key, label = '', type, options = [], placeholder } = cfg
     const value = state[key as TKeys] ?? ''
-
     const update = (val: string | number) => {
       setState((prev) => {
         const updated = {
           ...prev,
           [key]: val,
         }
+        console.log(val)
         if (onChange) {
           const mapped: Record<TKeys, string> = {} as any
           for (const k in updated) {
@@ -39,7 +41,8 @@ export function buildForm<TKeys extends string>(
     let control: React.ReactNode = null
 
     switch (type) {
-      case 'text': 
+      case 'text':
+      case 'date':
         control = (
           <Input
             label={hideLabel ? '' : label}
@@ -109,7 +112,9 @@ export function buildForm<TKeys extends string>(
         control = (
           <Selectree
             label={hideLabel ? '' : label}
-            // TODO: implement `onSelect` if needed
+            data={treeDat}
+            onSelect={(node: any) => update(node.fullPath)} // ← استفاده از fullPath
+            onUnselect={() => update('')}
           />
         )
         break
