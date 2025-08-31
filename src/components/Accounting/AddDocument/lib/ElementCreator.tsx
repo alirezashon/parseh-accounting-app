@@ -5,7 +5,7 @@ import MultiSelectTrees from '@/components/hub/MultiSelectTrees'
 import InputNumber from '@/components/hub/Forms/types/Inputs/Numerics'
 import Calendar from '@/components/hub/Calendar'
 import Selectree from './Selectree/Tree'
-import { FieldConfig, treeData } from './data'
+import { FieldConfig, Selectreetwo } from './data'
 import { TreeChartInterface } from '../../hub/AcctypesLevels/lib/data'
 
 export function buildForm<TKeys extends string>(
@@ -14,7 +14,8 @@ export function buildForm<TKeys extends string>(
     React.SetStateAction<Record<TKeys, string | number>>
   >,
   onChange?: (values: Record<TKeys, string>) => void,
-  treeDat?: TreeChartInterface[]
+  treeData?: TreeChartInterface[],
+  selectreeData?: Selectreetwo[]
 ) {
   return function elementCreator(cfg: FieldConfig, hideLabel?: boolean) {
     const { key, label = '', type, options = [], placeholder } = cfg
@@ -100,7 +101,7 @@ export function buildForm<TKeys extends string>(
       case 'multiselecttrees':
         control = (
           <MultiSelectTrees
-            trees={treeData}
+            trees={selectreeData || []}
             placeholder={placeholder || label}
             label={hideLabel ? '' : label}
             onSelect={(ids) => update(ids.join(','))}
@@ -112,7 +113,7 @@ export function buildForm<TKeys extends string>(
         control = (
           <Selectree
             label={hideLabel ? '' : label}
-            data={treeDat}
+            data={treeData}
             onSelect={(node: any) => update(node.fullPath)} // ← استفاده از fullPath
             onUnselect={() => update('')}
           />

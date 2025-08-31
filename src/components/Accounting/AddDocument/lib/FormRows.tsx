@@ -1,11 +1,14 @@
 import Divider from '@/components/hub/Forms/Divider'
-import { FieldConfig, fieldList } from './data'
+import { FieldConfig, fieldList, Selectreetwo } from './data'
 import { buildForm } from './ElementCreator'
 import { useEffect, useMemo, useState, useCallback } from 'react'
 import { Detail } from '@/interfaces'
 import { FaPlus, FaTrash } from 'react-icons/fa6'
 import { BalanceBadge } from '@/components/Accounting/hub/BalanceBadage'
-import { getAllTreeData } from '../../hub/AcctypesLevels/lib/convertors'
+import {
+  getAllTreeData,
+  getSelectreeData,
+} from '../../hub/AcctypesLevels/lib/convertors'
 import { TreeChartInterface } from '../../hub/AcctypesLevels/lib/data'
 
 type RowState = {
@@ -32,6 +35,7 @@ const EMPTY_ROW: RowState = {
 
 const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
   const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
+  const [detailedAndTypes, setDetailerdAndTypes] = useState<Selectreetwo[]>([])
   const [documents, setDocuments] = useState<RowState[]>(
     Array.from({ length: 25 }, () => ({ ...EMPTY_ROW }))
   )
@@ -51,6 +55,9 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
     const fetchData = async () => {
       await getAllTreeData().then((result) => {
         if (result as TreeChartInterface[]) setTreeData(result)
+      })
+      await getSelectreeData().then((response) => {
+        if (response as Selectreetwo[]) setDetailerdAndTypes
       })
     }
     fetchData()
@@ -192,7 +199,8 @@ const DocRows = ({ onChange }: { onChange: (result: Detail[]) => void }) => {
                   React.SetStateAction<Record<keyof RowState, string | number>>
                 >,
                 undefined, // پدر را وسط تایپ صدا نزنیم
-                treeData
+                treeData,
+                detailedAndTypes
               )
 
               return (
