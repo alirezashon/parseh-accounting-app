@@ -5,7 +5,7 @@ export const GetDetailed = async ({
   DLTypeID,
 }: {
   accessToken: string | undefined
-  DLTypeID: number
+  DLTypeID?: number
 }): Promise<DetailedScheme[] | undefined> => {
   try {
     const response = await fetch(
