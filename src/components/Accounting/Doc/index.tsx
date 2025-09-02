@@ -17,9 +17,9 @@ const Document = () => {
       await getCookieByKey('access_token').then(async (token) => {
         await getCookieByKey('viewdocmockinewdsamothlyioghlia').then(
           async (data) => {
-            const docHeadHistory = await JSON.parse(`${data}`)
+            const docHeadHistory = data && (await JSON.parse(data))
             console.log(docHeadHistory)
-            if (docHeadHistory[0].sys_id) {
+            if (docHeadHistory[0]?.sys_id) {
               setDocumentHead(docHeadHistory[0] as Header)
               await GetVoucherItemList({
                 accessToken: token as string,
@@ -37,6 +37,7 @@ const Document = () => {
   return (
     <MainLayout>
       <DocHead
+        value={documentHead as Header}
         onChange={(documentHead: Header) =>
           setVoucherItemList((prev) => ({
             ...prev,

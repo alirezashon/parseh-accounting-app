@@ -1,13 +1,18 @@
 'use client'
 import DocHead from './lib/FormHead'
 import DocRows from './lib/FormRows'
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Header, Detail } from '@/interfaces'
 import { InsertEasyVoucher } from '@/services/voucher'
-import { getCookieByKey } from '@/actions/cookieToken'
+import { getCookieByKey, setCookieByTagAndValue } from '@/actions/cookieToken'
 import { FieldConfig, fieldList } from './lib/data'
 
+const COOKIE_KEY = 'documentocachecookiemanashtobashhashrasht'
+
 export default function AddDocument() {
+  const [mounted, setMounted] = useState(false) // ← NEW
+  useEffect(() => setMounted(true), []) // ← NEW
+
   const [finalData, setFinalData] = useState<{
     header: Header
     details: Detail[]
@@ -33,31 +38,61 @@ export default function AddDocument() {
     },
     details: [],
   })
+
+  const setAndCache = useCallback(
+    (
+      updater: (prev: { header: Header; details: Detail[] }) => {
+        header: Header
+        details: Detail[]
+      }
+    ) => {
+      setFinalData((prev) => updater(prev))
+    },
+    []
+  )
+
+  useEffect(() => {
+    ;(async () => {
+      const cache = await getCookieByKey(COOKIE_KEY)
+      if (!cache) return
+      try {
+        setFinalData(JSON.parse(cache))
+      } catch {}
+    })()
+  }, [])
+
+  useEffect(() => {
+    // فقط بعد از mount (کلاینت) کوکی بنویسیم تا SSR/CSR تفاوت نداشته باشن
+    if (!mounted) return
+    void setCookieByTagAndValue({
+      key: COOKIE_KEY,
+      value: JSON.stringify(finalData),
+    })
+  }, [finalData, mounted])
+
   const onSubmit = async () => {
-    console.log(finalData)
-    if (!finalData) return
-    console.table(finalData)
     const accessToken = (await getCookieByKey('access_token')) || ''
     await InsertEasyVoucher({ data: finalData as any, accessToken })
   }
+
+  // جلوگیری از Hydration mismatch: تا قبل از mount هیچ HTMLی تولید نکن
+  if (!mounted) return null
+
   return (
     <div dir="rtl" className="grid gap-8 bg-white">
       <DocHead
-        onChange={(documentHead) =>
-          setFinalData((prev) => ({
-            ...prev,
-            header: documentHead,
-          }))
-        }
+        value={finalData.header}
+        onChange={(documentHead) => {
+          setAndCache((prev) => ({ ...prev, header: documentHead }))
+        }}
         data={fieldList.header as FieldConfig[]}
       />
+
       <DocRows
-        onChange={(documentDetails) =>
-          setFinalData((prev) => ({
-            ...prev,
-            details: documentDetails,
-          }))
-        }
+        value={finalData.details}
+        onChange={(documentDetails) => {
+          setAndCache((prev) => ({ ...prev, details: documentDetails }))
+        }}
       />
 
       <div

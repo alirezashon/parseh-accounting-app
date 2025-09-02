@@ -11,10 +11,9 @@ export type FieldConfig = {
     | 'text'
     | 'date'
     | 'textarea'
-    | 'select'
+    | 'select' 
     | 'number'
     | 'calendar'
-    | 'singleselect'
     | 'multiselecttrees'
     | 'selectree'
   options?: string[] // برای select
@@ -34,13 +33,13 @@ export const fieldList = {
   ],
   details: [
     { key: 'refs', label: 'کد معین', type: 'selectree' },
-    { key: 'Detailed', label: ' کد تفضیلی', type: 'multiselecttrees' },
+    { key: 'DLLevel4', label: ' کد تفضیلی', type: 'select' },
     { key: 'Debit', label: 'بدهکار', type: 'number' },
     { key: 'Credit', label: 'بستانکار', type: 'number' },
     { key: 'Description', label: 'شرح ', type: 'text' },
     { key: 'FollowUpNumber', label: 'شماره پیگیری', type: 'text' },
     { key: 'FollowUpDate', label: 'تاریخ پیگیری', type: 'calendar' },
-    { key: 'DLTypeRef5', label: 'مرکز هزینه / پروژه', type: 'select' },
+    { key: 'DLLevel5', label: 'مرکز هزینه / پروژه', type: 'select' },
   ],
 }
 

@@ -7,19 +7,22 @@ import Calendar from '@/components/hub/Calendar'
 import Selectree from './Selectree/Tree'
 import { FieldConfig, Selectreetwo } from './data'
 import { TreeChartInterface } from '../../hub/AcctypesLevels/lib/data'
-
-export function buildForm<TKeys extends string>(
-  state: Record<TKeys, string | number>,
-  setState: React.Dispatch<
-    React.SetStateAction<Record<TKeys, string | number>>
-  >,
-  onChange?: (values: Record<TKeys, string>) => void,
-  treeData?: TreeChartInterface[],
+export function buildForm<TKeys extends string>({
+  state,
+  setState,
+  treeData,
+  selectreeData,
+  singleSelectListData,
+}: {
+  state: Record<TKeys, string | number>
+  setState: React.Dispatch<React.SetStateAction<Record<TKeys, string | number>>>
+  treeData?: TreeChartInterface[]
   selectreeData?: Selectreetwo[]
-) {
+  singleSelectListData?: { id: string | number; label: string }[]
+}) {
   return function elementCreator(cfg: FieldConfig, hideLabel?: boolean) {
     const { key, label = '', type, options = [], placeholder } = cfg
-    const value = state[key as TKeys] ?? ''
+    const value = state?.[key as TKeys] ?? ''
     const update = (val: string | number) => {
       setState((prev) => {
         const updated = {
@@ -27,20 +30,10 @@ export function buildForm<TKeys extends string>(
           [key]: val,
         }
         console.log(val)
-        if (onChange) {
-          const mapped: Record<TKeys, string> = {} as any
-          for (const k in updated) {
-            mapped[k as TKeys] = String(updated[k])
-          }
-          onChange(mapped)
-        }
-
         return updated
       })
     }
-
     let control: React.ReactNode = null
-
     switch (type) {
       case 'text':
       case 'date':
@@ -54,7 +47,6 @@ export function buildForm<TKeys extends string>(
           />
         )
         break
-
       case 'textarea':
         control = (
           <TextArea
@@ -65,7 +57,6 @@ export function buildForm<TKeys extends string>(
           />
         )
         break
-
       case 'number':
         control = (
           <InputNumber
@@ -76,7 +67,6 @@ export function buildForm<TKeys extends string>(
           />
         )
         break
-
       case 'calendar':
         control = (
           <Calendar
@@ -88,11 +78,10 @@ export function buildForm<TKeys extends string>(
         break
 
       case 'select':
-      case 'singleselect':
         control = (
           <SingleSelectList
             label={hideLabel ? '' : label}
-            items={options.map((o, i) => ({ id: i, label: o }))}
+            items={singleSelectListData || []}
             setSelectedItems={(id) => update(options[id as number])}
           />
         )
