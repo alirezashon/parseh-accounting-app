@@ -30,7 +30,6 @@ export interface DetailedScheme {
   dltype_id: number
   dltype_title: string
 }
-
 export interface IUserResponse {
   customer_status: string
   mobile: string

@@ -9,7 +9,6 @@ import MainLayout from '@/layouts/Main'
 import { GetVoucherList } from '@/services/voucher'
 import { getCookieByKey, setCookieByKey } from '@/utils/cookies'
 import { VoucherList } from '@/interfaces'
-
 const Accounting = () => {
   const [activeTab, setActiveTab] = useState('همه')
   const [voucherList, setVoucherList] = useState<VoucherList[]>([])
@@ -139,5 +138,4 @@ const Accounting = () => {
     </MainLayout>
   )
 }
-
 export default Accounting

@@ -1,5 +1,5 @@
 export interface TreeChartInterface {
-  id: number
+  id: number | string
   chpid: number
   chtitle: string
   chstatus: number

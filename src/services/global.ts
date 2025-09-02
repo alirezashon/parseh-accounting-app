@@ -1,4 +1,4 @@
-import { AccountGroupsScheme } from '@/interfaces'
+import { AccountGroupsScheme, DetailTypeScheme } from '@/interfaces'
 
 export const GetAccountGroups = async ({
   accessToken,
@@ -36,7 +36,7 @@ export interface SL {
   HasCurrencyConversion: boolean | null
   State: number | null
   Type: number | null
-  DLTypes: unknown[]
+  DLTypes: DetailTypeScheme[]
 }
 
 export interface GL {
