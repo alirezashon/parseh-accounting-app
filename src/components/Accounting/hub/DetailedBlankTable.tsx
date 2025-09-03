@@ -1,7 +1,8 @@
 'use client'
 import { useEffect, useState, useRef } from 'react'
-import { BiEdit, BiTrash } from 'react-icons/bi'
+import { BiTrash } from 'react-icons/bi'
 import { MdDeleteForever } from 'react-icons/md'
+import ConfirmationModal from './Modalo'
 
 type GenericRow = {
   id: number
@@ -22,6 +23,7 @@ type EditableTableProps = {
   color?: string
   className?: string
   searchMode?: boolean
+  handleDelete?: (id: number) => void
 }
 
 const EditableTable: React.FC<EditableTableProps> = ({
@@ -31,6 +33,7 @@ const EditableTable: React.FC<EditableTableProps> = ({
   color = '#2F27CE',
   className,
   searchMode = false,
+  handleDelete,
 }) => {
   const [data, setData] = useState<GenericRow[]>([])
   const [filters, setFilters] = useState<{ [key: string]: string }>({})
@@ -39,6 +42,9 @@ const EditableTable: React.FC<EditableTableProps> = ({
   )
   const [columns, setColumns] = useState<FieldConfig[]>(fields)
   const [selectedRows, setSelectedRows] = useState<FieldConfig[] | null>()
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [deleteId, setDeleteId] = useState<number | null>(null)
+
   const dragColIndex = useRef<number | null>(null)
   const tableRef = useRef<HTMLTableElement>(null)
 
@@ -56,10 +62,6 @@ const EditableTable: React.FC<EditableTableProps> = ({
     setData((prev) =>
       prev.map((row) => (row.id === id ? { ...row, [key]: value } : row))
     )
-  }
-
-  const handleDelete = (id: number) => {
-    setData((prev) => prev.filter((row) => row.id !== id))
   }
 
   const handleResize = (index: number, startX: number, startWidth: number) => {
@@ -108,24 +110,24 @@ const EditableTable: React.FC<EditableTableProps> = ({
     <div
       className={`${className} bg-white max-h-[70vh] rounded-2xl  overflow-auto border border-[#3573e7] shadow-md shadow-[blue] `}
     >
-      <div className='max-h-[6ز0vh] overflow-auto'>
+      <div className="max-h-[6ز0vh] overflow-auto">
         <table
           ref={tableRef}
-          className='min-w-max max-md:min-w-0  text-sm select-none table-fixed'
+          className="min-w-max max-md:min-w-0  text-sm select-none table-fixed"
           style={{ borderCollapse: 'collapse' }}
         >
           <thead>
             <tr
               style={{ backgroundColor: color }}
-              className='text-white sticky top-0 z-20'
+              className="text-white sticky top-0 z-20"
             >
-              <th className='absolute border-l right-0 py-3 px-4 text-center font-semibold   top-0 bg-inherit z-10'>
+              <th className="absolute border-l right-0 py-3 px-4 text-center font-semibold   top-0 bg-inherit z-10">
                 عملیات
               </th>
               {columns.map((field, i) => (
                 <th
                   key={field.key}
-                  className='py-3 px-4 text-center font-semibold relative whitespace-nowrap bg-inherit'
+                  className="py-3 px-4 text-center font-semibold relative whitespace-nowrap bg-inherit"
                   style={{ width: columnWidths[i], cursor: 'grab' }}
                   draggable
                   onDragStart={() => handleDragStart(i)}
@@ -137,7 +139,7 @@ const EditableTable: React.FC<EditableTableProps> = ({
                       onMouseDown={(e) =>
                         handleResize(i, e.clientX, columnWidths[i])
                       }
-                      className='w-1 hover:w-2 absolute top-0 right-0 h-full cursor-col-resize bg-[#ced9df] hover:bg-[#b0dbf7]'
+                      className="w-1 hover:w-2 absolute top-0 right-0 h-full cursor-col-resize bg-[#ced9df] hover:bg-[#b0dbf7]"
                     />
                   )}
                   <div>{field.label}</div>
@@ -146,10 +148,10 @@ const EditableTable: React.FC<EditableTableProps> = ({
             </tr>
 
             {searchMode && (
-              <tr className='bg-gray-50 sticky top-[42px] z-10'>
-                <th className='bg-[#f9feff] flex justify-center items-center gap-1 transition-all duration-700'>
+              <tr className="bg-gray-50 sticky top-[42px] z-10">
+                <th className="bg-[#f9feff] flex justify-center items-center gap-1 transition-all duration-700">
                   <input
-                    type='checkbox'
+                    type="checkbox"
                     onClick={() =>
                       selectedRows
                         ? setSelectedRows(null)
@@ -174,19 +176,19 @@ const EditableTable: React.FC<EditableTableProps> = ({
                   <th
                     key={field.key}
                     style={{ width: columnWidths[i] }}
-                    className='bg-gray-50'
+                    className="bg-gray-50"
                   >
                     <input
                       value={filters[field.key] || ''}
                       onChange={(e) =>
                         setFilters({ ...filters, [field.key]: e.target.value })
                       }
-                      className='w-full text-sm px-2 py-1 focus:outline-none focus:ring focus:ring-blue-100'
-                      placeholder='جستجو...'
+                      className="w-full text-sm px-2 py-1 focus:outline-none focus:ring focus:ring-blue-100"
+                      placeholder="جستجو..."
                     />
                   </th>
                 ))}
-                <th className='bg-gray-50'></th>
+                <th className="bg-gray-50"></th>
               </tr>
             )}
           </thead>
@@ -195,29 +197,23 @@ const EditableTable: React.FC<EditableTableProps> = ({
             {filteredData.map((row) => (
               <tr
                 key={row.id}
-                className='transition hover:bg-gray-50 cursor-pointer'
+                className="transition hover:bg-gray-50 cursor-pointer"
                 onClick={() => onRowClick(row)}
               >
-                <td className='py-2 flex w-20 gap-2 justify-center'>
+                <td className="py-2 flex w-20 gap-2 justify-center">
                   <BiTrash
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleDelete(row.id)
+                      setDeleteId(row.VoucherID)
+                      setConfirmOpen(true)
                     }}
-                    className='hover:-rotate-12 text-red-500 hover:bg-red-50 rounded-full hover:text-red-600 text-2xl transition'
-                  />
-                  <BiEdit
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleDelete(row.id)
-                    }}
-                    className='hover:-rotate-12 text-blue-600 hover:bg-red-50 rounded-full hover:text-red-600 text-2xl transition'
+                    className="hover:-rotate-12 text-red-500 hover:bg-red-50 rounded-full hover:text-red-600 text-2xl transition"
                   />
                 </td>
                 {columns.map((field, i) => (
                   <td
                     key={field.key}
-                    className='py-2 px-4 text-center hover:bg-blue-200'
+                    className="py-2 px-4 text-center hover:bg-blue-200"
                     style={{ width: columnWidths[i] }}
                   >
                     <input
@@ -232,7 +228,7 @@ const EditableTable: React.FC<EditableTableProps> = ({
                           field.type
                         )
                       }
-                      className='w-full text-center outline-none bg-transparent'
+                      className="w-full text-center outline-none bg-transparent"
                     />
                   </td>
                 ))}
@@ -241,6 +237,19 @@ const EditableTable: React.FC<EditableTableProps> = ({
           </tbody>
         </table>
       </div>
+      <ConfirmationModal
+        open={confirmOpen}
+        message="آیا از حذف این سند مطمئن هستید؟"
+        onClose={() => {
+          setConfirmOpen(false)
+          setDeleteId(null)
+        }}
+        onConfirm={() => {
+          if (deleteId !== null && handleDelete) {
+            handleDelete(deleteId)
+          }
+        }}
+      />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import { MdCategory } from 'react-icons/md'
 import { HiClipboardDocumentList, HiDocumentPlus } from 'react-icons/hi2'
 import { useRouter } from 'next/navigation'
 import MainLayout from '@/layouts/Main'
-import { GetVoucherList } from '@/services/voucher'
+import { DeleteVoucher, GetVoucherList } from '@/services/voucher'
 import { getCookieByKey, setCookieByKey } from '@/utils/cookies'
 import { VoucherList } from '@/interfaces'
 const Accounting = () => {
@@ -14,16 +14,16 @@ const Accounting = () => {
   const [voucherList, setVoucherList] = useState<VoucherList[]>([])
   const router = useRouter()
 
+  const fetchData = async () => {
+    const accessToken = getCookieByKey('access_token') || ''
+    await GetVoucherList({ accessToken }).then((response) => {
+      if (response as VoucherList[]) setVoucherList(response)
+    })
+  }
   useEffect(() => {
-    const fetchData = async () => {
-      const accessToken = getCookieByKey('access_token') || ''
-      await GetVoucherList({ accessToken }).then((response) => {
-        if (response as VoucherList[]) setVoucherList(response)
-      })
-    }
     fetchData()
   }, [])
-  console.log(voucherList)
+
   return (
     <MainLayout>
       <MainHead
@@ -82,6 +82,12 @@ const Accounting = () => {
           id: index,
           ...item,
         }))}
+        handleDelete={async (id) => {
+          await DeleteVoucher({
+            accessToken: getCookieByKey('access_token') || '',
+            voucher_id: id,
+          }).then(async () => await fetchData())
+        }}
         fields={[
           { key: 'VoucherID', label: 'شناسه رسید', type: 'text' },
           { key: 'LedgerRef', label: 'دفتر کل', type: 'text' },

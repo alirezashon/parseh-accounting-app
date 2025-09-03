@@ -1,44 +1,47 @@
 'use client'
 import { getCookieByKey } from '@/actions/cookieToken'
-import { Header, VoucherItem } from '@/interfaces'
+import { Header, VoucherItem, VoucherList } from '@/interfaces'
 import MainLayout from '@/layouts/Main'
 import { GetVoucherItemList } from '@/services/voucher'
 import { useEffect, useState } from 'react'
 import EditableTable from '../hub/DetailedBlankTable'
-import DocHead from '../AddDocument/lib/FormHead'
 import { FieldConfig, fieldList } from '../AddDocument/lib/data'
+import DocHead from './lib/FormHead'
 
 const Document = () => {
   const [voucherItemList, setVoucherItemList] = useState<VoucherItem[]>([])
-  const [documentHead, setDocumentHead] = useState<Header>()
+  const [documentHead, setDocumentHead] = useState<VoucherList>()
 
   useEffect(() => {
     const getData = async () => {
-      await getCookieByKey('access_token').then(async (token) => {
-        await getCookieByKey('viewdocmockinewdsamothlyioghlia').then(
-          async (data) => {
-            const docHeadHistory = data && (await JSON.parse(data))
-            console.log(docHeadHistory)
-            if (docHeadHistory[0]?.sys_id) {
-              setDocumentHead(docHeadHistory[0] as Header)
-              await GetVoucherItemList({
-                accessToken: token as string,
-                sisaydi: docHeadHistory.sys_id as string,
-              }).then((response) => {
-                if (response as VoucherItem[]) setVoucherItemList(response)
-              })
-            }
+      const token = await getCookieByKey('access_token')
+      const data = await getCookieByKey('viewdocmockinewdsamothlyioghlia')
+
+      if (data) {
+        const result: VoucherList = JSON.parse(data)
+
+        if (result?.sys_id) {
+          setDocumentHead(result)
+          const response = await GetVoucherItemList({
+            accessToken: token as string,
+            sisaydi: result.sys_id as string,
+          })
+
+          if (response) {
+            setVoucherItemList(response as VoucherItem[])
           }
-        )
-      })
+        }
+      }
     }
+
     getData()
   }, [])
+
   return (
     <MainLayout>
       <DocHead
-        value={documentHead as Header}
-        onChange={(documentHead: Header) =>
+        value={documentHead as VoucherList}
+        onChange={(documentHead: VoucherList) =>
           setVoucherItemList((prev) => ({
             ...prev,
             header: documentHead,

@@ -124,7 +124,7 @@ export interface VoucherList {
   ReferenceNumber: number
   ShowCurrencyFields: number
   IsReadonly: number
-  Version: null
+  Version: string
   cust_id: number
   sys_id: string
   sys_status: number

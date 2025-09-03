@@ -100,21 +100,63 @@ export const InsertEasyVoucher = async ({
   }
 }
 
-export const UpdateDetailTypes = async ({
-  dltype_id,
-  title,
-  status,
+export const UpdateVoucher = async ({
+  voucher_id,
+  details_update,
+  header_update,
   accessToken,
 }: {
-  code: string
-  title: string
-  status: number
-  dltype_id: string
+  voucher_id: string
   accessToken: string
+  header_update: {
+    BranchRef: number
+    Date: string
+    Number: number
+    Sequence: number
+    DailyNumber: number
+    VoucherTypeRef: number
+    Description: string
+    Description_En: string
+    State: number
+    IsTemporary: number
+    IsCurrencyBased: number
+    IsExternal: number
+    ReferenceNumber: number
+    ShowCurrencyFields: number
+    IsReadonly: number
+    FiscalYearRef: number
+    Signature: string
+  }
+  details_update: {
+    RowNumber: number
+    AccountGroupRef: number
+    GLRef: number
+    SLRef: number
+    SLCode: string
+    Debit: number
+    Credit: number
+    CurrencyRef: number
+    Description: string
+    Description_En: string
+    FollowUpNumber: string
+    FollowUpDate: string
+    Quantity: number
+    DLLevel4: string
+    DLLevel5: string
+    DLTypeRef4: number
+    DLTypeRef5: number
+    TaxAccountType: number
+    TaxStateType: number
+    TransactionType: number
+    PurchaseOrSale: number
+    ItemOrService: number
+    PartyRef: number
+    TaxAmount: number
+  }[]
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/update_detail_type/${dltype_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/update_voucher/${voucher_id}`,
       {
         method: 'PUT',
         headers: {
@@ -122,7 +164,7 @@ export const UpdateDetailTypes = async ({
           'Content-Type': 'application/json',
           authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({ status, title }),
+        body: JSON.stringify({ header_update, details_update }),
       }
     )
 
@@ -136,16 +178,16 @@ export const UpdateDetailTypes = async ({
   }
 }
 
-export const DeleteDetailType = async ({
-  dltype_id,
+export const DeleteVoucher = async ({
+  voucher_id,
   accessToken,
 }: {
-  dltype_id: number
+  voucher_id: number
   accessToken: string
 }) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/delete_dltype/${dltype_id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/.api/v1/delete_voucher/${voucher_id}`,
       {
         method: 'DELETE',
         headers: {
