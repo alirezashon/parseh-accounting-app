@@ -1,6 +1,6 @@
 'use client'
 import { getCookieByKey } from '@/actions/cookieToken'
-import { Header, VoucherItem, VoucherList } from '@/interfaces'
+import { VoucherItem, VoucherList } from '@/interfaces'
 import MainLayout from '@/layouts/Main'
 import { GetVoucherItemList } from '@/services/voucher'
 import { useEffect, useState } from 'react'
@@ -27,7 +27,7 @@ const Document = () => {
             sisaydi: result.sys_id as string,
           })
 
-          if (response) {
+          if (response && Array.isArray(response)) {
             setVoucherItemList(response as VoucherItem[])
           }
         }
@@ -50,11 +50,23 @@ const Document = () => {
         data={fieldList.header as FieldConfig[]}
       />
       <EditableTable
+        setRows={(data) =>
+          setVoucherItemList(
+            data.map((row) => {
+              const { id, ...rest } = row
+              return rest as VoucherItem
+            })
+          )
+        }
         searchMode
-        rows={voucherItemList.map((item, index) => ({
-          id: index,
-          ...item,
-        }))}
+        rows={
+          Array.isArray(voucherItemList)
+            ? voucherItemList.map((item, index) => ({
+                id: index,
+                ...item,
+              }))
+            : []
+        }
         fields={[
           { key: 'VoucherID', label: 'شناسه رسید', type: 'text' },
           { key: 'LedgerRef', label: 'دفتر کل', type: 'text' },

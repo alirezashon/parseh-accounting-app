@@ -18,6 +18,7 @@ type FieldConfig = {
 
 type EditableTableProps = {
   rows: GenericRow[]
+  setRows?: (data: GenericRow[]) => void
   fields: FieldConfig[]
   onRowClick: (row: GenericRow) => void
   color?: string
@@ -110,7 +111,7 @@ const EditableTable: React.FC<EditableTableProps> = ({
     <div
       className={`${className} bg-white max-h-[70vh] rounded-2xl  overflow-auto border border-[#3573e7] shadow-md shadow-[blue] `}
     >
-      <div className="max-h-[6ز0vh] overflow-auto">
+      <div className="max-h-[70vh]">
         <table
           ref={tableRef}
           className="min-w-max max-md:min-w-0  text-sm select-none table-fixed"
