@@ -106,7 +106,7 @@ export const UpdateVoucher = async ({
   header_update,
   accessToken,
 }: {
-  voucher_id: string
+  voucher_id: number
   accessToken: string
   header_update: {
     BranchRef: number
