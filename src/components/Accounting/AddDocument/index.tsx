@@ -1,16 +1,27 @@
 'use client'
 import DocHead from './lib/FormHead'
 import DocRows from './lib/FormRows'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, ReactNode } from 'react'
 import { Header, Detail } from '@/interfaces'
 import { InsertEasyVoucher } from '@/services/voucher'
-import { getCookieByKey, setCookieByTagAndValue } from '@/actions/cookieToken'
+import {
+  deleteCookieByKey,
+  getCookieByKey,
+  setCookieByTagAndValue,
+} from '@/actions/cookieToken'
 import { FieldConfig, fieldList } from './lib/data'
-
+import CustomModal from '@/components/hub/CustomModal'
 const COOKIE_KEY = 'documentocachecookiemanashtobashhashrasht'
 
 export default function AddDocument() {
-  const [mounted, setMounted] = useState(false) // ← NEW
+  const [mounted, setMounted] = useState(false)
+  const [showModal, setShowModal] = useState<{
+    main: ReactNode
+    title: string
+    type?: 'success' | 'error' | 'info'
+    autoClose?: number
+    hideButton?: boolean
+  } | null>()
   useEffect(() => setMounted(true), []) // ← NEW
 
   const [finalData, setFinalData] = useState<{
@@ -72,14 +83,42 @@ export default function AddDocument() {
 
   const onSubmit = async () => {
     const accessToken = (await getCookieByKey('access_token')) || ''
-    await InsertEasyVoucher({ data: finalData as any, accessToken })
+    await InsertEasyVoucher({ data: finalData as any, accessToken }).then(
+      async (result) => {
+        if (result.status === 'success') {
+          setShowModal({
+            main: <p>با موفقیت ثبت شد</p>,
+            title: 'موفق',
+            type: 'success',
+            autoClose: 2,
+          })
+          await deleteCookieByKey(COOKIE_KEY)
+        } else
+          setShowModal({
+            main: <p> عملیات ناموفق بود </p>,
+            title: 'ناموفق',
+            type: 'error',
+            autoClose: 2,
+          })
+      }
+    )
   }
 
-  // جلوگیری از Hydration mismatch: تا قبل از mount هیچ HTMLی تولید نکن
   if (!mounted) return null
 
   return (
     <div dir="rtl" className="grid gap-8 bg-white">
+      {showModal && (
+        <CustomModal
+          modalContent={{
+            main: <p></p>,
+            title: '',
+            type: 'success',
+            autoClose: 2,
+          }}
+          closeModal={() => setShowModal(null)}
+        />
+      )}
       <DocHead
         value={finalData.header}
         onChange={(documentHead) => {

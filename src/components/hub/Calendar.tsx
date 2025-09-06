@@ -32,7 +32,7 @@ const Calendar: React.FC<Props> = ({
 
   return (
     <div className="flex flex-col">
-      {label && <label className='text-gray-500'> {label}</label>}
+      {label && <label className="text-gray-500"> {label}</label>}
       <div className="relative w-full">
         <DatePicker
           containerClassName={'w-full '}

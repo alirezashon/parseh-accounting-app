@@ -21,7 +21,6 @@ type RowState = {
   FollowUpDate: string | number
   DLTypeRef5: string | number
 }
-
 const EMPTY_ROW: RowState = {
   refs: '',
   Detailed: '',
@@ -32,11 +31,9 @@ const EMPTY_ROW: RowState = {
   FollowUpDate: '',
   DLTypeRef5: '',
 }
-
 const shallowEqual = (a: any, b: any) => {
   return JSON.stringify(a) === JSON.stringify(b)
 }
-
 const DocRows = ({
   value,
   onChange,
@@ -49,11 +46,7 @@ const DocRows = ({
 
   const [treeData, setTreeData] = useState<TreeChartInterface[]>([])
   const [detailed, setDetailed] = useState<DetailedScheme[]>([])
-  const [documents, setDocuments] = useState<RowState[]>(
-    Array.from({ length: 25 }, () => ({ ...EMPTY_ROW }))
-  )
-
-  // 🔒 هنگام سینک‌شدن از prop -> state، جلوی onChange را می‌گیریم
+  const [documents, setDocuments] = useState<RowState[]>([{ ...EMPTY_ROW }])
   const syncingFromProp = useRef(false)
 
   useEffect(() => {
@@ -68,19 +61,14 @@ const DocRows = ({
       FollowUpDate: d.FollowUpDate || '',
       DLTypeRef5: d.DLTypeRef5 || '',
     }))
-    const padded = rowsFromValue.concat(
-      Array.from({ length: Math.max(0, 25 - rowsFromValue.length) }, () => ({
-        ...EMPTY_ROW,
-      }))
-    )
 
-    // ✅ فقط اگر واقعاً تغییر کرده، آپدیت کن
-    if (!shallowEqual(padded, documents)) {
+    if (!shallowEqual(rowsFromValue, documents)) {
       syncingFromProp.current = true
-      setDocuments(padded)
+      setDocuments(
+        rowsFromValue.length > 0 ? rowsFromValue : [{ ...EMPTY_ROW }]
+      )
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]) // عمداً documents را وارد نکردیم تا لوپ نسازیم
+  }, [value])
 
   const totalDebit = useMemo(
     () => documents.reduce((s, r) => s + (Number(r.Debit) || 0), 0),
@@ -147,8 +135,6 @@ const DocRows = ({
         return detail
       })
   }, [documents])
-
-  // ✅ فقط وقتی تغییر از کاربر بوده (نه از props) onChange را صدا بزن
   const lastSentRef = useRef<Detail[] | null>(null)
   useEffect(() => {
     if (syncingFromProp.current) {
@@ -184,20 +170,32 @@ const DocRows = ({
     setDocuments((prev) => prev.filter((_, i) => i !== index))
   }
   const addNewRow = () => {
-    setDocuments((prev) => [...prev, { ...EMPTY_ROW }])
+    const last = documents[documents.length - 1]
+    const isLastRowFilled =
+      Number(last.Debit) !== 0 ||
+      Number(last.Credit) !== 0 ||
+      String(last.Description || '').trim() !== '' ||
+      String(last.refs || '').trim() !== '' ||
+      String(last.Detailed || '').trim() !== ''
+
+    if (isLastRowFilled) {
+      setDocuments((prev) => [...prev, { ...EMPTY_ROW }])
+    }
   }
+
   const clearEmptyRows = () => {
-    setDocuments((prev) =>
-      prev.filter((r) => {
-        const hasSomething =
-          (Number(r.Debit) || 0) !== 0 ||
-          (Number(r.Credit) || 0) !== 0 ||
+    setDocuments((prev) => {
+      const cleared = prev.filter((r) => {
+        return (
+          Number(r.Debit) !== 0 ||
+          Number(r.Credit) !== 0 ||
           String(r.Description || '').trim() !== '' ||
           String(r.refs || '').trim() !== '' ||
           String(r.Detailed || '').trim() !== ''
-        return hasSomething
+        )
       })
-    )
+      return cleared.length > 0 ? cleared : [{ ...EMPTY_ROW }]
+    })
   }
 
   const singleSelectListData = useMemo(

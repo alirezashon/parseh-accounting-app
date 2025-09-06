@@ -90,8 +90,9 @@ const Drawer = () => {
         {icons.map((icon, index) => (
           <div
             onClick={() => (window.location.href = icon.destination)}
-            className={externalStyles.iconBox}
+            className={`${externalStyles.iconBox}`}
             style={{
+              
               justifyContent: `${drawerWidth < 7 ? 'center' : 'space-around'}`,
               background: pathname.includes(icon.destination) ? '#0f20a4' : '',
               color: pathname.includes(icon.destination) ? '#ffffff' : '',

@@ -98,7 +98,7 @@ const Login = () => {
         return toast.error('کاربر غیرفعال است')
 
       localStorage.setItem('mobile', mobile)
-      location.href = '/'
+      // location.href = '/'
     } catch (err) {
       setLoading(false)
       console.error(err)

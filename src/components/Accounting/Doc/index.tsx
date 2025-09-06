@@ -61,6 +61,7 @@ const Document = () => {
         FiscalYearRef: documentHead.FiscalYearRef,
         Signature: '', // اگر لازم نیست می‌تونی حذفش
       },
+      
       details_update: voucherItemList.map((item) => ({
         RowNumber: item.RowNumber,
         AccountGroupRef: item.AccountGroupRef,

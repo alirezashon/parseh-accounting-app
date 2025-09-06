@@ -14,12 +14,12 @@ export default function RootLayout({
 }>) {
   return (
     <StatesProvider>
-      <html lang='en'>
+      <html lang="en">
         <body
           suppressHydrationWarning={true}
-          className='flex flex-col items-center'
+          className="flex flex-col items-center"
         >
-          <div className='max-w-[11 20px] w-full px-4'>{children}</div>
+          <div className="max-w-[11 20px] w-full px-4">{children}</div>
         </body>
       </html>
     </StatesProvider>

@@ -25,10 +25,10 @@ export type HeaderState<TKeys extends string> = Record<TKeys, string>
 export type Update = (val: any) => void
 export const fieldList = {
   header: [
-    { key: 'Number', label: 'شماره سند', type: 'text' },
+    { key: 'Number', label: 'شماره سند', type: 'number' },
     { key: 'Date', label: 'تاریخ', type: 'calendar' },
-    { key: 'Sequence', label: ' شماره فرعی', type: 'text' },
-    { key: 'DailyNumber', label: 'شماره روزانه', type: 'text' },
+    { key: 'Sequence', label: ' شماره فرعی', type: 'number' },
+    { key: 'DailyNumber', label: 'شماره روزانه', type: 'number' },
     { key: 'Description', label: 'توضیحات', type: 'textarea' },
   ],
   details: [

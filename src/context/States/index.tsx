@@ -3,10 +3,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
 
 interface StatesContextProps {
-  // productGroupStates: 'productgroups' | 'product-brands'
-  // setProductGroupStates: (value: 'productgroups' | 'product-brands') => void
-  // selectedSubGroupData: SubGroup | undefined
-  // setSelectedSubGroupData: (SubGroupData: SubGroup) => void
   submitting: boolean | undefined
   setSubmitting: (value: boolean | undefined) => void
   modalContent: {
@@ -24,22 +20,11 @@ interface StatesContextProps {
     hideButton?: boolean
   }) => void
   closeModal: () => void
-  // selectedProductData:
-  //   | {
-  //       data: any[]
-  //       group: any
-  //       brand: any
-  //     }
-  //   | undefined
-  //   | null
 }
 
 const StatesContext = createContext<StatesContextProps | undefined>(undefined)
 
 export const StatesProvider = ({ children }: { children: ReactNode }) => {
-  // const [productGroupStates, setProductGroupStates] = useState<
-  //   'productgroups' | 'product-brands'
-  // >('productgroups')
   const [modalContent, setModalContent] = useState<{
     main: ReactNode
     title: string

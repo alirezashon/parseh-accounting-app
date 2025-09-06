@@ -4,12 +4,13 @@ import { IUserResponse } from '@/interfaces'
 import { cookies } from 'next/headers'
 
 export interface IAccessTokenResponse {
+  status: number
   access_token: string
   token_type: string
   lastlogin_date: string
   lastlogin_time: string
   last_login_ip: string
-  role_id: number
+  // role_id?: number
 }
 
 export async function setCurrentUsertoCookie({

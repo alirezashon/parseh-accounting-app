@@ -29,11 +29,12 @@ export const UserLoginAPI = async ({
       body: new URLSearchParams({
         username: username,
         password: password,
-        // scope:'8'0
+        scope: '3',
       }),
     })
     if (!response) return
     const data = await response.json()
+    console.log(data)
     return data
   } catch (error) {
     console.log(error)
@@ -203,7 +204,7 @@ export const UserChangePassword = async ({
         body: JSON.stringify({ newpassword, otp_code }),
       }
     )
-        if ([401, 403].includes(response.status)) {
+    if ([401, 403].includes(response.status)) {
       await deleteCookieByKey('access_token')
       location.href = '/auth/login'
       return
@@ -252,7 +253,7 @@ export const UpdateProfile = async ({
       }
     )
 
-        if ([401, 403].includes(response.status)) {
+    if ([401, 403].includes(response.status)) {
       await deleteCookieByKey('access_token')
       location.href = '/auth/login'
       return
@@ -292,7 +293,7 @@ export const GetUserPermissions = async ({
       }
     )
 
-        if ([401, 403].includes(response.status)) {
+    if ([401, 403].includes(response.status)) {
       await deleteCookieByKey('access_token')
       location.href = '/auth/login'
       return

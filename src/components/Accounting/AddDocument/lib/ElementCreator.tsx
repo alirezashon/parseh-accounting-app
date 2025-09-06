@@ -61,9 +61,9 @@ export function buildForm<TKeys extends string>({
         control = (
           <InputNumber
             label={hideLabel ? '' : label}
-            value={Number(value) || 0}
+            value={Number(value)}
             onChange={update}
-            placeholder={placeholder || '0'}
+            placeholder={placeholder}
           />
         )
         break
@@ -71,7 +71,9 @@ export function buildForm<TKeys extends string>({
         control = (
           <Calendar
             label={hideLabel ? '' : label}
-            placeholder={placeholder}
+            placeholder={
+              placeholder || (value as string) || 'یک مورد انتخاب کنید'
+            }
             setDate={(iso: string) => update(iso)}
           />
         )
@@ -81,6 +83,7 @@ export function buildForm<TKeys extends string>({
         control = (
           <SingleSelectList
             label={hideLabel ? '' : label}
+            defaultValue={value}
             items={singleSelectListData || []}
             setSelectedItems={(id) => update(options[id as number])}
           />
@@ -105,6 +108,9 @@ export function buildForm<TKeys extends string>({
             data={treeData}
             onSelect={(node: any) => update(node.fullPath)} // ← استفاده از fullPath
             onUnselect={() => update('')}
+            placeholder={
+              typeof value === 'string' && value.length > 1 ? value : undefined
+            }
           />
         )
         break

@@ -5,17 +5,19 @@ interface SingleSelectListProps {
   label: string
   items: { id: string | number; label: string }[]
   setSelectedItems: (selected: string | number) => void
+  defaultValue?: string | number
 }
 
 const SingleSelectList: React.FC<SingleSelectListProps> = ({
   label,
   items,
   setSelectedItems,
+  defaultValue,
 }) => {
   const [selectedItem, setSelectedItem] = useState<string | number | null>(null)
-  const [filteredItems, setFilteredItems] = useState<{ id: string | number; label: string }[]>(
-    items ?? []
-  )
+  const [filteredItems, setFilteredItems] = useState<
+    { id: string | number; label: string }[]
+  >(items ?? [])
   const [isOpen, setIsOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const lastItemsRef = useRef(items)
@@ -37,7 +39,10 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
   // بستن لیست با کلیک بیرون
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false)
       }
     }
@@ -47,7 +52,9 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
 
   const filterData = (value: string) => {
     const v = value.toLowerCase()
-    const filtered = items.filter((item) => item.label.toLowerCase().includes(v))
+    const filtered = items.filter((item) =>
+      item.label.toLowerCase().includes(v)
+    )
     setFilteredItems(filtered)
   }
 
@@ -59,7 +66,11 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <span className="text-gray-700">
-          {selectedItem ? items.find((item) => item.id === selectedItem)?.label : label}
+          {selectedItem
+            ? items.find((item) => item.id === selectedItem)?.label
+            : defaultValue
+            ? items.find((item) => item.id === selectedItem)?.label
+            : label}
         </span>
         <span className="text-gray-400">&#x25BC;</span>
       </div>
@@ -92,7 +103,13 @@ const SingleSelectList: React.FC<SingleSelectListProps> = ({
                   readOnly
                   className="form-radio h-5 w-5 text-[#2F27CE] accent-[#2F27CE]"
                 />
-                <span className={`${selectedItem === item.id ? 'text-[primary65]' : 'text-gray-700'}`}>
+                <span
+                  className={`${
+                    selectedItem === item.id
+                      ? 'text-[primary65]'
+                      : 'text-gray-700'
+                  }`}
+                >
                   {item.label}
                 </span>
               </div>
